@@ -243,6 +243,39 @@
             </div><!-- /.container -->
         </footer><!-- /#footer -->
     </div>
+
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="text" name="email" placeholder="Email">
+                        <input type="text" name="password" placeholder="Password">
+                    </form>
+                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#signup-modal">Already a member? Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="signup-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign Up</h5>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="text" name="email" placeholder="Email">
+                    </form>
+                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#login-modal">Not a member yet? Login now</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Dependency Scripts -->
     <script src="{% static 'homepage/temp-static/dependencies/popper.js/popper.min.js' %}"></script>
     <script src="{% static 'homepage/temp-static/dependencies/jquery/jquery.min.js' %}"></script>

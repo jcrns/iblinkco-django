@@ -1,6 +1,20 @@
 {% extends 'homepage/header.html' %}
 {% load static %}
 {% block content %}
+<style>
+	#what-we-offer-icons-1 {
+		min-height: 96px;
+		min-width: 96px;
+	}
+	#what-we-offer-icons-2 {
+		min-height: 116px;
+		min-width: 116px;
+	}
+	#what-we-offer-icons-3 {
+		min-height: 96px;
+		min-width: 96px;
+	}
+</style>
 <!--==========================-->
 <!--=         Banner         =-->
 <!--==========================-->
@@ -22,7 +36,7 @@
 
 				<div class="col-lg-6">
 					<div class="promo-mockup wow pixFadeLeft">
-						<img src="{% static 'homepage/temp-static/media/banner/macbook.png' %}" alt="mpckup">
+						<img src="{% static 'homepage/img/small-business-photo.jpg' %}" >
 					</div><!-- /.promo-mockup -->
 				</div><!-- /.col-lg-6 -->
 			</div><!-- /.row -->
@@ -48,7 +62,7 @@
 			<div class="col-md-4">
 				<div class="saaspik-icon-box-wrapper style-one wow pixFadeLeft" data-wow-delay="0.3s">
 					<div class="saaspik-icon-box-icon">
-						<img src="{% static 'homepage/temp-static/media/feature/1.png' %}" alt="">
+						<img id="what-we-offer-icons-1" src="{% static 'homepage/img/verified.png' %}" alt="">
 					</div>
 					<div class="pixsass-icon-box-content">
 						<h3 class="pixsass-icon-box-title"><a href="#">We verify our Social Media Managers have the skills needed</a></h3>
@@ -59,7 +73,7 @@
 			<div class="col-md-4">
 				<div class="saaspik-icon-box-wrapper style-one wow pixFadeLeft" data-wow-delay="0.5s">
 					<div class="saaspik-icon-box-icon">
-						<img src="{% static 'homepage/temp-static/media/feature/2.png' %}" alt="">
+						<img id="what-we-offer-icons-2" src="{% static 'homepage/img/customer-service.png' %}" alt="">
 					</div>
 					<div class="pixsass-icon-box-content">
 						<h3 class="pixsass-icon-box-title"><a href="#">We have Great Customers Service</a></h3>
@@ -70,7 +84,7 @@
 			<div class="col-md-4">
 				<div class="saaspik-icon-box-wrapper style-one wow pixFadeLeft" data-wow-delay="0.7s">
 					<div class="saaspik-icon-box-icon">
-						<img src="{% static 'homepage/temp-static/media/feature/3.png' %}" alt="">
+						<img id="what-we-offer-icons-3" src="{% static 'homepage/img/growth.png' %}" alt="">
 					</div>
 					<div class="pixsass-icon-box-content">
 						<h3 class="pixsass-icon-box-title"><a href="#">We have an analytics tool for you to track your growth</a></h3>
@@ -90,12 +104,12 @@
 
 			<div class="editure-feature-image wow pixFadeRight">
 				<div class="image-one" data-parallax='{"x" : 30}'>
-					<img src="{% static 'homepage/temp-static/media/feature/4.png' %}" class="wow pixFadeRight" data-wow-delay="0.3s"
+					<img src="{% static 'homepage/img/goals.jpg' %}" class="wow pixFadeRight" data-wow-delay="0.3s"
 						alt="feature-image">
 				</div>
 				<div class="image-two">
 					<div class="image-two-inner" data-parallax='{"x" : -30}'>
-						<img src="{% static 'homepage/temp-static/media/feature/41.png' %}" class="wow pixFadeLeft" data-wow-delay="0.5s"
+						<img src="{% static 'homepage/img/deal.jpg' %}" class="wow pixFadeLeft" data-wow-delay="0.5s"
 							alt="feature-image">
 					</div>
 				</div>
@@ -158,11 +172,11 @@
 
 			<div class="informes-feature-image">
 				<div class="image-one" data-parallax='{"y" : 20}'>
-					<img src="{% static 'homepage/temp-static/media/feature/5.png' %}" class="wow pixFadeDown" alt="informes">
+					<img src="{% static 'homepage/img/smm.jpg' %}" class="wow pixFadeDown" alt="informes">
 				</div>
 
 				<div class="image-two" data-parallax='{"y" : -20}'>
-					<img src="{% static 'homepage/temp-static/media/feature/51.png' %}" class=" mw-none wow pixFadeDown" data-wow-delay="0.3s"
+					<img src="{% static 'homepage/img/desk-laptop.jpg' %}" class=" mw-none wow pixFadeDown" data-wow-delay="0.3s"
 						alt="informes">
 				</div>
 
@@ -206,34 +220,4 @@
 <!-- /.call-to-action -->
 
 
-</div><!-- /#site -->
-
-
-<div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
-<div class="modal-dialog" role="document">
-	<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title">Login</h5>
-		</div>
-		<div class="modal-body">
-			<p>Theeee</p>
-			<a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#signup-modal">Already a member? Sign In</a>
-		</div>
-	</div>
-</div>
-</div>
-
-<div class="modal fade" id="signup-modal" tabindex="-1" role="dialog">
-<div class="modal-dialog" role="document">
-	<div class="modal-content">
-		<div class="modal-header">
-			<h5 class="modal-title">Sign Up</h5>
-		</div>
-		<div class="modal-body">
-			<p>Ha</p>
-			<a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#login-modal">Not a member yet? Login now</a>
-		</div>
-	</div>
-</div>
-</div>
 {% endblock %}
