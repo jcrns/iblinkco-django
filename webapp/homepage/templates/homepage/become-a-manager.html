@@ -1,0 +1,156 @@
+{% extends 'homepage/header.html' %}
+{% load static %}
+{% block content %}
+<style>
+    #head-pic {
+        max-width: 800px;
+    }
+
+    /* Butttons */
+    #main-start-button {
+        background: #fff; 
+        color:#FF8A00; 
+        border: 1px solid #FF8A00;
+    }
+    #main-start-button:hover {
+        background: #FF8A00; 
+        color:#fff; 
+        border: 1px solid #FF8A00;
+    }
+    #manager-button-1 {
+        background: #fff; 
+        color:#FF8A00; 
+        border: 1px solid #FF8A00;
+    }
+    #manager-button-1:hover {
+        background: #FF8A00; 
+        color:#fff; 
+        border: 1px solid #FF8A00;
+    }
+    #manager-button-2 {
+        background: #fff; 
+        color:#FF8A00; 
+        border: 1px solid #FF8A00;
+    }
+    #manager-button-2:hover {
+        background: #FF8A00; 
+        color:#fff; 
+        border: 1px solid #FF8A00;
+    }
+    #manager-button-3 {
+        background: #fff; 
+        color:#FF8A00; 
+        border: 1px solid #FF8A00;
+    }
+    #manager-button-3:hover {
+        background: #FF8A00; 
+        color:#fff; 
+        border: 1px solid #FF8A00;
+    }
+
+    #banner-four {
+        height: 820px;
+    }
+</style>
+<section id="banner-four" class="banner banner-four"
+    style="background-image: -o-linear-gradient(150deg, #ffffff 0%, #ffffff 100%);background-image:
+    linear-gradient(-60deg, #ffffff 0%, #ffffff 100%);">
+    <div class="container">
+        <div class="banner-content-wrap-four">
+            <div class="row">
+                <div class="col-lg-8 col-md-7">
+                    <div class="banner-content">
+                        <h1 style="color: #2b2350;" class="banner-title wow pixFadeUp" data-wow-delay="0.3s"
+                            style="visibility: visible; animation-delay: 0.3s; animation-name: pixFadeUp;">
+                            Become a Social <br> Media Manager
+                        </h1>
+
+                        <p style="color: #2b2350;" class="description wow pixFadeUp" data-wow-delay="0.5s"
+                            style="visibility: visible; animation-delay: 0.5s; animation-name: pixFadeUp;">
+                            Make extra money as a social media manager unbiasly.
+                        </p>
+                        <a href="#" id="main-start-button" class="pxs-btn banner-btn wow pixFadeUp" data-wow-delay="0.6s" data-toggle="modal"
+                            data-target="#signup-modal"
+                            style="visibility: visible; animation-delay: 0.6s; animation-name: pixFadeUp;">Get
+                            Started</a>
+                    </div><!-- /.banner-content -->
+                </div>
+                <!-- /.col-lg-8 -->
+
+                <div class="col-lg-4 col-md-5">
+                    <div class="promo-mockup wow pixFadeUp text-center animated"
+                        style="visibility: visible; animation-name: jump;">
+                        <img src="{% static 'homepage/img/working1.jpg' %}" class="wow pixZoomIn" alt="mpckup"
+                            style="visibility: visible; animation-name: pixZoomIn;">
+                    </div><!-- /.promo-mockup -->
+                </div>
+                <!-- /.col-lg-4 col-md-5 -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.banner-content-wrap -->
+    </div><!-- /.container -->
+</section>
+<section class="featured-eight">
+
+    <div class="banner-content text-center">
+        <h2 class="banner-title wow pixFadeUp" data-wow-delay="0.3s"
+            style="visibility: visible; animation-delay: 0.3s; animation-name: pixFadeUp;">
+            Join Our Community Of Managers
+        </h2>
+    <div class="container">
+        <div class="section-title style-two title-light text-center">
+        </div><!-- /.section-title -->
+
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="saaspik-icon-box-wrapper style-eight">
+                    <div class="saaspik-icon-box-icon">
+                        <img src="{% static 'homepage/img/regular-managers.png' %}" alt="">
+                    </div>
+                    <div class="pixsass-icon-box-content">
+                        <h3 class="pixsass-icon-box-title"><a href="#">Regular Managers</a></h3>
+                        <p>
+                            These managers are responsible for posting content given to them by clients.
+                        </p>
+
+                        <a href="#" id="manager-button-1" class="pix-btn btn-two btn-outline">Start Now</a>
+                    </div>
+                </div><!-- /.pixsass-box style-eight -->
+            </div><!-- /.col-lg-4 col-md-6 -->
+
+            <div class="col-lg-4 col-md-6">
+                <div class="saaspik-icon-box-wrapper style-eight">
+                    <div class="saaspik-icon-box-icon">
+                        <img src="{% static 'homepage/img/repost-managers.png' %}" alt="">
+                    </div>
+                    <div class="pixsass-icon-box-content">
+                        <h3 class="pixsass-icon-box-title"><a href="#">Reposting Managers</a></h3>
+
+                        <p>
+                            These Managers are responsible for looking for content out there relevent to the clients and to create posts.
+                        </p>
+
+                        <a href="#" id="manager-button-2" class="pix-btn btn-two btn-outline">Start Now</a>
+                    </div>
+                </div><!-- /.pixsass-box style-eight -->
+            </div><!-- /.col-lg-4 col-md-6 -->
+
+            <div class="col-lg-4 col-md-6">
+                <div class="saaspik-icon-box-wrapper style-eight">
+                    <div class="saaspik-icon-box-icon">
+                        <img src="{% static 'homepage/img/content-creation.png' %}" alt="">
+                    </div>
+                    <div class="pixsass-icon-box-content">
+                        <h3 class="pixsass-icon-box-title"><a href="#">Content Creation Managers</a></h3>
+                        <p>
+                            These managers are responsible for creating great quality content and to post it on social media.
+                        </p>
+
+                        <a href="#" id="manager-button-3" class="pix-btn btn-two btn-outline">Start Now</a>
+                    </div>
+                </div><!-- /.pixsass-box style-eight -->
+            </div><!-- /.col-lg-4 col-md-6 -->
+        </div><!-- /.row -->
+    </div><!-- /.container -->
+</section>
+{% endblock %}

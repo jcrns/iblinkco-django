@@ -17,3 +17,6 @@ def partnerships(request):
 
 def helpAndSupport(request):
     return render(request, 'homepage/help-and-support.html')
+
+def becomeManager(request):
+    return render(request, 'homepage/become-a-manager.html')

@@ -60,16 +60,13 @@
             overflow-y: auto;
         }
 
-        {% if request.path != '/' %}
-            .site-header .site-main-menu li > a{
-                color: #888888;
-            }
+        {% if request.path == '/privacy_policy' or request.path == '/terms_and_conditions' or request.path == '/become_a_manager' %}
+        .site-header .site-main-menu li > a{
+            color: #888888;
+        }
         {% endif %}
-    </style>
-    <a href="#main_content" data-type="section-switch" class="return-to-top">
-        <i class="fa fa-chevron-up"></i>
-    </a>
 
+    </style>
     <div class="page-loader">
         <div class="loader">
             <!-- Loader -->
@@ -113,7 +110,7 @@
 
                     <div class="site-mobile-logo">
                         <a href="{% url 'homepage-home' %}" class="logo">
-                                {% if request.path == '/' %}
+                                {% if  request.path == '/' %}
                                     <img src="{% static 'homepage/img/headerlogowebsite-mobile-2.png' %}" alt="site logo"
                                     class="main-logo">
                                 {% else %}
@@ -149,7 +146,7 @@
                         <div class="menu-wrapper" data-top="992">
                             <ul class="site-main-menu">
                                 <li><a href="about.html">Blog</a></li>
-                                <li><a href="blog.html">Become a Manager</a></li>
+                                <li><a href="{% url 'homepage-become-a-manager' %}">Become a Manager</a></li>
                                 <li><a href="contact.html" data-toggle="modal" data-target="#login-modal">Login</a></li>
                             </ul>
 
@@ -233,12 +230,6 @@
                     <div class="copyright">
                         <p>iBlinkco, Copyright © 2020</a></p>
                     </div>
-
-                    <ul class="site-info-menu">
-                        <li><a href="#">Privacy & Policy.</a></li>
-                        <li><a href="#">Faq.</a></li>
-                        <li><a href="#">Terms.</a></li>
-                    </ul>
                 </div><!-- /.site-info -->
             </div><!-- /.container -->
         </footer><!-- /#footer -->
@@ -251,10 +242,7 @@
                     <h5 class="modal-title">Login</h5>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <input type="text" name="email" placeholder="Email">
-                        <input type="text" name="password" placeholder="Password">
-                    </form>
+                    {% include "users/login.html" %}
                     <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#signup-modal">Already a member? Sign In</a>
                 </div>
             </div>
@@ -268,9 +256,7 @@
                     <h5 class="modal-title">Sign Up</h5>
                 </div>
                 <div class="modal-body">
-                    <form>
-                        <input type="text" name="email" placeholder="Email">
-                    </form>
+                    {% include "users/signup.html" %}
                     <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#login-modal">Not a member yet? Login now</a>
                 </div>
             </div>
