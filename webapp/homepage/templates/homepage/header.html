@@ -66,6 +66,12 @@
         }
         {% endif %}
 
+        .nav-btn:hover {
+            color: #FF8A00
+        }
+        .link-btn:hover {
+            color: #FF8A00
+        }
     </style>
     <div class="page-loader">
         <div class="loader">
@@ -179,7 +185,6 @@
                                 <ul class="footer-menu">
                                     <li><a href="{% url 'homepage-privacy-policy' %}">Privacy Policy</a></li>
                                     <li><a href="{% url 'homepage-terms-and-conditions' %}">Terms and Conditions</a></li>
-                                    <li><a href="#">Help & Support</a></li>
                                     <li><a href="#">Partnerships</a></li>
                                 </ul>
                             </div>
@@ -204,12 +209,11 @@
 
                         <div class="col-lg-4 col-md-4">
                             <div class="widget footer-widget">
-                                <h3 class="widget-title">Our PO Box</h3>
-
-                                <p>
-                                    99656 Emeryville CA
-                                </p>
-
+                                <h3 class="widget-title">Contact Us</h3>
+                                <ul class="footer-menu">
+                                    <li><a href="#">Help & Support</a></li>
+                                    <li>Our PO Box: 99656 Emeryville CA</li>
+                                </ul>
                                 <ul class="footer-social-link">
                                     <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
                                     <li><a href="#"><i class="fab fa-twitter"></i></a></li>
