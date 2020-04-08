@@ -72,8 +72,10 @@
 
     .smm-list li {
         padding-left: 33px;
+        padding-top: 15px;
         position: relative;
         margin-bottom: 12px;
+        color: #505050;
     }
 
     .smm-list li:before {
@@ -91,6 +93,13 @@
     .smm-list li.not:before {
         content: "\4d";
         color: #fa7878;
+    }
+    #join-description {
+        /* text-align: center; */
+        /* width: 60%; */
+    }
+    #picture-two {
+        max-height: 550px;
     }
 </style>
 <section id="banner-four" class="banner banner-four" style="background-image: -o-linear-gradient(150deg, #ffffff 0%, #ffffff 100%);background-image:
@@ -250,98 +259,46 @@
         </div><!-- /.row -->
     </div><!-- /.container -->
 </section>
-<section class="featured-eight">
-    <div class="banner-content text-center">
-        <h2 class="banner-title wow pixFadeUp" data-wow-delay="0.3s"
-            style="visibility: visible; animation-delay: 0.3s; animation-name: pixFadeUp;">
-            Join Our Community Of Managers
-        </h2>
-    </div>
+<section class="featured-six">
     <div class="container">
-        <div class="section-title style-two title-light text-center">
+        <div class="section-title style-three text-center">
+            <h2 class="title wow pixFadeUp" data-wow-delay="0.2s"
+                style="visibility: visible; animation-delay: 0.2s; animation-name: pixFadeUp;">
+                Join Our Community Of Managers
+            </h2>
+            <p id="join-description">Our Managers are responsible for posting content given <br> by clients and looking for content relevant to their business</p>
         </div><!-- /.section-title -->
 
-        <div class="row">
-            <div class="col-lg-4 col-md-6">
-                <div class="saaspik-icon-box-wrapper style-eight">
-                    <div class="saaspik-icon-box-icon">
-                        <img src="{% static 'homepage/img/regular-managers.png' %}" alt="">
-                    </div>
+        <div class="row align-items-center">
+            <!-- /.col-lg-5 -->
+            <div class="col-lg-5 col-md-5">
+                <div class="feature-image-wrapper wow pixFadeLeft" style="visibility: visible; animation-name: pixFadeLeft;">
+                    <img id="picture-two" src="{% static 'homepage/img/working-show.jpg' %}" alt="">
+                </div>
+                <!-- /.feature-image-wrapper -->
+            </div>
+            <div class="col-lg-7 col-md-7">
+                <div class="saaspik-icon-box-wrapper style-six wow pixFadeRight" data-wow-delay="0.4s"
+                    style="visibility: visible; animation-delay: 0.4s; animation-name: pixFadeRight;">
                     <div class="pixsass-icon-box-content">
-                        <h3 class="pixsass-icon-box-title">Standard Managers</h3>
-                        <p>
-                            These managers are responsible for posting content given to them by clients.
-                        </p>
-                        <p class="text-left">
-                            These managers are responsible of
-                        </p>
-                        <ul class="smm-list text-left">
-                            <li class="have">Being able to design a social media campaign for their jobs</li>
-                            <li class="have">Creating detailed post descriptions from given content</li>
-                            <li class="have">Engaging in common social media activities(likes, comments, etc.)</li>
-                            <br><br>
-                        </ul>
-                        <a href="#" id="manager-button-1" class="pix-btn btn-two btn-outline" data-toggle="modal"
-                            data-target="#signup-modal">Start Now</a>
+                        <h4>
+                            Our managers are capable of
+                        </h4>
                     </div>
-                </div><!-- /.pixsass-box style-eight -->
-            </div><!-- /.col-lg-4 col-md-6 -->
-
-            <div class="col-lg-4 col-md-6">
-                <div class="saaspik-icon-box-wrapper style-eight">
-                    <div class="saaspik-icon-box-icon">
-                        <img src="{% static 'homepage/img/repost-managers.png' %}" alt="">
-                    </div>
+                </div><!-- /.pixsass-box style-six -->
+                <div class="saaspik-icon-box-wrapper style-six wow pixFadeRight" data-wow-delay="0.4s"
+                    style="visibility: visible; animation-delay: 0.4s; animation-name: pixFadeRight;">
                     <div class="pixsass-icon-box-content">
-                        <h3 class="pixsass-icon-box-title">Reposting Managers</h3>
-
-                        <p>
-                            These Managers are responsible for looking for content out there relevent to the clients and
-                            to create posts.
-                        </p>
-                        <p class="text-left">
-                            These managers are responsible of
-                        </p>
                         <ul class="smm-list text-left">
-                            <li class="have">Being able to design a social media campaign for their jobs</li>
-                            <li class="have">Creating detailed post descriptions from given content</li>
-                            <li class="have">Engaging in common social media activities(likes, comments, etc.)</li>
-                            <li class="have">Sharing content relevant to the client’s business and their niche</li>
+                            <li class="have h3">Being able to design a social media campaign for their jobs</li>
+                            <li class="have h3">Creating detailed post descriptions from given content</li>
+                            <li class="have h3">Engaging in common social media activities(likes, comments, etc.)</li>
+                            <li class="have h3">Sharing content relevant to the client’s business and their niche</li>
                         </ul>
-
-                        <a href="#" id="manager-button-2" class="pix-btn btn-two btn-outline" data-toggle="modal"
-                            data-target="#signup-modal">Start Now</a>
                     </div>
-                </div><!-- /.pixsass-box style-eight -->
-            </div><!-- /.col-lg-4 col-md-6 -->
-
-            <div class="col-lg-4 col-md-6">
-                <div class="saaspik-icon-box-wrapper style-eight">
-                    <div class="saaspik-icon-box-icon">
-                        <img src="{% static 'homepage/img/content-creation.png' %}" alt="">
-                    </div>
-                    <div class="pixsass-icon-box-content">
-                        <h3 class="pixsass-icon-box-title">Content Creation Managers</h3>
-                        <p>
-                            These managers are responsible for creating great quality content and to post it on social
-                            media.
-                        </p>
-                        <p class="text-left">
-                            These managers are responsible of
-                        </p>
-                        <ul class="smm-list text-left">
-                            <li class="have">Being able to design a social media campaign for their jobs</li>
-                            <li class="have">Creating detailed post descriptions from given content</li>
-                            <li class="have">Engaging in common social media activities(likes, comments, etc.)</li>
-                            <li class="have">Creating content related to the client’s business and their niche</li>
-                        </ul>
-
-
-                        <a href="#" id="manager-button-3" class="pix-btn btn-two btn-outline" data-toggle="modal"
-                            data-target="#signup-modal">Start Now</a>
-                    </div>
-                </div><!-- /.pixsass-box style-eight -->
-            </div><!-- /.col-lg-4 col-md-6 -->
+                </div><!-- /.pixsass-box style-six -->
+            </div>
+            <!-- /.col-lg-7 -->
         </div><!-- /.row -->
     </div><!-- /.container -->
 </section>
