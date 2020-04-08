@@ -31,14 +31,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Project Apps
     'homepage.apps.HomepageConfig',
+    'blog.apps.BlogConfig',
+    'dashboard.apps.DashboardConfig',
     'users.apps.UsersConfig',
+    
+    # Django libraries
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +74,7 @@ TEMPLATES = [
         },
     },
 ]
-
+# AUTH_USER_MODEL = 'users.Account'
 WSGI_APPLICATION = 'webapp.wsgi.application'
 
 
@@ -120,3 +126,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+#Email Settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = "confirmemailiblinkco@gmail.com"
+EMAIL_HOST_PASSWORD = "598E,?^r%}UanaW'"

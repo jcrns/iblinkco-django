@@ -1,5 +1,18 @@
 {% block content %}
-<form>
-    <input type="text" name="email" placeholder="Email">
+{% load crispy_forms_tags %}
+<form method="POST" action="{% url 'users-signup' %}">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <!-- Token block needed for added security -->
+    {% csrf_token %}
+    
+    <!-- Imported form.py and is using add on Crispy forms to enhance look-->
+    {{ form_register|crispy }}
+    <input class="btn-success" type="submit" value="Next">
 </form>
 {% endblock %}

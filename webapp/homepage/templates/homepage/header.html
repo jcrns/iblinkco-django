@@ -45,13 +45,16 @@
 
     <!-- Icon -->
     <link rel="shortcut icon" href="{% static 'homepage/img/icon.ico' %}" type="image/x-icon">
+
+            <!-- Jquery -->
+        <script src="https://code.jquery.com/jquery-3.4.0.js" integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="crossorigin="anonymous"></script>
 </head>
 
 <body data-style="default">
     <style>
         .modal-dialog {
             position: absolute;
-            top: 25vh;
+            top: 10vh;
             right: 0;
             bottom: 0;
             left: 0;
@@ -60,7 +63,7 @@
             overflow-y: auto;
         }
 
-        {% if request.path == '/privacy_policy' or request.path == '/terms_and_conditions' or request.path == '/become_a_manager' %}
+        {% if request.path == '/privacy_policy' or request.path == '/terms_and_conditions' or request.path == '/become_a_manager' or request.path == '/blog/' or request.path == '/overview' %}
         .site-header .site-main-menu li > a{
             color: #888888;
         }
@@ -71,6 +74,9 @@
         }
         .link-btn:hover {
             color: #FF8A00
+        }
+        #form-sign-up {
+            overflow: scroll;
         }
     </style>
     <div class="page-loader">
@@ -151,14 +157,21 @@
 
                         <div class="menu-wrapper" data-top="992">
                             <ul class="site-main-menu">
-                                <li><a href="about.html">Blog</a></li>
+                                <li><a href="{% url 'blog-home' %}">Blog</a></li>
                                 <li><a href="{% url 'homepage-become-a-manager' %}">Become a Manager</a></li>
-                                <li><a href="contact.html" data-toggle="modal" data-target="#login-modal">Login</a></li>
+                                {% if user.is_authenticated %}
+                                    <li><a href="{% url 'users-logout' %}">Logout</a></li>
+                                    <li><a id="username-link" href="{% url 'dashboard-overview' %}" class="">Welcome, {{ user.username }} </a></li>
+                                {% else %}
+                                    <li><a class="float-right" href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
+                                {% endif %}
                             </ul>
 
                             <div class="nav-right">
-                                <a href="signup.html" class="nav-btn" data-toggle="modal"
+                                {% if not user.is_authenticated %}
+                                    <a href="signup.html" class="nav-btn" data-toggle="modal"
                                     data-target="#signup-modal">Sign Up</a>
+                                {% endif %}
                             </div>
                         </div>
                         <!-- /.menu-wrapper -->
@@ -259,7 +272,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Sign Up</h5>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="form-sign-up" style="overflow:scroll; height:400px;">
                     {% include "users/signup.html" %}
                     <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#login-modal">Not a member yet? Login now</a>
                 </div>

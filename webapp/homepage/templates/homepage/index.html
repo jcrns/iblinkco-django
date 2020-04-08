@@ -3,30 +3,93 @@
 {% block content %}
 <style>
 	#what-we-offer-icons-1 {
-		min-height: 96px;
-		min-width: 96px;
+		width: 96px;
+		height: 96px;
 	}
+
 	#what-we-offer-icons-2 {
-		min-height: 116px;
-		min-width: 116px;
+		width: 96px;
+		height: 96px;
 	}
+
 	#what-we-offer-icons-3 {
-		min-height: 96px;
-		min-width: 96px;
+		width: 96px;
+		height: 96px;
 	}
+
 	#bottom-get-started {
 		color: #FF8A00;
 	}
+
 	#bottom-get-started:hover {
 		color: #ffffff;
+	}
+
+	@media (max-width: 1600px) {
+		.banner.banner-one .banner-content-wrap {
+			-webkit-transform: translateY(50%);
+			-ms-transform: translateY(50%);
+			transform: translateY(50%);
+		}
+
+		.banner.banner-one .promo-mockup img {
+			max-width: 90%;
+			float: right;
+		}
+	}
+
+	@media (max-width: 1440px) {
+		.banner.banner-one .banner-content-wrap {
+			-webkit-transform: translateY(45%);
+			-ms-transform: translateY(45%);
+			transform: translateY(45%);
+		}
+
+		.banner.banner-one .promo-mockup img {
+			max-width: 90%;
+			float: right;
+		}
+	}
+
+	@media (max-width: 1280px) {
+		.banner.banner-one .banner-content-wrap {
+			-webkit-transform: translateY(45%);
+			-ms-transform: translateY(45%);
+			transform: translateY(45%);
+		}
+	}
+
+	@media (min-width: 991px) and (max-width: 1024px) {
+
+		.banner.banner-one .banner-content-wrap {
+			-webkit-transform: translateY(60%);
+			-ms-transform: translateY(60%);
+			transform: translateY(60%);
+		}
+	}
+
+	@media (max-width: 991px) {
+		.banner.banner-one .banner-content-wrap {
+			-webkit-transform: translateY(20%);
+			-ms-transform: translateY(20%);
+			transform: translateY(20%);
+		}
+	}
+
+	@media (max-width: 768px) {
+
+		.banner.banner-one .banner-content-wrap {
+			-webkit-transform: translateY(20%);
+			-ms-transform: translateY(20%);
+			transform: translateY(20%);
+		}
 	}
 </style>
 <!--==========================-->
 <!--=         Banner         =-->
 <!--==========================-->
-<section class="banner banner-one" style="background-image: -o-linear-gradient(350deg, #FF8A00 0%, #fa9770 100%); background-image: linear-gradient(100deg, #FF8A00 0%, #fa9770 100%);">
-	<div class="circle-shape" data-parallax='{"y" : 230}'><img
-			src="{% static 'homepage/temp-static/media/banner/circle-shape.png' %}" alt="circle"></div>
+<section class="banner banner-one"
+	style="background-image: -o-linear-gradient(350deg, #FF8A00 0%, #fa9770 100%); background-image: linear-gradient(100deg, #FF8A00 0%, #fa9770 100%);">
 	<div class="container">
 		<div class="banner-content-wrap">
 			<div class="row align-items-center">
@@ -34,15 +97,16 @@
 					<div class="banner-content">
 						<h1 class="banner-title wow pixFadeUp" data-wow-delay="0.3s">
 							Connect with <span>Quality
-								Social Media Managers</span> Now
+								Social Media Managers</span> in the blink of an eye
 						</h1>
-						<a href="#" class="pxs-btn banner-btn wow pixFadeUp" data-wow-delay="0.6s" data-toggle="modal" data-target="#signup-modal">Get Started</a>
+						<a href="#" class="pxs-btn banner-btn wow pixFadeUp" data-wow-delay="0.6s" data-toggle="modal"
+							data-target="#signup-modal">Get Started</a>
 					</div><!-- /.banner-content -->
 				</div><!-- /.col-lg-6 -->
 
 				<div class="col-lg-6">
 					<div class="promo-mockup wow pixFadeLeft">
-						<img src="{% static 'homepage/img/small-business.jpg' %}" >
+						<img src="{% static 'homepage/img/small-business.jpg' %}">
 					</div><!-- /.promo-mockup -->
 				</div><!-- /.col-lg-6 -->
 			</div><!-- /.row -->
@@ -71,7 +135,7 @@
 						<img id="what-we-offer-icons-1" src="{% static 'homepage/img/verified.png' %}" alt="">
 					</div>
 					<div class="pixsass-icon-box-content">
-						<h3 class="pixsass-icon-box-title"><a href="#">Assign you verified social media managers to work with</a></h3>
+						<h3 class="pixsass-icon-box-title">Assign you verified social media managers to work with</h3>
 					</div>
 				</div><!-- /.pixsass-box style-one -->
 			</div><!-- /.col-md-4 -->
@@ -82,7 +146,7 @@
 						<img id="what-we-offer-icons-2" src="{% static 'homepage/img/customer-service.png' %}" alt="">
 					</div>
 					<div class="pixsass-icon-box-content">
-						<h3 class="pixsass-icon-box-title"><a href="#">Provide a platform for social media managers to work equitable</a></h3>
+						<h3 class="pixsass-icon-box-title">A platform for social media managers to work equitable</h3>
 					</div>
 				</div><!-- /.pixsass-box style-one -->
 			</div><!-- /.col-md-4 -->
@@ -93,7 +157,8 @@
 						<img id="what-we-offer-icons-3" src="{% static 'homepage/img/growth.png' %}" alt="">
 					</div>
 					<div class="pixsass-icon-box-content">
-						<h3 class="pixsass-icon-box-title"><a href="#">An analytics tool for you to track your growth</a></h3>
+						<h3 class="pixsass-icon-box-title">An analytics tool for you to track your growth on social
+							media</h3>
 					</div>
 				</div><!-- /.pixsass-box style-one -->
 			</div><!-- /.col-md-4 -->
@@ -148,7 +213,8 @@
 		</div><!-- /.row -->
 	</div><!-- /.container -->
 	<div class="shape-bg">
-		<img src="{% static 'homepage/temp-static/media/background/shape_bg.png' %}" class="wow fadeInLeft" alt="shape-bg">
+		<img src="{% static 'homepage/temp-static/media/background/shape_bg.png' %}" class="wow fadeInLeft"
+			alt="shape-bg">
 	</div>
 </section><!-- /.editor-design -->
 
@@ -169,7 +235,8 @@
 					</p>
 				</div><!-- /.section-title style-two -->
 				<p>
-					We enforce an unbiased platform by offering all freelance opportunities to our managers randomly. This ensures that the managers are judged by their content and production only.   
+					We enforce an unbiased platform by offering all freelance opportunities to our managers randomly.
+					This ensures that the managers are judged by their content and production only.
 				</p>
 
 				<a href="{% url 'homepage-become-a-manager' %}" class="pix-btn btn-outline wow pixFadeUp"
@@ -184,8 +251,8 @@
 				</div>
 
 				<div class="image-two" data-parallax='{"y" : -20}'>
-					<img src="{% static 'homepage/img/desk-laptop.jpg' %}" class=" mw-none wow pixFadeDown" data-wow-delay="0.3s"
-						alt="informes">
+					<img src="{% static 'homepage/img/desk-laptop.jpg' %}" class=" mw-none wow pixFadeDown"
+						data-wow-delay="0.3s" alt="informes">
 				</div>
 
 			</div>
@@ -194,7 +261,8 @@
 	</div><!-- /.container -->
 
 	<div class="shape-bg">
-		<img src="{% static 'homepage/temp-static/media/background/shape.png' %}" class="wow fadeInRight" alt="shape-bg">
+		<img src="{% static 'homepage/temp-static/media/background/shape.png' %}" class="wow fadeInRight"
+			alt="shape-bg">
 	</div>
 </section><!-- /.genera-informes -->
 
@@ -214,18 +282,27 @@
 				Find Quality Social Media Managers Today
 			</p>
 
-			<a href="#" id="bottom-get-started" class="pix-btn btn-light" data-toggle="modal" data-target="#signup-modal">Get Started</a>
+			<a href="#" id="bottom-get-started" class="pix-btn btn-light" data-toggle="modal"
+				data-target="#signup-modal">Get Started</a>
 		</div>
 		<!-- /.action-content -->
 	</div>
 	<!-- /.container -->
 
 	<div class="scroll-circle">
-		<img src="{% static 'homepage/temp-static/media/background/circle13.png' %}" data-parallax='{"y" : -130}' alt="circle">
+		<img src="{% static 'homepage/temp-static/media/background/circle13.png' %}" data-parallax='{"y" : -130}'
+			alt="circle">
 	</div>
 	<!-- /.scroll-circle -->
 </section>
 <!-- /.call-to-action -->
-
-
+{% if request.GET.login == 'true' %}
+{% if not user.is_authenticated  %}
+<script>
+	$(window).on('load', function () {
+		$('#login-modal').modal('show');
+	});
+</script>
+{% endif %}
+{% endif %}
 {% endblock %}

@@ -1,3 +1,9 @@
 from django.shortcuts import render
+from .models import BlogPost
 
-# Create your views here.
+# Homepage function
+def home(request):
+    content = {
+        'posts': BlogPost.objects.all()
+    }
+    return render(request, 'blog/blog.html', content)

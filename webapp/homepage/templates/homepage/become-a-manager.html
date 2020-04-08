@@ -8,55 +8,92 @@
 
     /* Butttons */
     #main-start-button {
-        background: #fff; 
-        color:#FF8A00; 
+        background: #fff;
+        color: #FF8A00;
         border: 1px solid #FF8A00;
     }
+
     #main-start-button:hover {
-        background: #FF8A00; 
-        color:#fff; 
+        background: #FF8A00;
+        color: #fff;
         border: 1px solid #FF8A00;
     }
+
     #manager-button-1 {
-        background: #fff; 
-        color:#FF8A00; 
+        background: #fff;
+        color: #FF8A00;
         border: 1px solid #FF8A00;
     }
+
     #manager-button-1:hover {
-        background: #FF8A00; 
-        color:#fff; 
+        background: #FF8A00;
+        color: #fff;
         border: 1px solid #FF8A00;
     }
+
     #manager-button-2 {
-        background: #fff; 
-        color:#FF8A00; 
+        background: #fff;
+        color: #FF8A00;
         border: 1px solid #FF8A00;
     }
+
     #manager-button-2:hover {
-        background: #FF8A00; 
-        color:#fff; 
+        background: #FF8A00;
+        color: #fff;
         border: 1px solid #FF8A00;
     }
+
     #manager-button-3 {
-        background: #fff; 
-        color:#FF8A00; 
+        background: #fff;
+        color: #FF8A00;
         border: 1px solid #FF8A00;
     }
+
     #manager-button-3:hover {
-        background: #FF8A00; 
-        color:#fff; 
+        background: #FF8A00;
+        color: #fff;
         border: 1px solid #FF8A00;
     }
 
     #banner-four {
         height: 820px;
     }
+
     .six-steps-imgs {
         height: 80px;
     }
+
+    /* list style */
+    .smm-list {
+        padding: 0;
+        list-style: none;
+        margin-bottom: 55px;
+    }
+
+    .smm-list li {
+        padding-left: 33px;
+        position: relative;
+        margin-bottom: 12px;
+    }
+
+    .smm-list li:before {
+        font-family: eleganticons;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    .smm-list li.have:before {
+        content: "\4e";
+        color: #1acb44;
+    }
+
+    .smm-list li.not:before {
+        content: "\4d";
+        color: #fa7878;
+    }
 </style>
-<section id="banner-four" class="banner banner-four"
-    style="background-image: -o-linear-gradient(150deg, #ffffff 0%, #ffffff 100%);background-image:
+<section id="banner-four" class="banner banner-four" style="background-image: -o-linear-gradient(150deg, #ffffff 0%, #ffffff 100%);background-image:
     linear-gradient(-60deg, #ffffff 0%, #ffffff 100%);">
     <div class="container">
         <div class="banner-content-wrap-four">
@@ -70,10 +107,10 @@
 
                         <p style="color: #2b2350;" class="description wow pixFadeUp" data-wow-delay="0.5s"
                             style="visibility: visible; animation-delay: 0.5s; animation-name: pixFadeUp;">
-                            Make extra money as a social media manager unbiasly <br> and have jobs guarenteed for you. 
+                            Make extra money as a social media manager unbiasedly <br> and have jobs guarenteed for you.
                         </p>
-                        <a href="#" id="main-start-button" class="pxs-btn banner-btn wow pixFadeUp" data-wow-delay="0.6s" data-toggle="modal"
-                            data-target="#signup-modal"
+                        <a href="#" id="main-start-button" class="pxs-btn banner-btn wow pixFadeUp"
+                            data-wow-delay="0.6s" data-toggle="modal" data-target="#signup-modal"
                             style="visibility: visible; animation-delay: 0.6s; animation-name: pixFadeUp;">Get
                             Started</a>
                     </div><!-- /.banner-content -->
@@ -96,13 +133,15 @@
 <section class="featured-tax">
     <div class="container">
         <div class="section-title style-three text-center">
-            <h3 class="sub-title wow pixFadeUp" style="visibility: visible; animation-name: pixFadeUp;">The Six Steps</h3>
+            <h3 class="sub-title wow pixFadeUp" style="visibility: visible; animation-name: pixFadeUp;">The Six Steps
+            </h3>
             <h2 class="title wow pixFadeUp" data-wow-delay="0.2s"
                 style="visibility: visible; animation-delay: 0.2s; animation-name: pixFadeUp;">Work a New Way
             </h2>
             <p class="wow pixFadeUp" data-wow-delay="0.4s"
                 style="visibility: visible; animation-delay: 0.4s; animation-name: pixFadeUp;">
-                We strive to serve our clients as best we can on social media while providing a unbias platform for managers to work on.
+                We strive to serve our clients as best we can on social media while providing a unbias platform for
+                managers to work on.
             </p>
         </div><!-- /.section-title -->
         <div class="row">
@@ -110,12 +149,14 @@
                 <div class="saaspik-icon-box-wrapper style-nine wow pixFadeRight text-center" data-wow-delay="0.4s"
                     style="visibility: visible; animation-delay: 0.4s; animation-name: pixFadeRight;">
                     <div class="text-center">
-                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/validation.png' %}" alt="feature">
+                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/validation.png' %}"
+                            alt="feature">
                     </div>
                     <div class="pixsass-icon-box-content">
                         <h3 class="pixsass-icon-box-title">Verification</h3>
                         <p>
-                            The verification process is it to ensure the quality of the social media managers on our platform.  
+                            The verification process is it to ensure the quality of the social media managers on our
+                            platform.
                         </p>
                     </div>
                 </div><!-- /.pixsass-box style-nine -->
@@ -125,13 +166,15 @@
                 <div class="saaspik-icon-box-wrapper style-nine wow pixFadeRight text-center" data-wow-delay="0.5s"
                     style="visibility: visible; animation-delay: 0.5s; animation-name: pixFadeRight;">
                     <div class="text-center color-two">
-                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/assigned.png' %}" alt="feature">
+                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/assigned.png' %}"
+                            alt="feature">
                     </div>
                     <div class="pixsass-icon-box-content">
                         <h3 class="pixsass-icon-box-title">Randomly Assigned</h3>
 
                         <p>
-                            We try to make our platform as unbiased as possible. There are some exeptions, such as when we pair our clients with managers to fulfil their certain needs.
+                            We try to make our platform as unbiased as possible. There are some exeptions, such as when
+                            we pair our clients with managers to fulfil their certain needs.
                         </p>
                     </div>
                 </div><!-- /.pixsass-box style-nine -->
@@ -141,26 +184,30 @@
                 <div class="saaspik-icon-box-wrapper style-nine wow pixFadeRight text-center" data-wow-delay="0.6s"
                     style="visibility: visible; animation-delay: 0.6s; animation-name: pixFadeRight;">
                     <div class="text-center color-three">
-                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/management.png' %}" alt="feature">
+                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/management.png' %}"
+                            alt="feature">
                     </div>
                     <div class="pixsass-icon-box-content">
                         <h3 class="pixsass-icon-box-title">Management</h3>
                         <p>
-                            Knowing when to commit certain actions such as comments, likes, etc on social media is essential to become successful as a social media manager. 
+                            Knowing when to commit certain actions such as comments, likes, etc on social media is
+                            essential to become successful as a social media manager.
                         </p>
                     </div>
                 </div><!-- /.pixsass-box style-nine -->
             </div><!-- /.col-lg-4 col-md-6 -->
-                        <div class="col-lg-4 col-md-4">
+            <div class="col-lg-4 col-md-4">
                 <div class="saaspik-icon-box-wrapper style-nine wow pixFadeRight text-center" data-wow-delay="0.4s"
                     style="visibility: visible; animation-delay: 0.4s; animation-name: pixFadeRight;">
                     <div class="text-center">
-                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/milestone.png' %}" alt="feature">
+                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/milestone.png' %}"
+                            alt="feature">
                     </div>
                     <div class="pixsass-icon-box-content">
                         <h3 class="pixsass-icon-box-title">Hit Milestones During Jobs</h3>
                         <p>
-                            Every job will have milestones. The number of milestones varies by the size of the job. Clients will be presented the work done when each milestone is completed.
+                            Every job will have milestones. The number of milestones varies by the size of the job.
+                            Clients will be presented the work done when each milestone is completed.
                         </p>
                     </div>
                 </div><!-- /.pixsass-box style-nine -->
@@ -170,13 +217,15 @@
                 <div class="saaspik-icon-box-wrapper style-nine wow pixFadeRight text-center" data-wow-delay="0.5s"
                     style="visibility: visible; animation-delay: 0.5s; animation-name: pixFadeRight;">
                     <div class="text-center color-two">
-                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/communication.png' %}" alt="feature">
+                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/communication.png' %}"
+                            alt="feature">
                     </div>
                     <div class="pixsass-icon-box-content">
                         <h3 class="pixsass-icon-box-title">Be available for clients</h3>
 
                         <p>
-                            We encourage you to accept jobs where you can be available for your client during the duration of the job.
+                            We encourage you to accept jobs where you can be available for your client during the
+                            duration of the job.
                         </p>
                     </div>
                 </div><!-- /.pixsass-box style-nine -->
@@ -186,12 +235,14 @@
                 <div class="saaspik-icon-box-wrapper style-nine wow pixFadeRight text-center" data-wow-delay="0.6s"
                     style="visibility: visible; animation-delay: 0.6s; animation-name: pixFadeRight;">
                     <div class="text-center color-three">
-                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/money.png' %}" alt="feature">
+                        <img class="six-steps-imgs" src="{% static 'homepage/img/become-a-manager/money.png' %}"
+                            alt="feature">
                     </div>
                     <div class="pixsass-icon-box-content">
                         <h3 class="pixsass-icon-box-title">Make it Rain</h3>
                         <p>
-                            Managers are paid when each milestone is completed. Managers are paid more over time as they gain more experience on our platform.
+                            Managers are paid when each milestone is completed. Managers are paid more over time as they
+                            gain more experience on our platform.
                         </p>
                     </div>
                 </div><!-- /.pixsass-box style-nine -->
@@ -205,6 +256,7 @@
             style="visibility: visible; animation-delay: 0.3s; animation-name: pixFadeUp;">
             Join Our Community Of Managers
         </h2>
+    </div>
     <div class="container">
         <div class="section-title style-two title-light text-center">
         </div><!-- /.section-title -->
@@ -216,12 +268,21 @@
                         <img src="{% static 'homepage/img/regular-managers.png' %}" alt="">
                     </div>
                     <div class="pixsass-icon-box-content">
-                        <h3 class="pixsass-icon-box-title"><a href="#">Regular Managers</a></h3>
+                        <h3 class="pixsass-icon-box-title">Standard Managers</h3>
                         <p>
                             These managers are responsible for posting content given to them by clients.
                         </p>
-
-                        <a href="#" id="manager-button-1" class="pix-btn btn-two btn-outline">Start Now</a>
+                        <p class="text-left">
+                            These managers are responsible of
+                        </p>
+                        <ul class="smm-list text-left">
+                            <li class="have">Being able to design a social media campaign for their jobs</li>
+                            <li class="have">Creating detailed post descriptions from given content</li>
+                            <li class="have">Engaging in common social media activities(likes, comments, etc.)</li>
+                            <br><br>
+                        </ul>
+                        <a href="#" id="manager-button-1" class="pix-btn btn-two btn-outline" data-toggle="modal"
+                            data-target="#signup-modal">Start Now</a>
                     </div>
                 </div><!-- /.pixsass-box style-eight -->
             </div><!-- /.col-lg-4 col-md-6 -->
@@ -232,13 +293,24 @@
                         <img src="{% static 'homepage/img/repost-managers.png' %}" alt="">
                     </div>
                     <div class="pixsass-icon-box-content">
-                        <h3 class="pixsass-icon-box-title"><a href="#">Reposting Managers</a></h3>
+                        <h3 class="pixsass-icon-box-title">Reposting Managers</h3>
 
                         <p>
-                            These Managers are responsible for looking for content out there relevent to the clients and to create posts.
+                            These Managers are responsible for looking for content out there relevent to the clients and
+                            to create posts.
                         </p>
+                        <p class="text-left">
+                            These managers are responsible of
+                        </p>
+                        <ul class="smm-list text-left">
+                            <li class="have">Being able to design a social media campaign for their jobs</li>
+                            <li class="have">Creating detailed post descriptions from given content</li>
+                            <li class="have">Engaging in common social media activities(likes, comments, etc.)</li>
+                            <li class="have">Sharing content relevant to the client’s business and their niche</li>
+                        </ul>
 
-                        <a href="#" id="manager-button-2" class="pix-btn btn-two btn-outline">Start Now</a>
+                        <a href="#" id="manager-button-2" class="pix-btn btn-two btn-outline" data-toggle="modal"
+                            data-target="#signup-modal">Start Now</a>
                     </div>
                 </div><!-- /.pixsass-box style-eight -->
             </div><!-- /.col-lg-4 col-md-6 -->
@@ -249,12 +321,24 @@
                         <img src="{% static 'homepage/img/content-creation.png' %}" alt="">
                     </div>
                     <div class="pixsass-icon-box-content">
-                        <h3 class="pixsass-icon-box-title"><a href="#">Content Creation Managers</a></h3>
+                        <h3 class="pixsass-icon-box-title">Content Creation Managers</h3>
                         <p>
-                            These managers are responsible for creating great quality content and to post it on social media.
+                            These managers are responsible for creating great quality content and to post it on social
+                            media.
                         </p>
+                        <p class="text-left">
+                            These managers are responsible of
+                        </p>
+                        <ul class="smm-list text-left">
+                            <li class="have">Being able to design a social media campaign for their jobs</li>
+                            <li class="have">Creating detailed post descriptions from given content</li>
+                            <li class="have">Engaging in common social media activities(likes, comments, etc.)</li>
+                            <li class="have">Creating content related to the client’s business and their niche</li>
+                        </ul>
 
-                        <a href="#" id="manager-button-3" class="pix-btn btn-two btn-outline">Start Now</a>
+
+                        <a href="#" id="manager-button-3" class="pix-btn btn-two btn-outline" data-toggle="modal"
+                            data-target="#signup-modal">Start Now</a>
                     </div>
                 </div><!-- /.pixsass-box style-eight -->
             </div><!-- /.col-lg-4 col-md-6 -->
