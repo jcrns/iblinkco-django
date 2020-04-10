@@ -8,7 +8,7 @@ urlpatterns = [
     path('signup', views.registerFunc, name='users-signup'),
     path('login', views.loginFunc, name='users-login'),
     path('logout', views.logoutFunc, name='users-logout'),
+
     # Profile functions
     path('confirm_user', views.comfirmUser, name='users-confirm-user-type'),
-
 ]

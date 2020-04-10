@@ -63,9 +63,16 @@
             overflow-y: auto;
         }
 
-        {% if request.path == '/privacy_policy' or request.path == '/terms_and_conditions' or request.path == '/become_a_manager' or request.path == '/blog/' or request.path == '/overview' %}
+        {% if request.path == '/privacy_policy' or request.path == '/terms_and_conditions' or request.path == '/become_a_manager' or request.path == '/blog/' or request.path == '/overview' or request.path == '/dashboard' %}
         .site-header .site-main-menu li > a{
             color: #888888;
+        }
+        header {
+            border-bottom: 0.3px solid rgb(200, 200, 200);
+            background-color: #fff;
+        }
+        .toggle-menu .bar {
+            background: #000;
         }
         {% endif %}
 
@@ -129,8 +136,10 @@
                                      <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
                                     class="main-logo">
                                 {% endif %}
-                            <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
+                                {% if request.path != '/dashboard' %}
+                                <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
                                 class="sticky-logo">
+                                {% endif %}
                         </a>
                     </div>
 
@@ -161,7 +170,7 @@
                                 <li><a href="{% url 'homepage-become-a-manager' %}">Become a Manager</a></li>
                                 {% if user.is_authenticated %}
                                     <li><a href="{% url 'users-logout' %}">Logout</a></li>
-                                    <li><a id="username-link" href="{% url 'dashboard-overview' %}" class="">Welcome, {{ user.username }} </a></li>
+                                    <li><a id="username-link" href="{% url 'homepage-overview' %}" class="">Welcome, {{ user.username }} </a></li>
                                 {% else %}
                                     <li><a class="float-right" href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
                                 {% endif %}
@@ -295,7 +304,11 @@
     <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDk2HrmqE4sWSei0XdKGbOMOHN3Mm2Bf-M&#038;ver=2.1.6'></script>
 
     <!-- Site Scripts -->
-    <script src="{% static 'homepage/temp-static/assets/js/header.js' %}"></script>
+    {% if request.path != '/dashboard' %}
+        <script src="{% static 'homepage/temp-static/assets/js/header.js' %}"></script>
+    {% else %}
+        <script src="{% static 'homepage/temp-static/assets/js/header2.js' %}"></script>
+    {% endif %}
     <script src="{% static 'homepage/temp-static/assets/js/app.js' %}"></script>
 </body>
 </html>

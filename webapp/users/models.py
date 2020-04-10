@@ -1,66 +1,40 @@
 from django.db import models
 from django.contrib.auth.models import User
+from PIL import Image
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
+    # Personal data
+    first_name = models.CharField(max_length=60, default='none')
+    last_name = models.CharField(max_length=60, default='none')
+    language = models.CharField(max_length=60, default='none')
+    date_of_birth = models.DateTimeField(verbose_name='date of birth', auto_now_add=True)
+
+    # type of profile
     is_manager = models.BooleanField(default=False)
     is_client = models.BooleanField(default=False)
 
+    # Business data 
+    business_name = models.CharField(max_length=60, default='none')
+    business_type = models.CharField(max_length=60, default='none')
+    business_description = models.TextField(max_length=350, default='none')
+
+    # Other information
+    date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
+    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
     def __str__(self):
         return f'{self.user.username} Profile'
-# from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-# #User Accounts
-# class MyAcccountManager(BaseUserManager):
-#     def create_user(self, email, username, password=None):
-#         if not email:
-#             raise ValueError("Users most have an email")
-#         if not username:
-#             raise ValueError("Users most have a username")
-#         user = self.model(
-#             email = self.normalize_email(email),
-#             username=username,
-#         )
-#         user.set_password(password)
-#         user.save(using=self._db)
-#         return user
-    
-#     def create_superuser(self, email, username, password):
-#         user = self.model(
-#             email = self.normalize_email(email),
-#             password=password,
-#             username=username,
-#         )
-#         user.is_admin = True
-#         user.is_staff = True
-#         user.is_superuser = True
-#         user.save(using=self._db)
-#         return user
-# # Account paramaters
-# class account(AbstractBaseUser):
-#     email = models.EmailField(verbose_name='email', max_length=60, unique=True)
-#     username = models.CharField(max_length=60, unique=True)
-#     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
-#     last_login = models.DateTimeField(verbose_name='last login', auto_now_add=True)
-#     is_admin = models.BooleanField(default=False)
-#     is_active = models.BooleanField(default=True)
-#     is_staff = models.BooleanField(default=False)
-#     is_superuser = models.BooleanField(default=False)
-#     is_manager = models.BooleanField(default=False)
-#     is_client = models.BooleanField(default=False)
+    # def save(self, *args, **kwargs):
+    #     super().save()
 
-#     USERNAME_FIELD = "email"
-#     REQUIRED_FIELDS = ["username",]
+    #     # Getting img
+    #     img = Image.open(self.image.path)
 
-#     def __str__(self):
-#         return self.username
-
-#     objects = MyAcccountManager()
-
-#     def has_perm(self, perm, obj=None):
-#         return self.is_admin
-
-#     def has_module_perms(self, app_label):
-#         return True
-
+    #     # Resizing img
+    #     if img.height > 300 or img.width > 300:
+    #         output_size = (300, 300)
+    #         img.thumbnail(output_size)
+    #         img.save(self.image.path)

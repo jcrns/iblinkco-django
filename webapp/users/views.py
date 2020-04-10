@@ -3,9 +3,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 
 # importing User Registeraton Form
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, ProfileUpdateForm
 
-# importing User Registeraton Form
+# Importing User Registeraton Form
 from .models import Profile
 
 # Importing login func from django
@@ -24,12 +24,13 @@ from django.core.mail import EmailMessage
 from django.urls import reverse
 from urllib.parse import urlencode
 
-from django.shortcuts import get_object_or_404
+# Importing lib to get specific objects
+# from django.shortcuts import get_object_or_404
 
 # Registering new user
 def registerFunc(request):
     if request.method == 'POST':
-        form = UserRegisterForm(request.POST)
+        form = UserRegisterForm(data=request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -70,7 +71,7 @@ def loginFunc(request):
                 return redirect(request.POST.get("next"))
             else:
                 return redirect('homepage-home')
-            return redirect('homepage-home')
+            return redirect('dashboard-home')
         else:
             # Redirecting to signup screen
             messages.warning(request, f'There was a problem logging in your account')
@@ -93,17 +94,33 @@ def comfirmUser(request):
     if request.method == 'POST':
 
         managerOrClient = request.POST.get("if-manager-or-client")
-        
-        print(managerOrClient)
-        profile = get_object_or_404(Profile, user=request.user)
-        if managerOrClient == True:
+
+        # Getting user
+        profile = request.user.profile
+
+        # If Client
+        if managerOrClient == 'True':
+            # Changing value of manager type
             profile.is_manager = False
             profile.is_client = True
+
+            # Saving value in db
+            profile.save(update_fields=["is_manager", "is_client"])
+
+            # Redirecting 
+            return redirect('service-complete-profile')
+        # If Manager
         else:
+            # Changing value of manager type
             profile.is_manager = True
             profile.is_client = False
-        
-        profile.save(update_fields=["is_manager", "is_client"]) 
+
+            # Saving value in db
+            profile.save(update_fields=["is_manager", "is_client"]) 
+
+            # Redirecting 
+            return redirect('service-job')
+
         
         return redirect('homepage-home')
 

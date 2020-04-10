@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'blog.apps.BlogConfig',
     'dashboard.apps.DashboardConfig',
     'users.apps.UsersConfig',
+    'service.apps.ServiceConfig',
     
     # Django libraries
     'django.contrib.admin',
