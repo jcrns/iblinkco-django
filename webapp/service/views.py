@@ -30,6 +30,9 @@ def completeProfile(request):
             profile.user = request.user
             profile.save()
             return redirect('dashboard-home')
+        else:
+            print(form.errors)
+            return redirect('service-complete-profile')
     # Defining form and user
     form = ProfileUpdateForm
     user = request.user

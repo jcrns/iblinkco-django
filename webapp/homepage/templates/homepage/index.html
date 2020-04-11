@@ -297,12 +297,21 @@
 </section>
 <!-- /.call-to-action -->
 {% if request.GET.login == 'true' %}
-{% if not user.is_authenticated  %}
-<script>
-	$(window).on('load', function () {
-		$('#login-modal').modal('show');
-	});
-</script>
+	{% if not user.is_authenticated  %}
+	<script>
+		$(window).on('load', function () {
+			$('#login-modal').modal('show');
+		});
+	</script>
+	{% endif %}
 {% endif %}
+{% if request.GET.signup == 'true' %}
+	{% if not user.is_authenticated  %}
+		<script>
+			$(window).on('load', function () {
+				$('#signup-modal').modal('show');
+			});
+		</script>
+	{% endif %}
 {% endif %}
 {% endblock %}

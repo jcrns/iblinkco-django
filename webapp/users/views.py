@@ -30,8 +30,9 @@ from urllib.parse import urlencode
 # Registering new user
 def registerFunc(request):
     if request.method == 'POST':
-        form = UserRegisterForm(data=request.POST)
+        form = UserRegisterForm(request.POST)
         if form.is_valid():
+            print('fwenfowirearfiu')
             form.save()
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
@@ -48,7 +49,7 @@ def registerFunc(request):
             url = createUrl('login')
             return redirect(url)
         else:
-            messages.warning(request, f'There was a problem creating your account')
+            messages.warning(request, form)
 
             # Redirecting to signup screen
             url = createUrl('signup')
