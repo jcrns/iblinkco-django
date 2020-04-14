@@ -2,20 +2,20 @@
 {% load static %}
 {% block content %}
 <style>
-
     .client {
         padding: 130px 0;
         background-color: #F5F5F5;
         width: 100%;
     }
+
     .dashboard-card {
         background-color: #fff;
-        border: 0.5px solid rgba(0,0,0,.125);
-        min-height: 300px;
-        max-height: 400px;
-        padding:10px;
+        border: 0.5px solid rgba(0, 0, 0, .125);
+        width: 100%;
+        padding: 10px;
         margin: 10px;
     }
+
     .bottom-link {
         width: 30px;
         height: 30px;
@@ -23,30 +23,39 @@
         bottom: 1px;
         right: 5px;
     }
+
     #no-job {
         padding-top: 50px;
     }
+
     .container-fluid h3 {
         padding: 10px;
     }
+
     #profile-pic {
         width: 150px;
         height: 150px;
 
     }
+
     #past-orders {
         position: relative;
-        overflow-y:auto;
+        overflow-y: auto;
     }
+
     #profile-row {
         height: 100%;
     }
+
     #profile {
         height: 100%;
     }
+
     #business-name {
         padding: 10px;
+        color: #000;
     }
+
     .modal-dialog {
         position: absolute;
         top: 20vh;
@@ -57,39 +66,108 @@
         overflow: auto;
         overflow-y: auto;
     }
+
+    .post-row {
+        cursor: pointer;
+    }
+
+    /* Current jobs */
+    #current-jobs .card-body p.h5 {
+        font-size: 1.35rem;
+    }
+
+    #current-jobs .card-body p.h2 {
+        font-size: 2rem;
+        color: #343a40;
+    }
+    #pay-button {
+        width: 100px;
+    }
 </style>
 <div class="client">
     <div class="container-fluid">
         <h3 class="m-0 text-dark">Management Dashboard</h3>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 d-flex align-items-stretch">
                 <div class="card dashboard-card" id="current-jobs">
                     <div class="card-body">
-                        <h5 class="card-title">Current Jobs</h5>
+                        <h5 class="card-title">
+                            {% if current_job %}
+                                {% for job in current_job %}
+                                    {% if job.manager %}
+                                        Current Job
+                                    {% else %}
+                                        Posted Job
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                Current Job
+                            {% endif %}
+                        </h5>
                         {% if current_job %}
+                        <div class="current-job text-center">
+                            {% for job in current_job %}
+                            {% if job.manager %}
+                            <p class="h5">{{ job.manager }}</p>
+                            {% else %}
+                            <p class="h5">Job not assigned yet</p>
+                            {% endif %}
+
+                            <p class="h2">
+                                {% if job.captions == True %}
+                                Create Captions
+                                {% endif %}
+                                {% if job.captions == True and job.search_for_content == True %}
+                                and
+                                {% endif %}
+                                {% if job.search_for_content == True %}
+                                Look for content
+                                {% endif %}
+                            </p>
+                            <p class="h6">For
+                                {% if job.facebook == True %}
+                                {{ job.instagram_username }} (Facebook)
+                                {% endif %}
+                                {% if job.facebook == True and job.instagram == True %}
+                                and
+                                {% endif %}
+                                {% if job.instagram == True %}
+                                {{ job.instagram_username }} (Instagram) 
+                                {% endif %}
+                            </p>
+                                {% if job.paid is not True %}
+                                    <a href="#" id="pay-button" class="btn btn-primary">Pay</a>
+                                {% endif %}
+                            
+                            <a href="{% url 'dashboard-job-detail' job.id %}" class="btn btn-success">Details</a>
+
+                            {% endfor %}
+                        </div>
                         {% else %}
                         <div id="no-job" class="text-center">
-                            <h3 class="text-secondary">There aren't any current jobs</h3>
-                            <a href="{% url 'service-job' %}" class="btn btn-primary">Post a Job</a>
+                            <h3 class="text-secondary">No jobs available</h3>
+                            <a href="{% url 'service-job-select' %}" class="btn btn-primary">Post a Job</a>
                         </div>
                         {% endif %}
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 card">
+            <div class="col-md-6 card d-flex align-items-stretch">
                 <div class="card dashboard-card" id="profile">
                     <div class="card-body">
                         <div class="row" id="profile-row">
                             <div class="col-3 text-center">
                                 <img id="profile-pic" class="float-center" src="{{ user.profile.image.url }}" alt="">
-                                <h4 id="business-name" class="font-weight-bold">{{ user.profile.business_name }}</h4>
-                                <h6 id="business-type" class="font-weight-bold">{{ user.profile.business_type }}</h6>
+                                <p id="business-name" class="font-weight-bold">{{ user.profile.business_name }}</p>
+                                <p id="business-type" class="font-weight-bold">{{ user.profile.business_type }}</p>
                             </div>
                             <div id="profile-description-div" class="col-9 text-right">
                                 <h5>{{ user.email }}</h5>
                                 <p>{{ user.profile.business_description }}</p>
-                                <p id="profile-language" class="text-weight-bold">Language: {{ user.profile.language }}</p>
-                                <a href="#" data-toggle="modal" data-target="#update-profile"><img class="bottom-link" src="{% static 'homepage/img/edit-icon.png' %}" alt=""></a>
+                                <p id="profile-language" class="text-weight-bold">Language: {{ user.profile.language }}
+                                </p>
+                                <a href="#" data-toggle="modal" data-target="#update-profile"><img class="bottom-link"
+                                        src="{% static 'homepage/img/edit-icon.png' %}" alt=""></a>
                             </div>
                         </div>
                     </div>
@@ -97,7 +175,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6 d-flex align-items-stretch">
                 <div class="card dashboard-card" id="past-orders">
                     <div class="card-body">
                         <h5 class="card-title">Past Orders</h5>
@@ -105,47 +183,67 @@
                             <table class="table table-striped table-valign-middle">
                                 <thead>
                                     <tr>
-                                        <th>Order</th>
+                                        <th>Services</th>
                                         <th>Price</th>
                                         <th>Manager</th>
                                         <th>Length</th>
+                                        <th>More</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for order in orders %}
-                                        <tr>
-                                            <td>
-                                                {{ order.name }}
-                                            </td>
-                                            <td>
-                                                {{ order.price }} USD
-                                            </td>
-                                            <td>
-                                                {{ order.manager }}
-                                            </td>
-                                            <td>
-                                                {{ order.length }}
-                                            </td>
-                                        </tr>
+                                    {% for order in past_orders %}
+                                    <tr class="post-row" onclick='window.location="job-details/{{ order.id  }}";'>
+                                        <td>
+                                            {% if order.captions == True %}
+                                            Created Captions
+                                            {% endif %}
+                                            {% if order.captions == True and order.search_for_content == True %}
+                                            ,
+                                            {% endif %}
+                                            {% if order.search_for_content == True %}
+                                            Looked for content
+                                            {% endif %}
+
+                                        </td>
+                                        <td>
+                                            {{ order.price_paid }} USD
+                                        </td>
+                                        <td>
+                                            {{ order.manager }}
+                                        </td>
+                                        <td>
+                                            {{ order.length }} Days
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'dashboard-job-detail' order.id %}"><img
+                                                    src="{% static 'homepage/img/expand-icon.png' %}" alt=""></a>
+                                        </td>
+                                    </tr>
                                     {% endfor %}
-                                    {% if order is None %}
-                                        
-                                    {% endif %}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 card">
+            <div class="col-md-6 card d-flex align-items-stretch">
                 <div class="card dashboard-card" id="profile">
                     <div class="card-body">
                         <h5 class="card-title">Social Media Analytics tool</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Connect your social media accounts and recieve instant feedback</h6>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                            card's
-                            content.</p>
-                        <a href="#" class="card-link view-link-all">Edit</a>
+                        <h6 class="card-subtitle mb-2 text-muted">Connect your social media accounts and recieve instant
+                            feedback</h6>
+                        <div class="row justify-content-between">
+                            <div class="col-6">
+                                The original iBlinkco Dashboard gives you tips to help maximize your presence on social
+                                media, shows your competition in your
+                                area as a business, and we give you data on your followers.
+                            </div>
+                            <div class="col-3 text-center">
+                                <img src="{% static 'homepage/img/old-platform-icon.png' %}">
+                                <p class="text-center"><a class="btn btn-outline-primary" target="_blank"
+                                        href="https://www.iblinkco.com/#">Start Now</a></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

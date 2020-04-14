@@ -63,7 +63,8 @@
             overflow-y: auto;
         }
 
-        {% if request.path == '/privacy_policy' or request.path == '/terms_and_conditions' or request.path == '/become_a_manager' or request.path == '/blog/' or request.path == '/overview' or request.path == '/dashboard' %}
+        {# if request.path == '/privacy_policy' or request.path == '/terms_and_conditions' or request.path == '/become_a_manager' or request.path == '/blog/' or request.path == '/overview' or request.path == '/dashboard' #}
+        {% if nav_black_link == True %}
         .site-header .site-main-menu li > a{
             color: #888888;
         }
@@ -136,10 +137,7 @@
                                      <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
                                     class="main-logo">
                                 {% endif %}
-                                {% if request.path != '/dashboard' %}
-                                <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
-                                class="sticky-logo">
-                                {% endif %}
+
                         </a>
                     </div>
 
@@ -167,7 +165,11 @@
                         <div class="menu-wrapper" data-top="992">
                             <ul class="site-main-menu">
                                 <li><a href="{% url 'blog-home' %}">Blog</a></li>
-                                <li><a href="{% url 'homepage-become-a-manager' %}">Become a Manager</a></li>
+                                {% if user.profile.is_client %}
+                                    <li><a href="{% url 'service-job' %}">Post a Job</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'homepage-become-a-manager' %}">Become a Manager</a></li>
+                                {% endif %}
                                 {% if user.is_authenticated %}
                                     <li><a href="{% url 'users-logout' %}">Logout</a></li>
                                     <li><a id="username-link" href="{% url 'homepage-overview' %}" class="">Welcome, {{ user.username }} </a></li>
@@ -269,7 +271,7 @@
                 </div>
                 <div class="modal-body">
                     {% include "users/login.html" %}
-                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#signup-modal">Already a member? Sign In</a>
+                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#signup-modal">Not a member yet? Sign Up</a>
                 </div>
             </div>
         </div>
@@ -283,11 +285,12 @@
                 </div>
                 <div class="modal-body" id="form-sign-up" style="overflow:scroll; height:400px;">
                     {% include "users/signup.html" %}
-                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#login-modal">Not a member yet? Login now</a>
+                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#login-modal">Already a member? Login now</a>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Dependency Scripts -->
     <script src="{% static 'homepage/temp-static/dependencies/popper.js/popper.min.js' %}"></script>
     <script src="{% static 'homepage/temp-static/dependencies/jquery/jquery.min.js' %}"></script>
@@ -304,10 +307,10 @@
     <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDk2HrmqE4sWSei0XdKGbOMOHN3Mm2Bf-M&#038;ver=2.1.6'></script>
 
     <!-- Site Scripts -->
-    {% if request.path != '/dashboard' %}
-        <script src="{% static 'homepage/temp-static/assets/js/header.js' %}"></script>
-    {% else %}
+    {% if static_header %}
         <script src="{% static 'homepage/temp-static/assets/js/header2.js' %}"></script>
+    {% else %}
+        <script src="{% static 'homepage/temp-static/assets/js/header.js' %}"></script>
     {% endif %}
     <script src="{% static 'homepage/temp-static/assets/js/app.js' %}"></script>
 </body>

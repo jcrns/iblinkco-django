@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 
 from django.http import HttpResponseRedirect
 
@@ -71,8 +71,7 @@ def loginFunc(request):
             if 'next' in request.POST:
                 return redirect(request.POST.get("next"))
             else:
-                return redirect('homepage-home')
-            return redirect('dashboard-home')
+                return redirect('dashboard-home')
         else:
             # Redirecting to signup screen
             messages.warning(request, f'There was a problem logging in your account')
@@ -86,7 +85,7 @@ def loginFunc(request):
 def logoutFunc(request):
     # user = request.user
     logout(request)
-    return redirect('homepage-home')
+    return redirect('dashboard-home')
 
 # PROFILE FUNC
 

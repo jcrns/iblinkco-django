@@ -1,0 +1,266 @@
+{% extends 'homepage/header.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .job {
+        padding: 130px 0;
+        background-color: #F5F5F5;
+        width: 100%;
+    }
+
+    .job-card {
+        background-color: #fff;
+        border: 0.5px solid rgba(0, 0, 0, .125);
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 10px;
+        margin: 10px;
+        min-height: 300px;
+    }
+
+    .bottom-link {
+        margin-top: 5px;
+        width: 30px;
+        height: 30px;
+    }
+
+    #milestone-bar {
+        height: 20px;
+    }
+
+    .detail-btn {
+        width: 100px;
+    }
+
+    #instagram-pic {
+        width: 40px;
+        height: 40px;
+    }
+
+    #without-manager {
+        margin-top: 60px;
+    }
+
+    .card .card-body p {
+        font-size: 16px;
+        margin-bottom: 1rem;
+    }
+
+    #submit-button {
+        width: 100px;
+    }
+</style>
+<div class="job">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 d-flex align-items-stretch">
+                <div class="card job-card">
+                    <div class="card-body">
+                        <h3>Job Details</h3>
+                        <p class="h5">
+                            Services:
+                            {% if order.captions == True %}
+                            Created Captions
+                            {% endif %}
+                            {% if order.captions == True and order.search_for_content == True %}
+                            ,
+                            {% endif %}
+                            {% if order.search_for_content == True %}
+                            Looked for content
+                            {% endif %}
+                        </p>
+                        <p class="h5">
+                            Job Duration: {{ order.length }}
+                        </p>
+                        <p class="h5">
+                            Number of Posts:
+                            {{ order.number_of_post }}
+                        </p>
+                        <p class="h5">
+                            {% if order.paid %}
+                            Price Paid: ${{ order.price_paid }}
+                            {% endif %}
+                        </p>
+                        <p class="h5">
+                            Platforms:
+                            {% if order.instagram == True %}
+                            Instagram({{ order.instagram_username }})
+                            {% endif %}
+                            {% if order.instagram == True and order.facebook == True%}
+                            ,
+                            {% endif %}
+                            {% if order.facebook == True %}
+                            Facebook({{ order.facebook_username }})
+                            {% endif %}
+                        </p>
+                        <p>
+                            {% if order.instagram == True %}
+                            <img id="instagram-pic" src="{% static 'homepage/img/instagram.png' %}">
+                            {% endif %}
+                            {% if order.instagram == True and order.facebook == True%}
+                            ,
+                            {% endif %}
+                            {% if order.facebook == True %}
+                            <img src="{% static 'homepage/img/facebook.png' %}">
+                            {% endif %}
+                        </p>
+                        <p class="h5">
+                            Job Complete:
+                            {% if order.job_complete == True %}
+                            Yes
+                            {% else %}
+                            No
+                            {% endif %}
+                        </p>
+                        {% if order.job_complete == False %}
+                        <p>
+                            <a href="#" class="detail-btn btn btn-outline-danger" data-toggle="modal"
+                                data-target="#cancel-modal">Cancel</a>
+                            <a href="#" class="detail-btn btn btn-outline-primary">Pay</a>
+                            <span class="float-right"><a href="#" data-toggle="modal"
+                                    data-target="#update-job-modal"><img src="{% static 'homepage/img/edit-icon.png' %}"
+                                        class="bottom-link"></a></span>
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex align-items-stretch">
+                <div class="card job-card">
+                    <div class="card-body">
+                        {% if order.manager %}
+                        <div class="row">
+                            <div class="col-3 text-center">
+                                <img id="profile-pic" class="float-center" src="{{ manager_profile.profile.image.url }}"
+                                    alt="">
+                                <p id="business-name" class="font-weight-bold">
+                                    {{ manager_profile.profile.business_name }}</p>
+                                <p id="business-type" class="font-weight-bold">
+                                    {{ manager_profile.profile.business_type }}</p>
+                            </div>
+                            <div id="profile-description-div" class="col-9 text-right">
+                                <h5>{{ manager_profile.email }}</h5>
+                                <p>{{ manager_profile.profile.business_description }}</p>
+                                <p id="profile-language" class="text-weight-bold">Language:
+                                    {{ manager_profile.profile.language }}
+                                </p>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div id="without-manager" class="text-center">
+                            <h1>Manager has yet <br> to be assigned</h1>
+                            <p>Want select a custom manager? Browse our selection of managers</p>
+                            <small>Browsing will cost an extra fee</small>
+                            <p><a href="#" class="btn btn-outline-success" data-toggle="modal"
+                                    data-target="#browse-modal">Browse Now</a></p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card job-card">
+                    <div class="card-body">
+                        <h3>Milestones</h3>
+                        <p><span class="font-weight-bold">Milestone 1 Statement:</span>
+                            {{ order.milestone_one_statement }}
+                        </p>
+                        <p><span class="font-weight-bold">Milestone 2 Statement:</span>
+                            {{ order.milestone_two_statement }}
+                        </p>
+                        <p><span class="font-weight-bold">Milestone 3 Statement:</span>
+                            {{ order.milestone_three_statement }}</p>
+                        <p><span class="font-weight-bold">Milestone 4 Statement:</span>
+                            {{ order.milestone_four_statement }}
+                        </p>
+                        <h5>Job Completion</h5>
+                        <div class="progress" id="milestone-bar">
+                            <div id="progress-bar-job-completion" class="progress-bar bg-success" role="progressbar"
+                                aria-valuemin="0" aria-valuemax="100">
+                                25%
+                            </div>
+                            <div id="progress-bar-job-incompletion" class="progress-bar" role="progressbar"
+                                style="color:#000; background-color: rgba(0, 0, 0, .125); width: 0%;">
+                            </div>
+                        </div>
+                        <p>Note: Managers update their milestones after they get through a certain point during the
+                            job
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if order.job_complete == False %}
+<div class="modal fade" id="browse-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="cancel-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="update-job-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4 class="modal-title">Edit Job</h4>
+                <small>Note: The platforms and usernames are not changeable here. After you are paired with a manager, you won't be able to edit the job.</small><br>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ edit_job_form }}
+                    <p><input id="submit-button" type="submit" class="btn btn-primary" value="Edit"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<script>
+    function progressBar(job_complete, milestone1 = 'none', milestone2 = 'none', milestone3 = 'none', milestone4 = 'none') {
+        let progressBarElement = document.getElementById('progress-bar-job-completion')
+        let progressBarIncompleteElement = document.getElementById('progress-bar-job-incompletion')
+        if (job_complete == 'True') {
+            progressBarElement.innerHTML = '100% Complete'
+            progressBarElement.style.width = '100%'
+        } else {
+            let progress = 0
+            if (milestone1 != 'none') {
+                progress += 25
+            }
+            if (milestone2 != 'none') {
+                progress += 25
+            }
+            if (milestone3 != 'none') {
+                progress += 25
+            }
+            if (milestone4 != 'none') {
+                progress += 25
+            }
+            console.log('progress: ' + progress)
+            progressBarElement.innerHTML = progress + '% complete'
+            progressBarElement.style.width = progress + '%'
+
+            if (progress == 0) {
+                progressIncomplete = 100 - progress
+                progressBarIncompleteElement.style.width = progressIncomplete + '%'
+                progressBarIncompleteElement.innerHTML = progress + '% Complete'
+            }
+        }
+    }
+    progressBar("{{ order.job_complete }}", "{{ order.milestone_one_statement }}", "{{ order.milestone_two_statement }}", "{{ order.milestone_four_statement }}", "{{ order.milestone_four_statement }}")
+</script>
+{% endblock %}

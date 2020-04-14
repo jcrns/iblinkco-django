@@ -1,0 +1,46 @@
+from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
+from .models import JobPost
+from .choices import * 
+
+# Creating form for clients to post jobs
+class JobPostForm(forms.ModelForm):
+
+    # Form field vars
+
+    # Job Detail
+    length = forms.ChoiceField(label='Job Length', choices=lengthChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+    number_of_post = forms.ChoiceField(label='Post Per Day', choices=postPerDayChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    # Platforms
+    instagram = forms.BooleanField(label='Instagram', required=True, initial=False, widget=forms.CheckboxInput(attrs={'class': 'form-control', 'onclick' : 'checkPlatformInstagram(this)'}))
+    facebook = forms.BooleanField(label='Facebook', required=True, initial=False, widget=forms.CheckboxInput(attrs={'class': 'form-control', 'onclick' : 'checkPlatformFacebook(this)'}))
+
+    # Platform Usernames
+    instagram_username = forms.CharField(label='Instagram Username',widget=forms.TextInput(attrs={'class': 'form-control', 'readonly':'readonly'}))
+    facebook_username = forms.CharField(label='Facebook Username',widget=forms.TextInput(attrs={ 'class': 'form-control', 'readonly':'readonly'}))
+    
+    # Services provided
+    captions = forms.BooleanField(label='Create Captions', initial=True, required=False)
+    search_for_content = forms.BooleanField(label='Find Relevant Content to post', initial=True, required=False)
+    service_description = forms.CharField(label='Service Description',widget=forms.Textarea(attrs={'placeholder':'Enter ...', 'rows' : '5', 'class' : 'form-control' }))
+    
+    # image = forms.ImageField()
+
+    class Meta:
+        model = JobPost
+        fields = [ "length", "number_of_post", "captions", "search_for_content", "service_description", "instagram_username", "facebook_username", "instagram", "facebook"]
+        exclude = ('user',)
+
+# Creating form for clients to post jobs
+class JobPostFormUpdate(forms.ModelForm):
+    length = forms.ChoiceField(label='Job Length', choices=lengthChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+    number_of_post = forms.ChoiceField(label='Post Per Day', choices=postPerDayChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    captions = forms.BooleanField(label='Create Captions', initial=True, required=False)
+    search_for_content = forms.BooleanField(label='Find Relevant Content to post', initial=True, required=False)
+    service_description = forms.CharField(label='Service Description',widget=forms.Textarea(attrs={'placeholder':'Enter ...', 'rows' : '5', 'class' : 'form-control' }))
+    class Meta:
+        model = JobPost
+        fields = [ "length", "number_of_post", "captions", "search_for_content", "service_description"]

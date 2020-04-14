@@ -30,19 +30,21 @@ def overview(request):
     print(profile.business_type)
     if profile.business_type != 'none':
         return redirect('dashboard-home')
-    return render(request, 'homepage/overview.html')
+    return render(request, 'homepage/overview.html', {"nav_black_link" : True} )
     
 def termsAndConditions(request):
-    return render(request, 'homepage/terms-and-conditions.html')
+    return render(request, 'homepage/terms-and-conditions.html', {"nav_black_link" : True} )
 
 def privacyPolicy(request):
-    return render(request, 'homepage/privacy-policy.html')
+    return render(request, 'homepage/privacy-policy.html', {"nav_black_link" : True} )
 
 def partnerships(request):
-    return render(request, 'homepage/partnerships.html')
+    return render(request, 'homepage/partnerships.html', {"nav_black_link" : True} )
 
 def helpAndSupport(request):
-    return render(request, 'homepage/help-and-support.html')
+    return render(request, 'homepage/help-and-support.html', {"nav_black_link" : True} )
 
 def becomeManager(request):
-    return render(request, 'homepage/become-a-manager.html')
+    if request.user.profile.is_client == True:
+        return redirect('service-job')
+    return render(request, 'homepage/become-a-manager.html', {"nav_black_link" : True} )
