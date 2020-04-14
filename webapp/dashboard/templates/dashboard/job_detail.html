@@ -208,7 +208,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-body">
-
+                <div class="text-center">
+                    <h3>Are you sure you want to cancel the job</h3>
+                    {% if order.manager %}
+                    <p>We will charge extra depending on how far you have made it through the job</p>
+                    {% else %}
+                    <p>We won't charge because you haven't been paired with a manager yet</p>
+                    {% endif %}
+                    <a href="#" class="btn btn-danger">Cancel Now</a>
+                </div>
             </div>
         </div>
     </div>
@@ -218,7 +226,8 @@
         <div class="modal-content">
             <div class="modal-body">
                 <h4 class="modal-title">Edit Job</h4>
-                <small>Note: The platforms and usernames are not changeable here. After you are paired with a manager, you won't be able to edit the job.</small><br>
+                <small>Note: The platforms and usernames are not changeable here. After you are paired with a manager,
+                    you won't be able to edit the job.</small><br>
                 <form method="POST">
                     {% csrf_token %}
                     {{ edit_job_form }}

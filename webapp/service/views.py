@@ -71,7 +71,7 @@ def postJob(request):
                 job.save()
 
                 # Updating profile to busy
-                profile.busy == True
+                profile.busy = True
                 profile.save(update_fields=["busy"])
 
             return redirect('dashboard-home')
