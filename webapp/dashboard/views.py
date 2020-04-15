@@ -26,7 +26,10 @@ from django.shortcuts import get_object_or_404
 def dashboard(request):
     # Getting user
     profile = request.user.profile
-
+    print(profile.is_client)
+    print(profile.is_manager)
+    if profile.is_client == False and profile.is_manager == False:
+        return redirect('homepage-home')
     # Checking if user is client or manager
     if profile.is_client == True:
         if profile.business_type != 'none':

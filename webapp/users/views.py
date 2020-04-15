@@ -9,7 +9,7 @@ from .forms import UserRegisterForm, ProfileUpdateForm
 from .models import Profile
 
 # Importing login func from django
-from django.contrib.auth import login, logout
+from django.contrib.auth import authenticate, login, logout
 
 # Importing Authentication Form
 from django.contrib.auth.forms import AuthenticationForm
@@ -31,6 +31,8 @@ from urllib.parse import urlencode
 def registerFunc(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
+        print(form)
+        print(form.errors)
         if form.is_valid():
             print('fwenfowirearfiu')
             form.save()
@@ -49,7 +51,8 @@ def registerFunc(request):
             url = createUrl('login')
             return redirect(url)
         else:
-            messages.warning(request, form)
+            messages.warning(request, f'There was a problem creating your account')
+
 
             # Redirecting to signup screen
             url = createUrl('signup')
@@ -63,8 +66,8 @@ def registerFunc(request):
 def loginFunc(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
-        print(form.get_user())
         if form.is_valid():
+            print('dfdfd')
             user = form.get_user()
             print(user)
             login(request, user)

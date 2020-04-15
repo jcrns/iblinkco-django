@@ -137,3 +137,9 @@ EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "confirmemailiblinkco@gmail.com"
 EMAIL_HOST_PASSWORD = "598E,?^r%}UanaW'"
+
+AUTHENTICATION_BACKENDS = (
+    # 'django.contrib.auth.backends.ModelBackend',
+    'users.backends.EmailBackend',
+    # 'django.contrib.auth.backends.ModelBackend',
+)
