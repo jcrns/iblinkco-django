@@ -1,8 +1,9 @@
+from datetime import date
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 from sorl.thumbnail import ImageField, get_thumbnail
-
+now = date(2000, 1, 1) 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -10,7 +11,8 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=60, default='none')
     last_name = models.CharField(max_length=60, default='none')
     language = models.CharField(max_length=60, default='none')
-    date_of_birth = models.DateTimeField(verbose_name='date of birth', auto_now_add=True)
+    date_of_birth = models.DateField(max_length=8, default=now)
+
 
     # Bool for if user is currently in a job
     busy = models.BooleanField(default=False)
@@ -22,10 +24,11 @@ class Profile(models.Model):
     # Business data 
     business_name = models.CharField(max_length=60, default='none')
     business_type = models.CharField(max_length=60, default='none')
-    business_description = models.TextField(max_length=350, default='none')
+    description = models.TextField(max_length=350, default='none')
 
     # Other information
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
+    evaluated = models.BooleanField(default=False)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
 
     def __str__(self):

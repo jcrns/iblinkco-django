@@ -1,7 +1,5 @@
 from django.shortcuts import render, redirect
 
-from django.http import HttpResponse
-
 # Importing User Registeraton Form
 from users.forms import UserRegisterForm
 
@@ -10,9 +8,6 @@ from django.contrib.auth.forms import AuthenticationForm
 
 # Importing profile to access 
 from users.models import Profile
-
-# Importing lib to get specific objects
-# from django.shortcuts import get_object_or_404
 
 # Importing login required func
 from django.contrib.auth.decorators import login_required
@@ -27,9 +22,12 @@ def home(request):
 @login_required(login_url="/?login=true")
 def overview(request):
     profile = request.user.profile
-    print(profile.business_type)
-    if profile.business_type != 'none':
-        return redirect('dashboard-home')
+    if profile.is_client == True:
+        if profile.business_type != 'none':
+            return redirect('dashboard-home')
+    else:
+        if profile.description != 'none':
+            return redirect('dashboard-home')
     return render(request, 'homepage/overview.html', {"nav_black_link" : True} )
     
 def termsAndConditions(request):
@@ -45,6 +43,10 @@ def helpAndSupport(request):
     return render(request, 'homepage/help-and-support.html', {"nav_black_link" : True} )
 
 def becomeManager(request):
-    if request.user.profile.is_client == True:
-        return redirect('service-job')
-    return render(request, 'homepage/become-a-manager.html', {"nav_black_link" : True} )
+    if request.user.is_authenticated:
+    
+        if request.user.profile.is_client == True:
+            return redirect('service-job')
+        return render(request, 'homepage/become-a-manager.html', {"nav_black_link" : True} )
+    else:
+        return redirect('dashboard-home')

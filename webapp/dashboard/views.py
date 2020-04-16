@@ -22,7 +22,7 @@ from service.models import JobPost
 from service.forms import JobPostFormUpdate
 
 # Importing Complete Profile
-from users.forms import ProfileUpdateForm
+from users.forms import ProfileUpdateFormClient, ProfileUpdateFormManager
 
 
 # Overview function
@@ -32,10 +32,11 @@ def dashboard(request):
     profile = request.user.profile
     if profile.is_client == False and profile.is_manager == False:
         return redirect('homepage-home')
+    
     # Checking if user is client or manager
     if profile.is_client == True:
         if profile.business_type != 'none':
-            update_profile_form = ProfileUpdateForm(instance=request.user.profile)
+            update_profile_form = ProfileUpdateFormClient(instance=request.user.profile)
             past_orders = JobPost.objects.filter(client=request.user.pk, job_complete=True).order_by('-date_requested')
             currentJob = JobPost.objects.filter(client=request.user.pk, job_complete=False)
 
@@ -43,7 +44,7 @@ def dashboard(request):
             if request.method == 'POST':
                 
                 # Creating update profile form with post data
-                update_profile_form = ProfileUpdateForm(request.POST or None, request.FILES or None, instance=request.user.profile)
+                update_profile_form = ProfileUpdateFormClient(request.POST or None, request.FILES or None, instance=request.user.profile)
                 
                 # Checking if update profile form is valid
                 if update_profile_form.is_valid():
@@ -55,7 +56,28 @@ def dashboard(request):
         else:
             return redirect('homepage-home')
     else:
-        return render(request, 'dashboard/manager.html')
+        if profile.description != 'none':
+            
+            # Get jobs involved
+            update_profile_form = ProfileUpdateFormManager(instance=request.user.profile)
+            past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
+            current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
+            
+            # Checking if request used post method
+            if request.method == 'POST':
+            
+                # Creating update profile form with post data
+                update_profile_form = ProfileUpdateFormManager(request.POST or None, request.FILES or None, instance=request.user.profile)
+                
+                # Checking if update profile form is valid
+                if update_profile_form.is_valid():
+                    profile = update_profile_form.save(commit=False)
+                    profile.user = request.user
+                    profile.save()
+                    return redirect('dashboard-home')
+        else:
+            return redirect('homepage-home')
+        return render(request, 'dashboard/manager.html', { 'profile': profile, 'current_jobs' : current_jobs, 'past_jobs' : past_jobs, 'update_profile_form' : update_profile_form, "static_header" : True, "nav_black_link" : True })
 
 # Adding form to view
 def jobDetail(request):

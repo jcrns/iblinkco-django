@@ -19,7 +19,7 @@ from django.urls import reverse
 from urllib.parse import urlencode
 
 # importing User Registeraton Form
-from .forms import UserRegisterForm, ProfileUpdateForm
+from .forms import UserRegisterForm, ProfileUpdateFormClient, ProfileUpdateFormManager
 
 # Importing User Registeraton Form
 from .models import Profile
@@ -68,7 +68,6 @@ def loginFunc(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            print('dfdfd')
             user = form.get_user()
             print(user)
             login(request, user)
@@ -110,9 +109,9 @@ def comfirmUser(request):
 
             # Saving value in db
             profile.save(update_fields=["is_manager", "is_client"])
-
+            
             # Redirecting 
-            return redirect('service-complete-profile')
+            return redirect('service-complete-profile-client')
         # If Manager
         else:
             # Changing value of manager type
@@ -121,9 +120,9 @@ def comfirmUser(request):
 
             # Saving value in db
             profile.save(update_fields=["is_manager", "is_client"]) 
-
+            
             # Redirecting 
-            return redirect('service-job')
+            return redirect('service-complete-profile-manager')
 
         
         return redirect('homepage-home')

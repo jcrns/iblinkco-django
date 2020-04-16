@@ -43,10 +43,14 @@
                             {{ form.client }}
                             <div class="form-group">
                                 {{ form.captions.label }}
+                                <br>
+                                <small>If this box is checked, managers will write captions for content you provide them.</small>
                                 {{ form.captions }}
                             </div>
                             <div class="form-group">
                                 {{ form.search_for_content.label }}
+                                <br>
+                                <small>If this box is checked, managers will look for content relevant to your business</small>
                                 {{ form.search_for_content }}
                             </div>
                         </div>
@@ -55,11 +59,14 @@
 
                             <div class="form-group">
                                 {{ form.length.label }}
+                                <br>
+                                <small>Select the amount of time you want them to provide these services</small>
                                 {{ form.length }}
                             </div>
                             <div class="form-group">
                                 {{ form.number_of_post.label }} (for each platform)
-
+                                <br>
+                                <small>If this box is checked, managers will write captions for content you provide them.</small>
                                 {{ form.number_of_post }}
                             </div>
                         </div>
@@ -80,12 +87,16 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {{ form.post_for_you.label }}
+                                        <br>
+                                        <small>Check this off if you want the managers to post for you. If not they will message you content</small>
                                         {{ form.post_for_you }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {{ form.engagement.label }}
+                                        <br>
+                                        <small>Check this off if you want managers to use your accounts to interact on social media through likes, follows, etc.</small>
                                         {{ form.engagement }}
                                     </div>
                                 </div>

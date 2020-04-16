@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.forms.widgets import DateInput
 from .models import Profile
 
 # User Registration Form
@@ -18,7 +19,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 # Creating form for complete profile page
-class ProfileUpdateForm(forms.ModelForm):
+class ProfileUpdateFormClient(forms.ModelForm):
     languagesChoices = (('English', 'English'), ('Spanish', 'Spanish'), ('Chinese', 'Chinese'), ('French', 'French'), ('Other', 'Other'))
     businessTypeChoices = (('Services', 'Services'), ('Retail', 'Retail'), ('Art & Entertainment', 'Art & Entertainment'), ('Tech', 'Tech'), ('Events', 'Events'), ('Farming6', 'Farming'), ('Health Care', 'Health Care'), ('Restaurants', 'Restaurants'), ('Other', 'Other'))
     first_name = forms.CharField(label='First Name',widget=forms.TextInput(attrs={'placeholder':'Enter', 'class': 'form-control'}))
@@ -26,9 +27,28 @@ class ProfileUpdateForm(forms.ModelForm):
     language = forms.ChoiceField(label='Language', choices=languagesChoices, widget=forms.Select(attrs={'placeholder':'Enter', 'class': 'form-control'}))
     business_name = forms.CharField(label='Business Name',widget=forms.TextInput(attrs={'placeholder':'Enter', 'class': 'form-control'}))
     business_type = forms.ChoiceField(label='Business Type',choices=businessTypeChoices, widget=forms.Select(attrs={ 'class': 'form-control' }))
-    business_description = forms.CharField(label='Business Description',widget=forms.Textarea(attrs={'placeholder':'Enter ...', 'rows' : '5', 'class' : 'form-control' }))
+    description = forms.CharField(label='Business Description',widget=forms.Textarea(attrs={'placeholder':'Enter ...', 'rows' : '5', 'class' : 'form-control' }))
     # image = forms.ImageField()
 
     class Meta:
         model = Profile
-        fields = ["first_name", "last_name", "business_name", "business_type", "business_description", "image", "language"]
+        fields = ["first_name", "last_name", "business_name", "business_type", "description", "image", "language"]
+
+class ProfileUpdateFormManager(forms.ModelForm):
+    languagesChoices = (('English', 'English'), ('Spanish', 'Spanish'), ('Chinese', 'Chinese'), ('French', 'French'), ('Other', 'Other'))
+    businessTypeChoices = (('Services', 'Services'), ('Retail', 'Retail'), ('Art & Entertainment', 'Art & Entertainment'), ('Tech', 'Tech'), ('Events', 'Events'), ('Farming6', 'Farming'), ('Health Care', 'Health Care'), ('Restaurants', 'Restaurants'), ('Other', 'Other'))
+    first_name = forms.CharField(label='First Name',widget=forms.TextInput(attrs={'placeholder':'Enter', 'class': 'form-control'}))
+    last_name = forms.CharField(label='Last Name',widget=forms.TextInput(attrs={'placeholder':'Enter', 'class': 'form-control'}))
+    language = forms.ChoiceField(label='Language', choices=languagesChoices, widget=forms.Select(attrs={'placeholder':'Enter', 'class': 'form-control'}))
+    description = forms.CharField(label='Profile Bio',widget=forms.Textarea(attrs={'placeholder':'Enter ...', 'rows' : '5', 'class' : 'form-control' }))
+
+    class Meta:
+        model = Profile
+        fields = ["first_name", "last_name", "date_of_birth", "description", "image", "language"]
+        # Specifying label and widget for dob
+        labels = {
+            'date_of_birth': ('Date Of Birth'),
+        }
+        widgets = {
+            'date_of_birth': DateInput(attrs={'type': 'date', 'class': 'form-control'})
+        }

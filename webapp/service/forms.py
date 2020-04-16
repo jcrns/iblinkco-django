@@ -10,7 +10,7 @@ class JobPostForm(forms.ModelForm):
     # Form field vars
 
     # Job Detail
-    length = forms.ChoiceField(label='Job Length', choices=lengthChoices, widget=forms.Select(attrs={'class': 'form-control', 'onchange' : 'getPriceTag();'}))
+    length = forms.ChoiceField(label='Job Duration', choices=lengthChoices, widget=forms.Select(attrs={'class': 'form-control', 'onchange' : 'getPriceTag();'}))
     number_of_post = forms.ChoiceField(label='Post Per Day', choices=postPerDayChoices, widget=forms.Select(attrs={'class': 'form-control', 'onchange' : 'getPriceTag();'}))
 
     # Platforms

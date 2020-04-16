@@ -1,13 +1,22 @@
+# Importing datetime to check if user is over 18
+import datetime
+
 from django.shortcuts import render, redirect
 
+# Importing login required func
+from django.contrib.auth.decorators import login_required
+
 # Importing profile update form
-from users.forms import ProfileUpdateForm
+from users.forms import ProfileUpdateFormClient, ProfileUpdateFormManager
 
 # Importing job posting form
 from .forms import JobPostForm
 
-# Importing lib to get specific objects
-from django.shortcuts import get_object_or_404
+# Importing job model
+from .models import JobPost
+
+# Importing messages
+from django.contrib import messages
 
 # View for django post job select
 def postJobSelect(request):
@@ -28,7 +37,6 @@ def postJobSelect(request):
 def postJob(request):
     if request.method == 'POST':
         form = JobPostForm(request.POST)
-        # print(form.cleaned_data.get('instagram'))
         profile = request.user.profile
         if form.is_valid():
             print(form)
@@ -47,8 +55,6 @@ def postJob(request):
             price = calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement, post_for_you, captions, search_for_content)
             
             # Validating Instagram and Twitter info is appropriate
-            print("instagramBool ", instagramBool)
-            print("facebookBool ", facebookBool)
             if instagramBool == False and facebookBool == False:
                 return redirect('service-job')
                 
@@ -68,8 +74,6 @@ def postJob(request):
             
             # Getting total number of expected post throughout the job
             number_of_post = int(post_per_day) * int(length) 
-            print('sefbierfgrfyfew')
-            print(number_of_post)
             
             # Checking if user is currently in a job
             if profile.busy == False:
@@ -85,7 +89,11 @@ def postJob(request):
                 # Updating profile to busy
                 profile.busy = True
                 profile.save(update_fields=["busy"])
-                # return redirect('dashboard-confirm-job', pk=job_id)
+
+                # Get obj for redirect
+                job = JobPost.objects.get(client=request.user)
+                pk = job.pk
+                return redirect('dashboard-confirm-job', pk=pk)
             return redirect('dashboard-home')
         else:
             print(form.errors)
@@ -101,11 +109,12 @@ def postJob(request):
         return redirect('homepage-home')
 
 # View for complete profile screen
-def completeProfile(request):
+@login_required(login_url="/?login=true")
+def completeProfileClient(request):
     if request.method == 'POST':
         
         # Creating form with post data
-        form = ProfileUpdateForm(request.POST or None, request.FILES or None, instance=request.user.profile)
+        form = ProfileUpdateFormClient(request.POST or None, request.FILES or None, instance=request.user.profile)
         print(form)
         
         # Checking if form is valid
@@ -116,9 +125,9 @@ def completeProfile(request):
             return redirect('dashboard-home')
         else:
             print(form.errors)
-            return redirect('service-complete-profile')
+            return redirect('service-complete-profile-client')
     # Defining form and user
-    form = ProfileUpdateForm
+    form = ProfileUpdateFormClient
     user = request.user
 
     # Defining profile
@@ -128,11 +137,68 @@ def completeProfile(request):
     if profile.is_client == True:
         # Checking if client has updated previously
         if profile.business_type == 'none':
-            return render(request, 'service/complete_profile.html', { 'form' : form, "nav_black_link" : True })
+            return render(request, 'service/complete_profile_client.html', { 'form' : form, "nav_black_link" : True })
         else:
             return redirect('dashboard-home')
     else:
         return redirect('homepage-home')
+
+# View for complete profile screen
+@login_required(login_url="/?login=true")
+def completeProfileManager(request):
+    if request.method == 'POST':
+        
+        # Creating form with post data
+        form = ProfileUpdateFormManager(request.POST or None, request.FILES or None, instance=request.user.profile)
+        print(form)
+        
+        # Getting dob
+        dob = form.cleaned_data.get('date_of_birth')
+        print(dob)
+
+        # Converting dob to datetime obj using current time
+        my_time = datetime.datetime.min.time()
+        dob = datetime.datetime.combine(dob, my_time)
+
+        # Checking age with dob
+        now = datetime.datetime.now()
+        age = int((now - dob).days)
+        age = age/365
+
+        if age < 18:
+            messages.warning(request, f'You have to be at least 18 years old to sign up as a manager')
+            return redirect('service-complete-profile-manager')
+        print(age)
+
+        # Checking if form is valid
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            messages.success(request, f'Thanks for creating a profile with iBlinkco! The next step is to evaluate your knowledge of social media marketing for small businesses.')
+
+            return redirect('dashboard-home')
+        else:
+            print(form.errors)
+            return redirect('service-complete-profile-manager')
+            
+    # Defining form and user
+    form = ProfileUpdateFormManager
+    user = request.user
+
+    # Defining profile
+    profile = request.user.profile
+
+    # Checking if client is requesting else redirecting home
+    if profile.is_manager == True:
+        # Checking if client has updated previously
+        if profile.business_type == 'none':
+            return render(request, 'service/complete_profile_manager.html', { 'form' : form, "nav_black_link" : True })
+        else:
+            return redirect('dashboard-home')
+    else:
+        return redirect('homepage-home')
+
 
 def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement, post_for_you, caption, search_for_content):
     platforms = 0
@@ -164,20 +230,15 @@ def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement
 
     # Adjusting prices
     platforms= float(platforms) * 0.375
-    print("platforms: ", platforms)
     post_per_day= float(post_per_day) * 0.375
-    print("post_per_day: ", post_per_day)
 
     number_of_services= float(number_of_services) * 0.5
-    print("number_of_services: ", number_of_services)
 
     perDayValue = platforms+post_per_day+number_of_services
-    print("perDayValue: ", perDayValue)
     
     # Getting job base cost by multiplying by the length of the job
     length = float(length)
     totalValue = perDayValue * length
-    print("Total Base Value: ", totalValue)
 
     # Adding other services from managers to total
     totalValue = totalValue + engagement
@@ -187,16 +248,13 @@ def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement
 
     # Getting iBlinkco deduction by taking a percent from data
     iblinkcoValue = (totalValue * 0.1 ) + 2
-    print("iblinkcoValue: ", iblinkcoValue)
     
     # Adding iBlinkco deduction to total
     totalValue = totalValue + iblinkcoValue
 
     # Get stripe 
     stripe = (totalValue*0.029) + 0.3
-    print("stripe: ", stripe)
 
     totalValue = totalValue + stripe
     totalValue = round(totalValue, 1)
-    print(totalValue)
     return totalValue
