@@ -5,14 +5,10 @@ class EmailBackend(object):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
             user = User.objects.get(email=username)
-            print('fergerge')
         except User.MultipleObjectsReturned:
             user = User.objects.filter(email=username).order_by('id').first()
-            print('rerfergeerfgtgrge')
 
         except User.DoesNotExist:
-            print('pppfergerge')
-
             return None
 
         if getattr(user, 'is_active') and user.check_password(password):

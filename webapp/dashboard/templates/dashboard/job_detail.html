@@ -74,7 +74,7 @@
                         </p>
                         <p class="h5">
                             Number of Posts:
-                            {{ order.number_of_post }}
+                            {{ order.number_of_post }} (for each platform)
                         </p>
                         <p class="h5">
                             {% if order.paid %}
@@ -116,7 +116,6 @@
                         <p>
                             <a href="#" class="detail-btn btn btn-outline-danger" data-toggle="modal"
                                 data-target="#cancel-modal">Cancel</a>
-                            <a href="#" class="detail-btn btn btn-outline-primary">Pay</a>
                             <span class="float-right"><a href="#" data-toggle="modal"
                                     data-target="#update-job-modal"><img src="{% static 'homepage/img/edit-icon.png' %}"
                                         class="bottom-link"></a></span>
@@ -151,8 +150,6 @@
                             <h1>Manager has yet <br> to be assigned</h1>
                             <p>Want select a custom manager? Browse our selection of managers</p>
                             <small>Browsing will cost an extra fee</small>
-                            <p><a href="#" class="btn btn-outline-success" data-toggle="modal"
-                                    data-target="#browse-modal">Browse Now</a></p>
                         </div>
                         {% endif %}
                     </div>
@@ -195,15 +192,6 @@
     </div>
 </div>
 {% if order.job_complete == False %}
-<div class="modal fade" id="browse-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal fade" id="cancel-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -217,22 +205,6 @@
                     {% endif %}
                     <a href="#" class="btn btn-danger">Cancel Now</a>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="update-job-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <h4 class="modal-title">Edit Job</h4>
-                <small>Note: The platforms and usernames are not changeable here. After you are paired with a manager,
-                    you won't be able to edit the job.</small><br>
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ edit_job_form }}
-                    <p><input id="submit-button" type="submit" class="btn btn-primary" value="Edit"></p>
-                </form>
             </div>
         </div>
     </div>

@@ -15,6 +15,8 @@ class UserRegisterForm(UserCreationForm):
     def getemail(self):
         email = forms.EmailField()
 
+
+
 # Creating form for complete profile page
 class ProfileUpdateForm(forms.ModelForm):
     languagesChoices = (('English', 'English'), ('Spanish', 'Spanish'), ('Chinese', 'Chinese'), ('French', 'French'), ('Other', 'Other'))

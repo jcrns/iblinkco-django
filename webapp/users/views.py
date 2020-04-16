@@ -2,12 +2,6 @@ from django.shortcuts import redirect
 
 from django.http import HttpResponseRedirect
 
-# importing User Registeraton Form
-from .forms import UserRegisterForm, ProfileUpdateForm
-
-# Importing User Registeraton Form
-from .models import Profile
-
 # Importing login func from django
 from django.contrib.auth import authenticate, login, logout
 
@@ -24,21 +18,28 @@ from django.core.mail import EmailMessage
 from django.urls import reverse
 from urllib.parse import urlencode
 
-# Importing lib to get specific objects
-# from django.shortcuts import get_object_or_404
+# importing User Registeraton Form
+from .forms import UserRegisterForm, ProfileUpdateForm
+
+# Importing User Registeraton Form
+from .models import Profile
 
 # Registering new user
 def registerFunc(request):
     if request.method == 'POST':
+
+        # Getting posted data in form
         form = UserRegisterForm(request.POST)
-        print(form)
-        print(form.errors)
+
+        # Checking if form is valid
         if form.is_valid():
-            print('fwenfowirearfiu')
             form.save()
+
+            # Getting username and email to create message and confirm email
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
 
+            # Creating thank you message
             messages.success(request, f'Congratulations {username} you created an account for iBlinkco!')
 
             # Sending email 
@@ -52,7 +53,7 @@ def registerFunc(request):
             return redirect(url)
         else:
             messages.warning(request, f'There was a problem creating your account')
-
+            
 
             # Redirecting to signup screen
             url = createUrl('signup')

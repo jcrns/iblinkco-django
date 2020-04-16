@@ -126,21 +126,20 @@
                             </p>
                             <p class="h6">For
                                 {% if job.facebook == True %}
-                                {{ job.instagram_username }} (Facebook)
+                                    {{ job.facebook_username }} (Facebook)
                                 {% endif %}
                                 {% if job.facebook == True and job.instagram == True %}
                                 and
                                 {% endif %}
                                 {% if job.instagram == True %}
-                                {{ job.instagram_username }} (Instagram) 
+                                    {{ job.instagram_username }} (Instagram) 
                                 {% endif %}
                             </p>
-                                {% if job.paid is not True %}
-                                    <a href="#" id="pay-button" class="btn btn-primary">Pay</a>
+                                {% if job.paid_for is not True %}
+                                    <a href="{% url 'dashboard-confirm-job' job.id %}" id="pay-button" class="btn btn-primary">Pay</a>
+                                {% else %}
+                                    <a href="{% url 'dashboard-job-detail' job.id %}" class="btn btn-success">Details</a>
                                 {% endif %}
-                            
-                            <a href="{% url 'dashboard-job-detail' job.id %}" class="btn btn-success">Details</a>
-
                             {% endfor %}
                         </div>
                         {% else %}

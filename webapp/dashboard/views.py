@@ -3,6 +3,15 @@ from django.shortcuts import render, redirect
 # Lib to require login for certain views
 from django.contrib.auth.decorators import login_required
 
+# Adding mixins
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+# Importing list view to list past jobs
+from django.views.generic import DetailView, DeleteView
+
+# Importing lib to get specific objects
+from django.shortcuts import get_object_or_404
+
 # Importing profile to access 
 from users.models import Profile
 
@@ -15,19 +24,12 @@ from service.forms import JobPostFormUpdate
 # Importing Complete Profile
 from users.forms import ProfileUpdateForm
 
-# Importing list view to list past jobs
-from django.views.generic import DetailView
-
-# Importing lib to get specific objects
-from django.shortcuts import get_object_or_404
 
 # Overview function
 @login_required(login_url="/?login=true")
 def dashboard(request):
     # Getting user
     profile = request.user.profile
-    print(profile.is_client)
-    print(profile.is_manager)
     if profile.is_client == False and profile.is_manager == False:
         return redirect('homepage-home')
     # Checking if user is client or manager
@@ -71,36 +73,24 @@ class JobDetailView(DetailView):
     context_object_name = 'order'
     template_name = 'dashboard/job_detail.html'
 
-    def custom_save_session(self, request):
-        # Getting object
-        context = self.get_object() 
-        
-        # Applying found data to context
-        context['manager_profile'] = manager_profile
-        context['client_profile'] = client_profile
-
-        # Adding additional context for styling
-        context['static_header'] = True
-        context['nav_black_link'] = True
-
-        # Adding edit profile form
-        context['edit_job_form'] = JobPostFormUpdate(instance=context['object'])
-
-        return context
     # Overriding the get function to redirect user if not involved in detailed post
     def get(self, request, *args, **kwargs):
         # Getting object
         self.object = self.get_object() 
         user = request.user
-        print(user)
-        print(self.object.client)
 
         # Checking if user is either manager or client
-        if user is self.object.client or user is self.object.manager:
-            print('dfef')
-            return redirect('dashboard-home')
-        return super(JobDetailView, self).get(request, *args, **kwargs)
+        if user == self.object.client or user == self.object.manager:
 
+            # Checking if job is not paid
+            if self.object.paid_for == False:
+                # Redirecting to confirm screen
+                return redirect('dashboard-confirm-job', pk=self.object.pk)
+
+            # Returning super
+            return super(JobDetailView, self).get(request, *args, **kwargs)
+        else:
+            return redirect('dashboard-home')
     # Overriding django function to change context
     def get_context_data(self, **kwargs):
         context = super(JobDetailView, self).get_context_data(**kwargs)
@@ -129,9 +119,78 @@ class JobDetailView(DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object() 
         edit_job_form = JobPostFormUpdate(request.POST, instance=self.object)
+        
         if edit_job_form.is_valid():
             edit_job_form.save()
             return redirect('dashboard-job-detail', pk=self.object.pk)
         else:
             return redirect('dashboard-job-detail', pk=self.object.pk)
 
+class ConfirmJobDetailView(DetailView):
+    model = JobPost
+    context_object_name = 'order'
+    template_name = 'dashboard/confirm_job.html'
+    
+    # Overriding the get function to redirect user if not involved in detailed post
+    def get(self, request, *args, **kwargs):
+        
+        # Getting object
+        self.object = self.get_object() 
+        user = request.user
+
+        # Checking if user is either manager or client
+        if user == self.object.client or user == self.object.manager:
+            # Returning super
+            return super(ConfirmJobDetailView, self).get(request, *args, **kwargs)
+        else:
+            # Redirecting to dash
+            return redirect('dashboard-home')
+        
+
+            
+
+    # Overriding django function to change context
+    def get_context_data(self, **kwargs):
+        context = super(ConfirmJobDetailView, self).get_context_data(**kwargs)
+
+        # Defining manager and client profiles
+        manager_name = context['object'].manager
+        manager_profile = Profile.objects.filter(user=manager_name)
+        user = self.request.user
+        client_profile = self.request.user.profile
+        
+        # Applying found data to context
+        context['manager_profile'] = manager_profile
+        context['client_profile'] = client_profile
+
+        # Adding additional context for styling
+        context['static_header'] = True
+        context['nav_black_link'] = True
+
+        # Adding edit profile form
+        context['edit_job_form'] = JobPostFormUpdate(instance=context['object'])
+
+        print(context['object'].pk)
+        return context
+
+# Delete user function
+def deleteJob(request, pk):
+    # Getting job
+    job = get_object_or_404(JobPost, pk=pk)
+
+    # Defining user
+    user = request.user
+
+    # Defining profile
+    profile = request.user.profile
+
+    # Checking if user is involved in job
+    if user == job.client or user == job.manager:
+        
+        # Deleting job
+        job.delete()
+        
+        # Making user non busy
+        profile.busy = False
+        profile.save(update_fields=["busy"])
+    return redirect('dashboard-home')

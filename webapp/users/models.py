@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+from sorl.thumbnail import ImageField, get_thumbnail
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -31,13 +32,6 @@ class Profile(models.Model):
         return f'{self.user.username} Profile'
 
     # def save(self, *args, **kwargs):
-    #     super().save()
-
-    #     # Getting img
-    #     img = Image.open(self.image.path)
-
-    #     # Resizing img
-    #     if img.height > 300 or img.width > 300:
-    #         output_size = (300, 300)
-    #         img.thumbnail(output_size)
-    #         img.save(self.image.path)
+    #     if self.image:
+    #         self.image = get_thumbnail(self.image, '300x300', quality=99, format='JPEG')
+    #     super(Profile, self).save(*args, **kwargs)
