@@ -21,8 +21,11 @@ from urllib.parse import urlencode
 # importing User Registeraton Form
 from .forms import UserRegisterForm, ProfileUpdateFormClient, ProfileUpdateFormManager
 
-# Importing User Registeraton Form
+# Importing Profile Modal
 from .models import Profile
+
+# Importing Evaluation Modal
+from management.models import ManagerEvaluation
 
 # Registering new user
 def registerFunc(request):
@@ -117,10 +120,15 @@ def comfirmUser(request):
             # Changing value of manager type
             profile.is_manager = True
             profile.is_client = False
-
+            
             # Saving value in db
             profile.save(update_fields=["is_manager", "is_client"]) 
             
+            # Creating evaluation modal for managers
+            evaluation = ManagerEvaluation()
+            evaluation.manager = request.user
+            evaluation.save()
+
             # Redirecting 
             return redirect('service-complete-profile-manager')
 

@@ -31,7 +31,7 @@ def dashboard(request):
     # Getting user
     profile = request.user.profile
     if profile.is_client == False and profile.is_manager == False:
-        return redirect('homepage-home')
+        return redirect('homepage-overview')
     
     # Checking if user is client or manager
     if profile.is_client == True:
@@ -54,29 +54,38 @@ def dashboard(request):
                     return redirect('dashboard-home')
             return render(request, 'dashboard/client.html', { 'profile': profile, 'current_job' : currentJob, 'past_orders' : past_orders, 'update_profile_form' : update_profile_form, "static_header" : True, "nav_black_link" : True } )
         else:
-            return redirect('homepage-home')
+            return redirect('service-complete-profile-client')
+    # If manager
     else:
+        # Checking if profile is completed
         if profile.description != 'none':
+
+            # Checking if evaluation is completed
+            if profile.evaluated == True:
             
-            # Get jobs involved
-            update_profile_form = ProfileUpdateFormManager(instance=request.user.profile)
-            past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
-            current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
-            
-            # Checking if request used post method
-            if request.method == 'POST':
-            
-                # Creating update profile form with post data
-                update_profile_form = ProfileUpdateFormManager(request.POST or None, request.FILES or None, instance=request.user.profile)
+                # Get jobs involved
+                update_profile_form = ProfileUpdateFormManager(instance=request.user.profile)
+                past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
+                current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
                 
-                # Checking if update profile form is valid
-                if update_profile_form.is_valid():
-                    profile = update_profile_form.save(commit=False)
-                    profile.user = request.user
-                    profile.save()
-                    return redirect('dashboard-home')
+                # Checking if request used post method
+                if request.method == 'POST':
+                
+                    # Creating update profile form with post data
+                    update_profile_form = ProfileUpdateFormManager(request.POST or None, request.FILES or None, instance=request.user.profile)
+                    
+                    # Checking if update profile form is valid
+                    if update_profile_form.is_valid():
+                        profile = update_profile_form.save(commit=False)
+                        profile.user = request.user
+                        profile.save()
+                        return redirect('dashboard-home')
+
+            # Manager is not evaluated so redirecting to evaluation
+            else:
+                return redirect('management-evaluation')
         else:
-            return redirect('homepage-home')
+            return redirect('service-complete-profile-manager')
         return render(request, 'dashboard/manager.html', { 'profile': profile, 'current_jobs' : current_jobs, 'past_jobs' : past_jobs, 'update_profile_form' : update_profile_form, "static_header" : True, "nav_black_link" : True })
 
 # Adding form to view

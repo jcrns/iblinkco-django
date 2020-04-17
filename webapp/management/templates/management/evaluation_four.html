@@ -1,0 +1,23 @@
+{% extends 'homepage/header.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .evaluation {
+        padding: 120px 0;
+        position: relative;
+    }
+
+    #submit-button {
+        width: 200px;
+    }
+</style>
+<div class="evaluation">
+    <div class="container">
+        <h3>Evaluation</h3>
+        <form method="POST" class="text-left">
+            {% csrf_token %}
+            <input type="submit" id="submit-button" class="btn btn-success" value="Next Page">
+        </form>
+    </div>
+</div>
+{% endblock %}

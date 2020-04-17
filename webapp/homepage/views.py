@@ -22,13 +22,13 @@ def home(request):
 @login_required(login_url="/?login=true")
 def overview(request):
     profile = request.user.profile
-    if profile.is_client == True:
-        if profile.business_type != 'none':
-            return redirect('dashboard-home')
+
+    # Checking if user has been on the overview
+    if profile.is_client == False and profile.is_manager == False:
+        return render(request, 'homepage/overview.html', {"nav_black_link" : True} )
+    # Redirecting to dashboard
     else:
-        if profile.description != 'none':
-            return redirect('dashboard-home')
-    return render(request, 'homepage/overview.html', {"nav_black_link" : True} )
+        return redirect('dashboard-home')
     
 def termsAndConditions(request):
     return render(request, 'homepage/terms-and-conditions.html', {"nav_black_link" : True} )

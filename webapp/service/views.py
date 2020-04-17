@@ -122,6 +122,7 @@ def completeProfileClient(request):
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
+            messages.success(request, f'User profile completed')
             return redirect('dashboard-home')
         else:
             print(form.errors)
@@ -175,9 +176,8 @@ def completeProfileManager(request):
             profile = form.save(commit=False)
             profile.user = request.user
             profile.save()
-            messages.success(request, f'Thanks for creating a profile with iBlinkco! The next step is to evaluate your knowledge of social media marketing for small businesses.')
-
-            return redirect('dashboard-home')
+            messages.success(request, f'User profile completed')
+            return redirect('management-evaluation')
         else:
             print(form.errors)
             return redirect('service-complete-profile-manager')
