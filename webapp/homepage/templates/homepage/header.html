@@ -262,7 +262,7 @@
             </div><!-- /.container -->
         </footer><!-- /#footer -->
     </div>
-
+{% if not user.is_authenticated %}
     <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -290,7 +290,7 @@
             </div>
         </div>
     </div>
-
+{% endif %}
     <!-- Dependency Scripts -->
     <script src="{% static 'homepage/temp-static/dependencies/popper.js/popper.min.js' %}"></script>
     <script src="{% static 'homepage/temp-static/dependencies/jquery/jquery.min.js' %}"></script>
