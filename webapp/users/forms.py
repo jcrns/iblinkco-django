@@ -27,7 +27,7 @@ class ProfileUpdateFormClient(forms.ModelForm):
     language = forms.ChoiceField(label='Language', choices=languagesChoices, widget=forms.Select(attrs={'placeholder':'Enter', 'class': 'form-control'}))
     business_name = forms.CharField(label='Business Name',widget=forms.TextInput(attrs={'placeholder':'Enter', 'class': 'form-control'}))
     business_type = forms.ChoiceField(label='Business Type',choices=businessTypeChoices, widget=forms.Select(attrs={ 'class': 'form-control' }))
-    description = forms.CharField(label='Business Description',widget=forms.Textarea(attrs={'placeholder':'Enter ...', 'rows' : '5', 'class' : 'form-control' }))
+    description = forms.CharField(label='Business Description',widget=forms.Textarea(attrs={'placeholder':'Enter ... (max 500 characters)', 'rows' : '5', 'class' : 'form-control' }))
     # image = forms.ImageField()
 
     class Meta:
@@ -40,7 +40,7 @@ class ProfileUpdateFormManager(forms.ModelForm):
     first_name = forms.CharField(label='First Name',widget=forms.TextInput(attrs={'placeholder':'Enter', 'class': 'form-control'}))
     last_name = forms.CharField(label='Last Name',widget=forms.TextInput(attrs={'placeholder':'Enter', 'class': 'form-control'}))
     language = forms.ChoiceField(label='Language', choices=languagesChoices, widget=forms.Select(attrs={'placeholder':'Enter', 'class': 'form-control'}))
-    description = forms.CharField(label='Profile Bio',widget=forms.Textarea(attrs={'placeholder':'Enter ...', 'rows' : '5', 'class' : 'form-control' }))
+    description = forms.CharField(label='Profile Bio',widget=forms.Textarea(attrs={'placeholder':'Enter ... (max 500 characters)', 'rows' : '5', 'class' : 'form-control' }))
 
     class Meta:
         model = Profile

@@ -13,6 +13,7 @@ class JobPost(models.Model):
     length = models.IntegerField()
     
     # Paying
+    manager_payment = models.FloatField(null=True)
     price_paid = models.FloatField(null=True)
     paid_for = models.IntegerField(default=False)
 
