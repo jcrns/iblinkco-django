@@ -30,8 +30,7 @@ class Profile(models.Model):
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
 
     # Checking if user is fully verified
-    evaluated = models.BooleanField(default=False)
-    image = ResizedImageField(size=[300, 300], default='profile-blank.png', upload_to='profile_pics')
+    image = models.ImageField(default='profile-blank.png', upload_to='profile_pics')
     
     def __str__(self):
         return f'{self.user.username} Profile'

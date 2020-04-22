@@ -24,6 +24,8 @@ from service.forms import JobPostFormUpdate
 # Importing Complete Profile
 from users.forms import ProfileUpdateFormClient, ProfileUpdateFormManager
 
+# Getting user evaluation modal
+from management.models import ManagerEvaluation
 
 # Overview function
 @login_required(login_url="/?login=true")
@@ -60,14 +62,17 @@ def dashboard(request):
         # Checking if profile is completed
         if profile.description != 'none':
 
+            # Getting evaluation
+            evaluation = ManagerEvaluation.objects.get(manager=request.user)
             # Checking if evaluation is completed
-            if profile.evaluated == True:
+            if evaluation.accepted == True:
             
                 # Get jobs involved
                 update_profile_form = ProfileUpdateFormManager(instance=request.user.profile)
                 past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
                 current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
-                
+                print(past_jobs)
+                print(current_jobs)
                 # Checking if request used post method
                 if request.method == 'POST':
                 
@@ -98,17 +103,30 @@ def jobDetail(request):
         edit_job_form = JobPostFormUpdate(request.POST, instance=request.user.profile)
 
     return render(request, 'dashboard/client.html', edit_job_form)
+
 # Class for displaying info about specific job post
 class JobDetailView(DetailView):
     model = JobPost
     context_object_name = 'order'
-    template_name = 'dashboard/job_detail.html'
+    # template_name = 'dashboard/job_detail.html'
 
     # Overriding the get function to redirect user if not involved in detailed post
     def get(self, request, *args, **kwargs):
         # Getting object
         self.object = self.get_object() 
         user = request.user
+
+        # Checking if user is manager
+        if self.template_name == 'dashboard/job_detail_manager.html':
+            if user.profile.is_client == True:
+                return redirect('dashboard-job-detail-manager', pk=self.object.pk)
+
+
+        # Checking if user is client 
+        if self.template_name == 'dashboard/job_detail_client.html':
+            if user.profile.is_manager == True:
+                return redirect('dashboard-job-detail-manager', pk=self.object.pk)
+
 
         # Checking if user is either manager or client
         if user == self.object.client or user == self.object.manager:
@@ -120,17 +138,22 @@ class JobDetailView(DetailView):
 
             # Returning super
             return super(JobDetailView, self).get(request, *args, **kwargs)
+            
         else:
             return redirect('dashboard-home')
+
     # Overriding django function to change context
     def get_context_data(self, **kwargs):
         context = super(JobDetailView, self).get_context_data(**kwargs)
 
         # Defining manager and client profiles
         manager_name = context['object'].manager
-        manager_profile = Profile.objects.filter(user=manager_name)
-        user = self.request.user
-        client_profile = self.request.user.profile
+        client_name = context['object'].client
+
+        # Getting profiles
+        manager_profile = Profile.objects.get(user=manager_name)
+        client_profile = Profile.objects.get(user=client_name)
+        
         
         # Applying found data to context
         context['manager_profile'] = manager_profile
@@ -143,7 +166,6 @@ class JobDetailView(DetailView):
         # Adding edit profile form
         context['edit_job_form'] = JobPostFormUpdate(instance=context['object'])
 
-        print(context['object'].pk)
         return context
 
     # Func for when job form is posted
@@ -168,6 +190,7 @@ class ConfirmJobDetailView(DetailView):
         # Getting object
         self.object = self.get_object() 
         user = request.user
+
 
         # Checking if user is either manager or client
         if user == self.object.client or user == self.object.manager:

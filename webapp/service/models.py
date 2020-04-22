@@ -1,21 +1,32 @@
 from django.db import models
+
+# Importing to configure before save
+from django.db.models.signals import pre_save
+
 from django.contrib.auth.models import User
-from PIL import Image
 from .choices import * 
+import datetime
+
+# Importing to create job id
+from webapp.utils import random_string_generator
 
 class JobPost(models.Model):
+
+    # JOB ID
+    job_id = models.CharField(max_length=120, blank=True)
+    
     # Users involved
     client = models.ForeignKey(User, on_delete=models.CASCADE, related_name='client', null=True)
-    manager = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='manager')
+    manager = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='manager', blank=True)
 
     # Job Length
     number_of_post = models.IntegerField()
     length = models.IntegerField()
     
     # Paying
-    manager_payment = models.FloatField(null=True)
-    price_paid = models.FloatField(null=True)
-    paid_for = models.IntegerField(default=False)
+    manager_payment = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
+    price_paid = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
+    paid_for = models.BooleanField(default=False)
 
     # Job Details
     job_complete = models.BooleanField(default=False)
@@ -23,7 +34,7 @@ class JobPost(models.Model):
     search_for_content = models.BooleanField(default=False)
     post_for_you = models.BooleanField(default=False)
     engagement = models.BooleanField(default=False)
-    service_description = models.CharField(max_length=1000, default='none')
+    service_description = models.CharField(max_length=5000, default='none')
     manager_randomly_assigned = models.BooleanField(default=True)
 
     # Platforms
@@ -50,5 +61,29 @@ class JobPost(models.Model):
     # Date Job Posted
     date_requested = models.DateTimeField(verbose_name='date requested', auto_now_add=True)
 
+    # Deadline for 
+    deadline = models.DateTimeField(verbose_name='deadline', editable=True)
+
+
     def __str__(self):
-        return f'{self.client} Job Request {self.date_requested}'
+        print(self.manager)
+        return f'{self.client} Job Request {self.job_id}'
+
+    # Overriding the save function to check if manager was assigned
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+        if self.manager != None:
+            
+            # Creating deadline for job
+            now = datetime.date.today()
+            print('current time', now)
+            realJobLength = self.length + 2
+            now = now + datetime.timedelta(days=realJobLength)
+            print('new deadline', now)
+            self.deadline = now
+        super(JobPost, self).save(force_insert, force_update, *args, **kwargs)
+
+def pre_save_create_job_id(sender, instance, *args, **kwargs):
+    if not instance.job_id:
+        instance.job_id = random_string_generator(size=16)
+
+pre_save.connect(pre_save_create_job_id, sender=JobPost)

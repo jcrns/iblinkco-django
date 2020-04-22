@@ -15,8 +15,14 @@ from .forms import JobPostForm
 # Importing job model
 from .models import JobPost
 
+# Getting order
+from orders.models import Order
+
 # Importing messages
 from django.contrib import messages
+
+# Adding random string gen to create job id
+from webapp.utils import unique_order_id_generator
 
 # View for django post job select
 def postJobSelect(request):
@@ -200,6 +206,20 @@ def completeProfileManager(request):
         return redirect('homepage-home')
 
 
+# Checkout view
+def checkoutHome(request):
+    job_obj = JobPost.objects.get(client=request.user)
+    order_obj = None
+    if job_obj:
+        order_obj, new_order_obj = Order.objects.get_or_create(job=job_obj)
+        print(order_obj.job)
+        print(new_order_obj)
+    else:
+        print('sdsds')
+        return redirect('service-job')
+    return render(request, 'service/checkout.html', { "object" : order_obj, "static_header" : True, "nav_black_link" : True })
+    
+# Price calculation func
 def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement, post_for_you, caption, search_for_content):
     platforms = 0
     number_of_services = 0

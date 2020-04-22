@@ -1,0 +1,237 @@
+{% extends 'homepage/header.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .job {
+        padding: 130px 0;
+        background-color: #F5F5F5;
+        width: 100%;
+    }
+
+    .job-card {
+        background-color: #fff;
+        border: 0.5px solid rgba(0, 0, 0, .125);
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 10px;
+        margin: 10px;
+        min-height: 300px;
+    }
+
+    .bottom-link {
+        margin-top: 5px;
+        width: 30px;
+        height: 30px;
+    }
+
+    #milestone-bar {
+        height: 20px;
+    }
+
+    .detail-btn {
+        width: 100px;
+    }
+
+    .platform-pic {
+        max-width: 40px;
+        max-height: 40px;
+    }
+
+    #without-manager {
+        margin-top: 60px;
+    }
+
+    .card .card-body p {
+        font-size: 16px;
+        margin-bottom: 1rem;
+    }
+
+    #submit-button {
+        width: 100px;
+    }
+</style>
+<div class="job">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 d-flex align-items-stretch">
+                <div class="card job-card">
+                    <div class="card-body">
+                        <h3>Job Details</h3>
+                        <p class="h5">
+                            Services:
+                            {% if order.captions == True %}
+                            Created Captions
+                            {% endif %}
+                            {% if order.captions == True and order.search_for_content == True %}
+                            ,
+                            {% endif %}
+                            {% if order.search_for_content == True %}
+                            Looked for content
+                            {% endif %}
+                        </p>
+                        <p class="h5">
+                            Job Duration: {{ order.length }}
+                        </p>
+                        <p class="h5">
+                            Number of Posts:
+                            {{ order.number_of_post }} (for each platform)
+                        </p>
+                        <p class="h5">
+                            {% if order.paid %}
+                            Price Paid: ${{ order.price_paid }}
+                            {% endif %}
+                        </p>
+                        <p class="h5">
+                            Platforms:
+                            {% if order.instagram == True %}
+                            Instagram({{ order.instagram_username }})
+                            {% endif %}
+                            {% if order.instagram == True and order.facebook == True%}
+                            ,
+                            {% endif %}
+                            {% if order.facebook == True %}
+                            Facebook({{ order.facebook_username }})
+                            {% endif %}
+                        </p>
+                        <p>
+                            {% if order.instagram == True %}
+                            <img class="platform-pic" src="{% static 'homepage/img/instagram.png' %}">
+                            {% endif %}
+                            {% if order.instagram == True and order.facebook == True%}
+                            ,
+                            {% endif %}
+                            {% if order.facebook == True %}
+                            <img class="platform-pic" src="{% static 'homepage/img/facebook.png' %}">
+                            {% endif %}
+                        </p>
+                        <p class="h5">
+                            Job Complete:
+                            {% if order.job_complete == True %}
+                            Yes
+                            {% else %}
+                            No
+                            {% endif %}
+                        </p>
+                        {% if order.job_complete == False %}
+                        <p>
+                            <a href="#" class="detail-btn btn btn-outline-danger" data-toggle="modal"
+                                data-target="#cancel-modal">Cancel</a>
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex align-items-stretch">
+                <div class="card job-card">
+                    <div class="card-body">
+                        <h3>Your Client</h3>
+
+                        <div class="row">
+                            <div class="col-4 text-center">
+                                <img id="profile-pic" class="float-center" src="{{ client_profile.image.url }}" alt="">
+                                <p class="font-weight-bold">
+                                    {{ client_profile.first_name }} {{ client_profile.last_name }}
+                                </p>
+                                <p id="profile-language" class="text-weight-bold">Language:
+                                    {{ client_profile.language }}
+                                </p>
+                                <a href="{% url 'chat-room' order.job_id %}" class="btn btn-sm btn-outline-success">Message</a>
+                            </div>
+                            <div id="profile-description-div" class="col-8 text-right">
+                                <h5>{{ client_profile.email }}</h5>
+                                <p>{{ client_profile.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card job-card">
+                    <div class="card-body">
+                        <h3>Milestones</h3>
+                        <p><span class="font-weight-bold">Milestone 1 Statement:</span>
+                            {{ order.milestone_one_statement }}
+                        </p>
+                        <p><span class="font-weight-bold">Milestone 2 Statement:</span>
+                            {{ order.milestone_two_statement }}
+                        </p>
+                        <p><span class="font-weight-bold">Milestone 3 Statement:</span>
+                            {{ order.milestone_three_statement }}</p>
+                        <p><span class="font-weight-bold">Milestone 4 Statement:</span>
+                            {{ order.milestone_four_statement }}
+                        </p>
+                        <h5>Job Completion</h5>
+                        <div class="progress" id="milestone-bar">
+                            <div id="progress-bar-job-completion" class="progress-bar bg-success" role="progressbar"
+                                aria-valuemin="0" aria-valuemax="100">
+                                25%
+                            </div>
+                            <div id="progress-bar-job-incompletion" class="progress-bar" role="progressbar"
+                                style="color:#000; background-color: rgba(0, 0, 0, .125); width: 0%;">
+                            </div>
+                        </div>
+                        <p>Note: Managers update their milestones after they get through a certain point during the
+                            job
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if order.job_complete == False %}
+<div class="modal fade" id="cancel-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <h3>Are you sure you want to cancel the job</h3>
+                    {% if order.manager %}
+                    <p>We will charge extra depending on how far you have made it through the job</p>
+                    {% else %}
+                    <p>We won't charge because you haven't been paired with a manager yet</p>
+                    {% endif %}
+                    <a href="#" class="btn btn-danger">Cancel Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<script>
+    function progressBar(job_complete, milestone1 = 'none', milestone2 = 'none', milestone3 = 'none', milestone4 = 'none') {
+        let progressBarElement = document.getElementById('progress-bar-job-completion')
+        let progressBarIncompleteElement = document.getElementById('progress-bar-job-incompletion')
+        if (job_complete == 'True') {
+            progressBarElement.innerHTML = '100% Complete'
+            progressBarElement.style.width = '100%'
+        } else {
+            let progress = 0
+            if (milestone1 != 'none') {
+                progress += 25
+            }
+            if (milestone2 != 'none') {
+                progress += 25
+            }
+            if (milestone3 != 'none') {
+                progress += 25
+            }
+            if (milestone4 != 'none') {
+                progress += 25
+            }
+            console.log('progress: ' + progress)
+            progressBarElement.innerHTML = progress + '% complete'
+            progressBarElement.style.width = progress + '%'
+
+            if (progress == 0) {
+                progressIncomplete = 100 - progress
+                progressBarIncompleteElement.style.width = progressIncomplete + '%'
+                progressBarIncompleteElement.innerHTML = progress + '% Complete'
+            }
+        }
+    }
+    progressBar("{{ order.job_complete }}", "{{ order.milestone_one_statement }}", "{{ order.milestone_two_statement }}", "{{ order.milestone_four_statement }}", "{{ order.milestone_four_statement }}")
+</script>
+{% endblock %}

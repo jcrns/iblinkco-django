@@ -10,9 +10,12 @@ class ManagerEvaluation(models.Model):
     # Checking if evaluation was started
     evaluation_started = models.BooleanField(default=False)
 
+    # Checking if manager was accepted
+    accepted = models.BooleanField(default=False)
+
     # Checking if evaluation was completed
     evaluation_completed = models.BooleanField(default=False)
-    
+
     # Question one answer 
     answer_one_caption_one = models.TextField(max_length=2200, default='none')
     answer_one_caption_two = models.TextField(max_length=2200, default='none')

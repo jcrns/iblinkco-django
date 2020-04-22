@@ -24,7 +24,7 @@ class JobPostForm(forms.ModelForm):
     search_for_content = forms.BooleanField(label='Find Relevant Content to post', initial=False, required=False, widget=forms.CheckboxInput(attrs={'class': 'form-control', 'onclick' : 'getPriceTag();'}))
     post_for_you = forms.BooleanField(label='Manager Will Post For You', initial=False, required=False, widget=forms.CheckboxInput(attrs={'class': 'form-control', 'onclick' : 'getPriceTag();'}))
     engagement = forms.BooleanField(label='Engagement', initial=False, required=False, widget=forms.CheckboxInput(attrs={'class': 'form-control', 'onclick' : 'getPriceTag();'}))
-    service_description = forms.CharField(label='Service Description',widget=forms.Textarea(attrs={'placeholder':'Enter ...', 'rows' : '5', 'class' : 'form-control' }))
+    service_description = forms.CharField(label='Service Description',widget=forms.Textarea(attrs={'placeholder':'Enter ...', 'rows' : '6', 'class' : 'form-control' }))
     
     # image = forms.ImageField()
 

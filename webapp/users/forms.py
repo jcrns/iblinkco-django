@@ -30,6 +30,14 @@ class ProfileUpdateFormClient(forms.ModelForm):
     description = forms.CharField(label='Business Description',widget=forms.Textarea(attrs={'placeholder':'Enter ... (max 500 characters)', 'rows' : '5', 'class' : 'form-control' }))
     # image = forms.ImageField()
 
+    def clean_image(self):  
+        image = self.cleaned_data.get('image', False)
+        if image:
+            if image._size > 4*1024*1024:
+                raise ValidationError("Image file too large ( > 4mb )")
+            return image
+        else:
+            raise ValidationError("Couldn't read uploaded image")
     class Meta:
         model = Profile
         fields = ["first_name", "last_name", "business_name", "business_type", "description", "image", "language"]
@@ -41,6 +49,15 @@ class ProfileUpdateFormManager(forms.ModelForm):
     last_name = forms.CharField(label='Last Name',widget=forms.TextInput(attrs={'placeholder':'Enter', 'class': 'form-control'}))
     language = forms.ChoiceField(label='Language', choices=languagesChoices, widget=forms.Select(attrs={'placeholder':'Enter', 'class': 'form-control'}))
     description = forms.CharField(label='Profile Bio',widget=forms.Textarea(attrs={'placeholder':'Enter ... (max 500 characters)', 'rows' : '5', 'class' : 'form-control' }))
+
+    def clean_image(self):  
+        image = self.cleaned_data.get('image', False)
+        if image:
+            if image.size > 4*1024*1024:
+                raise ValidationError("Image file too large ( > 4mb )")
+            return image
+        else:
+            raise ValidationError("Couldn't read uploaded image")
 
     class Meta:
         model = Profile

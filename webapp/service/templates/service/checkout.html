@@ -1,0 +1,31 @@
+{% extends 'homepage/header.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .checkout {
+        padding: 120px 0;
+    }
+
+    #submit-button {
+        width: 100px;
+    }
+
+    .post-sec-card {
+        background-color: #fff;
+        border: 0.5px solid rgba(0, 0, 0, .5);
+        padding: 10px;
+        margin: 10px;
+        width: 100%;
+    }
+
+    .card .card-body p {
+        font-size: 1.5rem;
+    }
+</style>
+<div class="checkout">
+    <div class="container">
+        <h1>Checkout</h1>
+        <p>Order Total: ${{ object.job.price_paid }}</p>
+    </div>
+</div>
+{% endblock %}

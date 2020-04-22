@@ -28,7 +28,7 @@ def evaluation(request):
         answer_img_list = ['application_pics/default.jpeg', 'application_pics/default.jpg', 'default.jpeg', 'default.jpg']
 
         # Checking if evaluation process has started
-        if profile.evaluated == False:
+        if evaluation.accepted == False:
             if evaluation.evaluation_started == False:
 
                 if request.method == 'POST':

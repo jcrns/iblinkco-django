@@ -32,11 +32,6 @@
         padding: 10px;
     }
 
-    #profile-pic {
-        width: 150px;
-        height: 150px;
-
-    }
 
     #past-orders {
         position: relative;
@@ -138,7 +133,7 @@
                                 {% if job.paid_for is not True %}
                                     <a href="{% url 'dashboard-confirm-job' job.id %}" id="pay-button" class="btn btn-primary">Pay</a>
                                 {% else %}
-                                    <a href="{% url 'dashboard-job-detail' job.id %}" class="btn btn-success">Details</a>
+                                    <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success">Details</a>
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -156,7 +151,7 @@
                     <div class="card-body">
                         <div class="row" id="profile-row">
                             <div class="col-3 text-center">
-                                <img id="profile-pic" class="float-center" src="{{ user.profile.image.url }}" alt="">
+                                <img id="profile-pic" class="img-fluid float-center" src="{{ user.profile.image.url }}" alt="">
                                 <p id="business-name" class="font-weight-bold">{{ user.profile.business_name }}</p>
                                 <p id="business-type" class="font-weight-bold">{{ user.profile.business_type }}</p>
                             </div>
@@ -214,7 +209,7 @@
                                             {{ order.length }} Days
                                         </td>
                                         <td>
-                                            <a href="{% url 'dashboard-job-detail' order.id %}"><img
+                                        <a href="{% url 'dashboard-job-detail-client' order.id %}"><img
                                                     src="{% static 'homepage/img/expand-icon.png' %}" alt=""></a>
                                         </td>
                                     </tr>

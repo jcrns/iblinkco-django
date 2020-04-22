@@ -6,4 +6,5 @@ urlpatterns = [
     path('post_a_job', views.postJob, name='service-job'),
     path('complete_profile_client', views.completeProfileClient, name='service-complete-profile-client'),
     path('complete_profile_manager', views.completeProfileManager, name='service-complete-profile-manager'),
+    path('checkout', views.checkoutHome, name='service-checkout'),
 ]

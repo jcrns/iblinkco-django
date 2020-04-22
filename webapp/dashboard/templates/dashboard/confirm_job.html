@@ -73,7 +73,7 @@
                     <h2><u>Job Order</u></h2>
                     <p class="h5">
                         <span class="card-title-bold">Price: </span>
-                        {{ order.price_paid }}
+                        ${{ order.price_paid }}
                     </p>
                     <p class="h5">
                         <span class="card-title-bold">Services:</span>
@@ -112,7 +112,7 @@
                     <div>
                         <a href="#" class="detail-btn btn btn-outline-danger" data-toggle="modal"
                             data-target="#cancel-modal">Cancel</a>
-                        <a href="#" class="detail-btn btn btn-outline-primary">Pay</a>
+                        <a href="{% url 'service-checkout' %}" class="detail-btn btn btn-outline-primary">Pay</a>
                     </div>
                 </div>
             </div>
