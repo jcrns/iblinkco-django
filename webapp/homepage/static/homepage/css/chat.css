@@ -17,6 +17,7 @@ img {
 
 .inbox_msg {
     border: 1px solid #c4c4c4;
+    background-color: #fff;
     clear: both;
     height: 550px;
     overflow-y: auto;
@@ -108,11 +109,6 @@ img {
     border-bottom: 1px solid #c4c4c4;
     margin: 0;
     padding: 18px 16px 10px;
-}
-
-.inbox_chat {
-    height: 550px;
-    overflow-y: scroll;
 }
 
 .active_chat {
