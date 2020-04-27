@@ -16,16 +16,19 @@ from django.shortcuts import get_object_or_404
 from users.models import Profile
 
 # Importing jobs to access
-from service.models import JobPost
+from service.models import JobPost, MilestoneFiles
 
 # Importing job form for form updates in detail views
-from service.forms import JobPostFormUpdate
+from service.forms import JobPostFormUpdate, milestoneUpdate
 
 # Importing Complete Profile
 from users.forms import ProfileUpdateFormClient, ProfileUpdateFormManager
 
 # Getting user evaluation modal
 from management.models import ManagerEvaluation
+
+# Importing datetime
+from datetime import datetime, timezone
 
 # Overview function
 @login_required(login_url="/?login=true")
@@ -145,19 +148,76 @@ class JobDetailView(DetailView):
     # Overriding django function to change context
     def get_context_data(self, **kwargs):
         context = super(JobDetailView, self).get_context_data(**kwargs)
-
+        
         # Defining manager and client profiles
         manager_name = context['object'].manager
         client_name = context['object'].client
+        
+        # Creating time left for job preparation
+        jobPrepDeadline = context['object'].job_preparation_deadline
+        now = datetime.now(timezone.utc)
+        jobPrepTimeLeft = jobPrepDeadline - now
+        jobPrepTimeLeft = jobPrepTimeLeft.total_seconds()
+        
+        jobPrepMinLeft = jobPrepTimeLeft/60
+        JobPrepHourLeft = jobPrepMinLeft/60
 
-        # Getting profiles
-        manager_profile = Profile.objects.get(user=manager_name)
+        JobPrepDaysRemaining = JobPrepHourLeft/24
+        JobPrepHoursRemaining = JobPrepHourLeft/24
+
+        if JobPrepDaysRemaining < 1:
+            JobPrepTimeLeftStr = str(round(JobPrepHoursRemaining)) + " hours left"
+        else:
+            # Checking for certain situations
+            daysString = " Days left and "
+            if int(JobPrepDaysRemaining) == 1:
+                daysString = " Day left and "
+
+            hoursString = " hours left"
+            if round(JobPrepHoursRemaining) == 1:
+                hoursString = " hour left"
+
+            JobPrepTimeLeftStr = str(int(
+                JobPrepDaysRemaining)) + daysString + str(round(JobPrepHoursRemaining)) + hoursString
+
+        # Getting profiles and checking if user is assigned
+        if manager_name:
+            manager_profile = Profile.objects.get(user=manager_name)
+        else:
+            manager_profile = None
         client_profile = Profile.objects.get(user=client_name)
         
+        # Defining and saving form to context
+        form = milestoneUpdate()
+        context['form'] = form
         
+        # Getting img files
+        image_list_milestone_one = MilestoneFiles.objects.filter(
+            job=context['object'], milestoneOne=True)
+        print(image_list_milestone_one)
+
+        image_list_milestone_two = MilestoneFiles.objects.filter(
+            job=context['object'], milestoneTwo=True)
+        
+        image_list_milestone_three = MilestoneFiles.objects.filter(
+            job=context['object'], milestoneThree=True)
+        
+        image_list_milestone_four = MilestoneFiles.objects.filter(
+                job=context['object'], milestoneFour=True)
+
+        # Applying milestone images
+        context['image_list_milestone_one'] = image_list_milestone_one
+        context['image_list_milestone_two'] = image_list_milestone_two
+        context['image_list_milestone_three'] = image_list_milestone_three
+        context['image_list_milestone_four'] = image_list_milestone_four
+
+
         # Applying found data to context
         context['manager_profile'] = manager_profile
         context['client_profile'] = client_profile
+
+        # Applying additional info
+        context['job_prep_days_left'] = JobPrepTimeLeftStr
 
         # Adding additional context for styling
         context['static_header'] = True
@@ -171,13 +231,78 @@ class JobDetailView(DetailView):
     # Func for when job form is posted
     def post(self, request, *args, **kwargs):
         self.object = self.get_object() 
-        edit_job_form = JobPostFormUpdate(request.POST, instance=self.object)
         
-        if edit_job_form.is_valid():
-            edit_job_form.save()
-            return redirect('dashboard-job-detail', pk=self.object.pk)
-        else:
-            return redirect('dashboard-job-detail', pk=self.object.pk)
+        # Getting form with requested data
+        form = milestoneUpdate(self.request.POST, self.request.FILES, instance=self.object)
+        
+        # Checking if form is valid
+        if form.is_valid():
+
+            # Getting inputed statements
+            milestone_one_statement = form.cleaned_data.get('milestone_one_statement')
+            milestone_two_statement = form.cleaned_data.get(
+                'milestone_two_statement')
+            milestone_three_statement = form.cleaned_data.get(
+                'milestone_three_statement')
+            milestone_four_statement = form.cleaned_data.get(
+                'milestone_four_statement')
+
+            print(milestone_one_statement)
+            print(milestone_two_statement)
+            # Checking which milestone is being updated
+            if milestone_one_statement:
+                # Getting different images
+                for field in self.request.FILES.keys():
+                    for formfile in self.request.FILES.getlist(field):
+                        # Saving images in the db
+                        MilestoneFiles.objects.create(
+                            job=self.object, milestoneFile=formfile, milestoneOne=True)
+
+                form.completed_milestone_one = True
+                form.save()
+
+            elif milestone_two_statement:
+                for field in self.request.FILES.keys():
+                    for formfile in self.request.FILES.getlist(field):
+                        # Saving images in the db
+                        MilestoneFiles.objects.create(
+                            job=self.object, milestoneFile=formfile, milestoneTwo=True)
+
+                form.completed_milestone_two = True
+                form.save()
+
+            elif milestone_three_statement:
+                for field in self.request.FILES.keys():
+                    for formfile in self.request.FILES.getlist(field):
+                        # Saving images in the db
+                        MilestoneFiles.objects.create(
+                            job=self.object, milestoneFile=formfile, milestoneThree=True)
+
+                form.completed_milestone_three = True
+                form.save()
+
+            elif milestone_four_statement:
+                for field in self.request.FILES.keys():
+                    for formfile in self.request.FILES.getlist(field):
+                        # Saving images in the db
+                        MilestoneFiles.objects.create(
+                            job=self.object, milestoneFile=formfile, milestoneFour=True)
+
+                form.completed_milestone_four = True
+                form.save()
+
+        # # Getting posted data
+        # print(self.request.POST)
+        # print(self.request.FILES.keys())
+        # milestoneNumber = int(self.request.POST['milestone-number'])
+        # milestoneDescription = self.request.POST['milestone-description']
+        # milestoneFiles = self.request.FILES['milestone-files']
+        # print(milestoneFiles)
+        # print(milestoneNumber)
+        # if not milestoneDescription:
+        #     print('milestone description empty')
+        #     return redirect('dashboard-job-detail-manager', pk=self.object.pk)
+        return redirect('dashboard-job-detail-manager', pk=self.object.pk)
 
 class ConfirmJobDetailView(DetailView):
     model = JobPost
@@ -191,14 +316,13 @@ class ConfirmJobDetailView(DetailView):
         self.object = self.get_object() 
         user = request.user
 
-
-        # Checking if user is either manager or client
-        if user == self.object.client or user == self.object.manager:
-            # Returning super
-            return super(ConfirmJobDetailView, self).get(request, *args, **kwargs)
-        else:
-            # Redirecting to dash
-            return redirect('dashboard-home')
+        if self.object.paid_for == False:
+            # Checking if user is either manager or client
+            if user == self.object.client or user == self.object.manager:
+                # Returning super
+                return super(ConfirmJobDetailView, self).get(request, *args, **kwargs)
+        # Returning if conditions aren't satisfied
+        return redirect('dashboard-home')
         
 
             
@@ -248,3 +372,17 @@ def deleteJob(request, pk):
         profile.busy = False
         profile.save(update_fields=["busy"])
     return redirect('dashboard-home')
+
+# Func to change job prep bool
+def jobPrepEnded(request, pk):
+    # Getting job
+    job = get_object_or_404(JobPost, pk=pk)
+
+    # Defining user
+    user = request.user
+
+    # Changing variable in db
+    job.job_preparation_completed = True
+    print(job.job_preparation_completed)
+    job.save()
+    return redirect('dashboard-job-detail-manager', pk=pk)

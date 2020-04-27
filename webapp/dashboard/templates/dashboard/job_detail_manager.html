@@ -49,6 +49,56 @@
     #submit-button {
         width: 100px;
     }
+
+    .update-link {
+        color: #000;
+        padding-left: 10px;
+        /* text-decoration: underline; */
+    }
+
+        {
+        % if order.job_preparation_completed==True %
+    }
+
+    .update-link:hover {
+        color: blue;
+        cursor: pointer;
+    }
+
+        {
+        % endif %
+    }
+
+    .btn {
+        width: 100px;
+    }
+
+    #service-preparation,
+    #milestones {
+        padding-top: 10px;
+        padding-bottom: 50px;
+    }
+
+    .sub-titles {
+        color: rgb(77, 77, 77);
+    }
+
+    #end-preparation-btn,
+    #cancel-button {
+        width: 200px;
+    }
+
+    .update-milestone-header {
+        padding-bottom: 20px;
+    }
+
+    .milestone-img {
+        max-width: 100px;
+    }
+
+    .milestone-div {
+        padding: 10px;
+    }
 </style>
 <div class="job">
     <div class="container-fluid">
@@ -56,7 +106,7 @@
             <div class="col-md-6 d-flex align-items-stretch">
                 <div class="card job-card">
                     <div class="card-body">
-                        <h3>Job Details</h3>
+                        <h4>Job Details</h4>
                         <p class="h5">
                             Services:
                             {% if order.captions == True %}
@@ -112,6 +162,9 @@
                             No
                             {% endif %}
                         </p>
+                        <p class="h5">
+                            Deadline: {{ order.deadline }}
+                        </p>
                         {% if order.job_complete == False %}
                         <p>
                             <a href="#" class="detail-btn btn btn-outline-danger" data-toggle="modal"
@@ -124,8 +177,7 @@
             <div class="col-md-6 d-flex align-items-stretch">
                 <div class="card job-card">
                     <div class="card-body">
-                        <h3>Your Client</h3>
-
+                        <h4>Your Client</h4>
                         <div class="row">
                             <div class="col-4 text-center">
                                 <img id="profile-pic" class="float-center" src="{{ client_profile.image.url }}" alt="">
@@ -135,7 +187,8 @@
                                 <p id="profile-language" class="text-weight-bold">Language:
                                     {{ client_profile.language }}
                                 </p>
-                                <a href="{% url 'chat-room' order.job_id %}" class="btn btn-sm btn-outline-success">Message</a>
+                                <a href="{% url 'chat-room' order.job_id %}"
+                                    class="btn btn-sm btn-outline-success">Message</a>
                             </div>
                             <div id="profile-description-div" class="col-8 text-right">
                                 <h5>{{ client_profile.email }}</h5>
@@ -150,37 +203,196 @@
             <div class="col-12">
                 <div class="card job-card">
                     <div class="card-body">
-                        <h3>Milestones</h3>
-                        <p><span class="font-weight-bold">Milestone 1 Statement:</span>
-                            {{ order.milestone_one_statement }}
-                        </p>
-                        <p><span class="font-weight-bold">Milestone 2 Statement:</span>
-                            {{ order.milestone_two_statement }}
-                        </p>
-                        <p><span class="font-weight-bold">Milestone 3 Statement:</span>
-                            {{ order.milestone_three_statement }}</p>
-                        <p><span class="font-weight-bold">Milestone 4 Statement:</span>
-                            {{ order.milestone_four_statement }}
-                        </p>
-                        <h5>Job Completion</h5>
-                        <div class="progress" id="milestone-bar">
-                            <div id="progress-bar-job-completion" class="progress-bar bg-success" role="progressbar"
-                                aria-valuemin="0" aria-valuemax="100">
-                                25%
+                        <h4>Job Timeline</h4>
+                        <div>
+                            {% if order.job_preparation_completed == False %}
+                            <div id="service-preparation" class="col-sm-12 col-md-6">
+                                <h5 class="sub-titles">Service Preparation</h5>
+                                <small>This is the time given to the social media managers before the job
+                                    starts.</small>
+                                <p><span class="font-weight-bold">Service Preparation Length:</span>
+                                    {% if order.job_preparation_completed == False %}
+                                    {{ job_prep_days_left }}
+                                    {% else %}
+                                    Completed
+                                    {% endif %}
+                                </p>
+                                {% if order.job_preparation_completed == False %}
+                                <a href="{% url 'dashboard-end-job-prep' order.id %}" id="end-preparation-btn"
+                                    class="btn btn-outline-primary">End Preparation</a>
+                                {% endif %}
                             </div>
-                            <div id="progress-bar-job-incompletion" class="progress-bar" role="progressbar"
-                                style="color:#000; background-color: rgba(0, 0, 0, .125); width: 0%;">
+                            {% endif %}
+                            <div id="milestones" class="col-sm-12 col-md-6">
+                                <h5 class="sub-titles">Milestones</h5>
+                                <small>A milestone is a description of the services provided in a specific time frame.
+                                    You're
+                                    responsible for filling out milestones every time you get so far through a
+                                    job.</small>
+                                <div id="milestone-row">
+                                    <div class="milestone-div"><span class="font-weight-bold">Milestone 1
+                                            Statement:</span>
+                                        {% if order.milestone_one_statement != 'none' %}
+                                        {{ order.milestone_one_statement }}
+                                        <p>
+                                            {% for file in image_list_milestone_one %}
+                                            <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
+                                            {% endfor %}
+                                        </p>
+                                        {% else %}
+                                        <span class="update-link" data-toggle="modal"
+                                            data-target="#milestone-one-update">Update</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="milestone-div"><span class="font-weight-bold">Milestone 2
+                                            Statement:</span>
+                                        {% if order.milestone_two_statement != 'none' %}
+                                        {{ order.milestone_two_statement }}
+                                        <p>
+                                            {% for file in image_list_milestone_two %}
+                                            <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
+                                            {% endfor %}
+                                        </p>
+                                        {% else %}
+                                        <span class="update-link" data-toggle="modal"
+                                            data-target="#milestone-two-update">Update</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="milestone-div"><span class="font-weight-bold">Milestone 3
+                                            Statement:</span>
+                                        {% if order.milestone_three_statement != 'none' %}
+                                        {{ order.milestone_three_statement }}
+                                        <p>
+                                            {% for file in image_list_milestone_three %}
+                                            <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
+                                            {% endfor %}
+                                        </p>
+                                        {% else %}
+                                        <span class="update-link" data-toggle="modal"
+                                            data-target="#milestone-three-update">Update</span>
+                                    </div>
+                                    {% endif %}
+                                    <div class="milestone-div"><span class="font-weight-bold">Milestone 4
+                                            Statement:</span>
+                                        {% if order.milestone_four_statement != 'none' %}
+                                        {{ order.milestone_four_statement }}
+                                        <p>
+                                            {% for file in image_list_milestone_four %}
+                                            <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
+                                            {% endfor %}
+                                        </p>
+                                        {% else %}
+                                        <span class="update-link" data-toggle="modal"
+                                            data-target="#milestone-four-update">Update</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <p>Note: Managers update their milestones after they get through a certain point during the
-                            job
-                        </p>
+                        <div id="job-completion">
+                            <h5>Job Completion</h5>
+                            <div class="progress" id="milestone-bar">
+                                <div id="progress-bar-job-completion" class="progress-bar bg-success" role="progressbar"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    25%
+                                </div>
+                                <div id="progress-bar-job-incompletion" class="progress-bar" role="progressbar"
+                                    style="color:#000; background-color: rgba(0, 0, 0, .125); width: 0%;">
+                                </div>
+                            </div>
+                            <p>Note: Managers update their milestones after they get through a certain point during
+                                the
+                                job
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% if order.job_preparation_completed == True %}
+<div class="modal fade" id="milestone-one-update" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 class="update-milestone-header">Update Milestone One</h3>
+
+                <div class="text-left">
+                    <form method="POST" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <input type="hidden" name="milestone-number" id="milestone-number" value="1">
+                        {{ form.milestone_one_statement }}
+                        {{ form.milestone_one_files }}
+                        <input type="submit" class="btn btn-outline-primary" value="update">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="milestone-two-update" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 class="update-milestone-header">Update Milestone Two</h3>
+
+                <div class="text-left">
+                    <form method="POST" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <input type="hidden" name="milestone-number" id="milestone-number" value="1">
+                        {{ form.milestone_two_statement }}
+                        {{ form.milestone_two_files }}
+                        <input type="submit" class="btn btn-outline-primary" value="update">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="milestone-three-update" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 class="update-milestone-header">Update Milestone Three</h3>
+
+                <div class="text-left">
+
+                    <form method="POST" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <input type="hidden" name="milestone-number" id="milestone-number" value="1">
+                        {{ form.milestone_three_statement }}
+                        {{ form.milestone_three_files }}
+                        <input type="submit" class="btn btn-outline-primary" value="update">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="milestone-four-update" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h3 class="update-milestone-header">Update Milestone Four</h3>
+                <div class="text-left">
+                    <form method="POST" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <input type="hidden" name="milestone-number" id="milestone-number" value="1">
+                        {{ form.milestone_four_statement }}
+                        {{ form.milestone_four_files }}
+                        <input type="submit" class="btn btn-outline-primary" value="update">
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% if order.job_complete == False %}
 <div class="modal fade" id="cancel-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -193,7 +405,7 @@
                     {% else %}
                     <p>We won't charge because you haven't been paired with a manager yet</p>
                     {% endif %}
-                    <a href="#" class="btn btn-danger">Cancel Now</a>
+                    <a href="#" id="cancel-button" class="btn btn-danger">Cancel Now</a>
                 </div>
             </div>
         </div>
@@ -201,6 +413,48 @@
 </div>
 {% endif %}
 <script>
+    // function showMilestone(e, milestone) {
+    //     let milestoneDivs = document.getElementsByClassName('update-form-div');
+    //     milestone = milestone - 1;
+    //     milestone = milestoneDivs[milestone]
+    //     milestone.style.display = 'block';
+    // }
+    function onLoad() {
+
+        // Adding style to all image fields
+        var inputs = document.getElementsByTagName("input");
+        for (i = 0; i < inputs.length; i++) {
+            var input = inputs[i];
+            var inputClass = input.getAttribute("class");
+            console.log("class: " + inputClass)
+            if (inputClass == null) {
+                // alert('yay')
+                input.setAttribute("class", "form-control");
+            }
+        }
+
+        // Changing UI if job prep id exist
+        var jobPrep = document.getElementById('service-preparation');
+        var milestoneMainDiv = document.getElementById('milestones');
+        var milestoneRow = document.getElementById('milestone-row');
+        if (jobPrep == null) {
+            milestoneMainDiv.classList.remove("col-md-6");
+            milestoneMainDiv.classList.remove("col-sm-12");
+            milestoneRow.setAttribute("class", "row");
+
+            var milestoneDivs = document.getElementsByClassName('milestone-div');
+            for (i = 0; i < milestoneDivs.length; i++) {
+                var milestoneDiv = milestoneDivs[i];
+                // console.log(i)
+                milestoneDivs[i].setAttribute("class", "milestone-div col-sm-12 col-md-6");
+                console.log(i)
+
+            }
+        }
+        // alert(jobPrep);
+    }
+    onLoad();
+
     function progressBar(job_complete, milestone1 = 'none', milestone2 = 'none', milestone3 = 'none', milestone4 = 'none') {
         let progressBarElement = document.getElementById('progress-bar-job-completion')
         let progressBarIncompleteElement = document.getElementById('progress-bar-job-incompletion')
@@ -233,5 +487,6 @@
         }
     }
     progressBar("{{ order.job_complete }}", "{{ order.milestone_one_statement }}", "{{ order.milestone_two_statement }}", "{{ order.milestone_four_statement }}", "{{ order.milestone_four_statement }}")
+
 </script>
 {% endblock %}

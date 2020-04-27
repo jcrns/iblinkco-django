@@ -25,10 +25,11 @@ def room(request, room_name):
     # Checking if user is client or manager then getting opposite
     if request.user == job.client:
         involvedUserName = job.manager
-        involvedUser = Profile.objects.filter(user=involvedUserName)
+        print(job.manager)
+        involvedUser = Profile.objects.get(user=involvedUserName)
     else:
         involvedUserName = job.client
-        involvedUser = Profile.objects.filter(user=involvedUserName)
+        involvedUser = Profile.objects.get(user=involvedUserName)
 
     return render(request, 'chat/room.html', {
         'room_name': mark_safe(json.dumps(room_name)),

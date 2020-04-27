@@ -28,10 +28,6 @@
         min-height: 300px;
     }
 
-    #no-job {
-        padding-top: 50px;
-    }
-
     .container-fluid h3 {
         padding: 10px;
     }
@@ -82,9 +78,28 @@
     #pay-button {
         width: 100px;
     }
+
+    @media (max-width: 1600px) {
+        #no-job-text {
+            margin-top: -50px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #no-job-text {
+            /* margin-top: 50px; */
+        }
+    }
 </style>
 <div class="client">
     <div class="container-fluid">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
         <h3 class="m-0 text-dark">Management Dashboard</h3>
         <div class="row" id="top-row">
             <div class="col-md-6 d-flex align-items-stretch">
@@ -128,13 +143,15 @@
                             <a href="{% url 'dashboard-confirm-job' job.id %}" id="pay-button"
                                 class="btn btn-primary">Pay</a>
                             {% else %}
-                            <a href="{% url 'dashboard-job-detail-manager' job.id %}" class="btn btn-success">Details</a>
+                            <a href="{% url 'dashboard-job-detail-manager' job.id %}"
+                                class="btn btn-success">Details</a>
                             {% endif %}
                             {% endfor %}
                         </div>
                         {% else %}
-                        <div id="no-job" class="text-center">
-                            <h3 class="text-secondary d-flex align-items-center justify-content-center">No jobs assigned
+                        <div class="d-flex h-100 text-center">
+                            <h3 class="text-secondary d-flex align-items-center justify-content-center mx-auto"
+                                id="no-job-text">No jobs assigned
                             </h3>
                         </div>
                         {% endif %}

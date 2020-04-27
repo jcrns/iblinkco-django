@@ -24,6 +24,9 @@ from django.contrib import messages
 # Adding random string gen to create job id
 from webapp.utils import unique_order_id_generator
 
+# Importing billing
+from billing.models import BillingProfile
+
 # View for django post job select
 def postJobSelect(request):
 
@@ -210,6 +213,8 @@ def completeProfileManager(request):
 def checkoutHome(request):
     job_obj = JobPost.objects.get(client=request.user)
     order_obj = None
+
+    # Checkinf if job exists
     if job_obj:
         order_obj, new_order_obj = Order.objects.get_or_create(job=job_obj)
         print(order_obj.job)
@@ -217,7 +222,10 @@ def checkoutHome(request):
     else:
         print('sdsds')
         return redirect('service-job')
-    return render(request, 'service/checkout.html', { "object" : order_obj, "static_header" : True, "nav_black_link" : True })
+    # Getting billing profile
+    billing_profile, billing_profile_created = BillingProfile.objects.get_or_create(user=request.user, email=request.user.email)
+    
+    return render(request, 'service/checkout.html', { "object" : order_obj, "billing_profile" : billing_profile, "static_header" : True, "nav_black_link" : True })
     
 # Price calculation func
 def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement, post_for_you, caption, search_for_content):

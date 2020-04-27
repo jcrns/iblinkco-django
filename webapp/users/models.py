@@ -11,7 +11,7 @@ class Profile(models.Model):
     first_name = models.CharField(max_length=60, default='none')
     last_name = models.CharField(max_length=60, default='none')
     language = models.CharField(max_length=60, default='none')
-    date_of_birth = models.DateField(max_length=8, default=now)
+    date_of_birth = models.DateField(max_length=8, blank=True, null=True)
 
 
     # Bool for if user is currently in a job
@@ -34,7 +34,7 @@ class Profile(models.Model):
     
     def __str__(self):
         return f'{self.user.username} Profile'
-        
+    
     # def save(self, *args, **kwargs):
     #     if self.image:
     #         self.image = get_thumbnail(self.image, '300x300', quality=99, format='JPEG')

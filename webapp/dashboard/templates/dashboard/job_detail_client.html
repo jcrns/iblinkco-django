@@ -49,6 +49,14 @@
     #submit-button {
         width: 100px;
     }
+
+    .milestone-div {
+        padding-bottom: 10px;
+    }
+
+    .milestone-img {
+        max-width: 100px;
+    }
 </style>
 <div class="job">
     <div class="container-fluid">
@@ -56,7 +64,7 @@
             <div class="col-md-6 d-flex align-items-stretch">
                 <div class="card job-card">
                     <div class="card-body">
-                        <h3>Job Details</h3>
+                        <h4>Job Details</h4>
                         <p class="h5">
                             Services:
                             {% if order.captions == True %}
@@ -112,6 +120,9 @@
                             No
                             {% endif %}
                         </p>
+                        <p class="h5">
+                            Deadline: {{ order.deadline }}
+                        </p>
                         {% if order.job_complete == False %}
                         <p>
                             <a href="#" class="detail-btn btn btn-outline-danger" data-toggle="modal"
@@ -125,7 +136,7 @@
                 <div class="card job-card">
                     <div class="card-body">
                         {% if order.manager %}
-                        <h3>Your Manager</h3>
+                        <h4>Your Manager</h4>
                         <div class="row">
                             <div class="col-4 text-center">
                                 <img id="profile-pic" class="float-center" src="{{ manager_profile.image.url }}" alt="">
@@ -135,7 +146,8 @@
                                 <p id="profile-language" class="text-weight-bold">Language:
                                     {{ manager_profile.language }}
                                 </p>
-                                <a href="{% url 'chat-room' order.job_id %}" class="btn btn-sm btn-outline-success">Message</a>
+                                <a href="{% url 'chat-room' order.job_id %}"
+                                    class="btn btn-sm btn-outline-success">Message</a>
 
                             </div>
                             <div id="profile-description-div" class="col-8 text-right">
@@ -158,18 +170,47 @@
             <div class="col-12">
                 <div class="card job-card">
                     <div class="card-body">
-                        <h3>Milestones</h3>
-                        <p><span class="font-weight-bold">Milestone 1 Statement:</span>
-                            {{ order.milestone_one_statement }}
-                        </p>
-                        <p><span class="font-weight-bold">Milestone 2 Statement:</span>
-                            {{ order.milestone_two_statement }}
-                        </p>
-                        <p><span class="font-weight-bold">Milestone 3 Statement:</span>
-                            {{ order.milestone_three_statement }}</p>
-                        <p><span class="font-weight-bold">Milestone 4 Statement:</span>
-                            {{ order.milestone_four_statement }}
-                        </p>
+                        <h4>Milestones</h4>
+                        <p>Managers are required to update the milestones every few days so the progress of the job can
+                            be confirmed.</p>
+                        <div id="milestone-row" class="row">
+                            <div class="milestone-div col-sm-12 col-md-6"><span class="font-weight-bold">Milestone 1
+                                    Statement:</span>
+                                {{ order.milestone_one_statement }}
+                                <p>
+                                    {% for file in image_list_milestone_one %}
+                                    <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
+                                    {% endfor %}
+                                </p>
+                            </div>
+                            <div class="milestone-div col-sm-12 col-md-6"><span class="font-weight-bold">Milestone 2
+                                    Statement:</span>
+                                {{ order.milestone_two_statement }}
+                                <p>
+                                    {% for file in image_list_milestone_two %}
+                                    <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
+                                    {% endfor %}
+                                </p>
+                            </div>
+                            <div class="milestone-div col-sm-12 col-md-6"><span class="font-weight-bold">Milestone 3
+                                    Statement:</span>
+                                {{ order.milestone_three_statement }}
+                                <p>
+                                    {% for file in image_list_milestone_three %}
+                                    <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
+                                    {% endfor %}
+                                </p>
+                            </div>
+                            <div class="milestone-div col-sm-12 col-md-6"><span class="font-weight-bold">Milestone 4
+                                    Statement:</span>
+                                {{ order.milestone_four_statement }}
+                                <p>
+                                    {% for file in image_list_milestone_four %}
+                                    <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
+                                    {% endfor %}
+                                </p>
+                            </div>
+                        </div>
                         <h5>Job Completion</h5>
                         <div class="progress" id="milestone-bar">
                             <div id="progress-bar-job-completion" class="progress-bar bg-success" role="progressbar"
@@ -201,7 +242,7 @@
                     {% else %}
                     <p>We won't charge because you haven't been paired with a manager yet</p>
                     {% endif %}
-                    <a href="#" class="btn btn-danger">Cancel Now</a>
+                    <a href="{% url 'dashboard-job-delete' order.id %}" class="btn btn-danger">Cancel Now</a>
                 </div>
             </div>
         </div>
@@ -209,6 +250,7 @@
 </div>
 {% endif %}
 <script>
+
     function progressBar(job_complete, milestone1 = 'none', milestone2 = 'none', milestone3 = 'none', milestone4 = 'none') {
         let progressBarElement = document.getElementById('progress-bar-job-completion')
         let progressBarIncompleteElement = document.getElementById('progress-bar-job-incompletion')

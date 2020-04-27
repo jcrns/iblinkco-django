@@ -21,6 +21,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Project Apps
     'homepage.apps.HomepageConfig',
+    'billing.apps.BillingConfig',
     'management.apps.ManagementConfig',
     'blog.apps.BlogConfig',
     'dashboard.apps.DashboardConfig',

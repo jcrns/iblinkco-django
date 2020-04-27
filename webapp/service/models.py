@@ -45,25 +45,35 @@ class JobPost(models.Model):
     instagram_username = models.CharField(max_length=100, blank=True, default='none')
     facebook_username = models.CharField(max_length=100, blank=True, default='none')
 
-    # Milestone
+    # Milestones
     completed_milestone_one = models.BooleanField(default=False)
     milestone_one_statement = models.CharField(max_length=1000, default='none')
+    milestone_one_files = models.FileField(default='default.jpg',  upload_to='milestone_files')
 
     completed_milestone_two = models.BooleanField(default=False)
     milestone_two_statement = models.CharField(max_length=1000, default='none')
-    
+    milestone_two_files = models.FileField(default='default.jpg',  upload_to='milestone_files')
+
     completed_milestone_three = models.BooleanField(default=False)
     milestone_three_statement = models.CharField(max_length=1000, default='none')
-    
+    milestone_three_files = models.FileField(default='default.jpg', upload_to='milestone_files')
+
+
     completed_milestone_four = models.BooleanField(default=False)
     milestone_four_statement = models.CharField(max_length=1000, default='none')
+    milestone_four_files = models.FileField(default='default.jpg',  upload_to='milestone_files')
+
+    # Job Preparation
+    job_preparation_completed = models.BooleanField(default=False)
+    job_preparation_deadline = models.DateTimeField(
+        max_length=8, blank=True, null=True)
 
     # Date Job Posted
-    date_requested = models.DateTimeField(verbose_name='date requested', auto_now_add=True)
+    date_requested = models.DateTimeField(
+        verbose_name='date requested', auto_now_add=True)
 
-    # Deadline for 
-    deadline = models.DateTimeField(verbose_name='deadline', editable=True)
-
+    # Deadline for job
+    deadline = models.DateTimeField(max_length=8, blank=True, null=True)
 
     def __str__(self):
         print(self.manager)
@@ -76,10 +86,19 @@ class JobPost(models.Model):
             # Creating deadline for job
             now = datetime.date.today()
             print('current time', now)
+
+            # Getting absolute job length by adding regular job length and preparation time
             realJobLength = self.length + 2
-            now = now + datetime.timedelta(days=realJobLength)
-            print('new deadline', now)
-            self.deadline = now
+
+            # Adding the absolute job length to current time
+            deadline = now + datetime.timedelta(days=realJobLength)
+            print('new deadline', deadline)
+            self.deadline = deadline
+
+            # Getting preparation time
+            now = now + datetime.timedelta(days=2)
+            self.job_preparation_deadline = now
+
         super(JobPost, self).save(force_insert, force_update, *args, **kwargs)
 
 def pre_save_create_job_id(sender, instance, *args, **kwargs):
@@ -87,3 +106,12 @@ def pre_save_create_job_id(sender, instance, *args, **kwargs):
         instance.job_id = random_string_generator(size=16)
 
 pre_save.connect(pre_save_create_job_id, sender=JobPost)
+
+# Milestone file model
+class MilestoneFiles(models.Model):
+    job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    milestoneOne = models.BooleanField(default=False)
+    milestoneTwo = models.BooleanField(default=False)
+    milestoneThree = models.BooleanField(default=False)
+    milestoneFour = models.BooleanField(default=False)
+    milestoneFile = models.FileField()
