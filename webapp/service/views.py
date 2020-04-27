@@ -15,9 +15,6 @@ from .forms import JobPostForm
 # Importing job model
 from .models import JobPost
 
-# Getting order
-from orders.models import Order
-
 # Importing messages
 from django.contrib import messages
 
@@ -26,6 +23,12 @@ from webapp.utils import unique_order_id_generator
 
 # Importing billing
 from billing.models import BillingProfile
+
+# Importing stripe
+import stripe
+
+stripe.api_key = "sk_test_8dRE7QLn40wUt6wZtr8upMA4"
+
 
 # View for django post job select
 def postJobSelect(request):
@@ -210,23 +213,42 @@ def completeProfileManager(request):
 
 
 # Checkout view
-def checkoutHome(request):
-    job_obj = JobPost.objects.get(client=request.user)
-    order_obj = None
+def checkoutHome(request, job_id):
+    job_obj = JobPost.objects.get(job_id=job_id)
 
-    # Checkinf if job exists
-    if job_obj:
-        order_obj, new_order_obj = Order.objects.get_or_create(job=job_obj)
-        print(order_obj.job)
-        print(new_order_obj)
-    else:
-        print('sdsds')
-        return redirect('service-job')
     # Getting billing profile
     billing_profile, billing_profile_created = BillingProfile.objects.get_or_create(user=request.user, email=request.user.email)
-    
-    return render(request, 'service/checkout.html', { "object" : order_obj, "billing_profile" : billing_profile, "static_header" : True, "nav_black_link" : True })
-    
+
+    return render(request, 'service/checkout.html', {"object": job_obj, "billing_profile": billing_profile, "static_header": True, "nav_black_link": True})
+
+
+def charge(request):
+    job = JobPost.objects.get(client=request.user)
+    if request.method == "POST":
+        print("data: ", request.POST )
+        job.paid_for = True
+        # Creating stripe customer
+        customer = stripe.Customer.create(
+            email=request.user.email,
+            name=request.user.username,
+            source=request.POST['stripeToken']
+        )
+
+        # Converting price to pennies for stripe
+        price = int(job.price_paid*100)
+
+        # Charging user
+        charge = stripe.Charge.create(
+            customer=customer,
+            amount=price,
+            currency="usd",
+            description=job.service_description
+        )
+    return redirect('service-job-success', job_id=job.job_id)
+# Success view
+def jobSuccess(request, job_id):
+    return render(request, 'service/job_success.html', {"static_header": True, "nav_black_link": True})
+
 # Price calculation func
 def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement, post_for_you, caption, search_for_content):
     platforms = 0

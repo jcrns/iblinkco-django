@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'users.apps.UsersConfig',
     'service.apps.ServiceConfig',
-    'orders.apps.OrdersConfig',
     'chat.apps.ChatConfig',
     'channels',
     

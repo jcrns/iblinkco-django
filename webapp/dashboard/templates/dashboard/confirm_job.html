@@ -112,7 +112,7 @@
                     <div>
                         <a href="#" class="detail-btn btn btn-outline-danger" data-toggle="modal"
                             data-target="#cancel-modal">Cancel</a>
-                        <a href="{% url 'service-checkout' %}" class="detail-btn btn btn-outline-primary">Pay</a>
+                        <a href="{% url 'service-checkout' order.job_id %}" class="detail-btn btn btn-outline-primary">Pay</a>
                     </div>
                 </div>
             </div>

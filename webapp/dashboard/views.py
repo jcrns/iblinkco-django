@@ -67,6 +67,7 @@ def dashboard(request):
 
             # Getting evaluation
             evaluation = ManagerEvaluation.objects.get(manager=request.user)
+
             # Checking if evaluation is completed
             if evaluation.accepted == True:
             
@@ -74,8 +75,7 @@ def dashboard(request):
                 update_profile_form = ProfileUpdateFormManager(instance=request.user.profile)
                 past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
                 current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
-                print(past_jobs)
-                print(current_jobs)
+
                 # Checking if request used post method
                 if request.method == 'POST':
                 
@@ -194,7 +194,6 @@ class JobDetailView(DetailView):
         # Getting img files
         image_list_milestone_one = MilestoneFiles.objects.filter(
             job=context['object'], milestoneOne=True)
-        print(image_list_milestone_one)
 
         image_list_milestone_two = MilestoneFiles.objects.filter(
             job=context['object'], milestoneTwo=True)
@@ -247,8 +246,6 @@ class JobDetailView(DetailView):
             milestone_four_statement = form.cleaned_data.get(
                 'milestone_four_statement')
 
-            print(milestone_one_statement)
-            print(milestone_two_statement)
             # Checking which milestone is being updated
             if milestone_one_statement:
                 # Getting different images
@@ -348,7 +345,6 @@ class ConfirmJobDetailView(DetailView):
         # Adding edit profile form
         context['edit_job_form'] = JobPostFormUpdate(instance=context['object'])
 
-        print(context['object'].pk)
         return context
 
 # Delete user function
@@ -383,6 +379,5 @@ def jobPrepEnded(request, pk):
 
     # Changing variable in db
     job.job_preparation_completed = True
-    print(job.job_preparation_completed)
     job.save()
     return redirect('dashboard-job-detail-manager', pk=pk)

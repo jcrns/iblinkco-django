@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- test -->
+
 <head>
     <!-- Meta Data -->
     <meta charset="UTF-8">
@@ -46,8 +47,9 @@
     <!-- Icon -->
     <link rel="shortcut icon" href="{% static 'homepage/img/icon.ico' %}" type="image/x-icon">
 
-            <!-- Jquery -->
-        <script src="https://code.jquery.com/jquery-3.4.0.js" integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo="crossorigin="anonymous"></script>
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.4.0.js"
+        integrity="sha256-DYZMCC8HTC+QDr5QNaIcfR7VSPtcISykd+6eSmBW5qo=" crossorigin="anonymous"></script>
 </head>
 
 <body data-style="default">
@@ -63,26 +65,39 @@
             overflow-y: auto;
         }
 
-        {# if request.path == '/privacy_policy' or request.path == '/terms_and_conditions' or request.path == '/become_a_manager' or request.path == '/blog/' or request.path == '/overview' or request.path == '/dashboard' #}
-        {% if nav_black_link == True %}
-        .site-header .site-main-menu li > a{
+            {
+            # if request.path=='/privacy_policy'or request.path=='/terms_and_conditions'or request.path=='/become_a_manager'or request.path=='/blog/'or request.path=='/overview'or request.path=='/dashboard'#
+        }
+
+            {
+            % if nav_black_link==True %
+        }
+
+        .site-header .site-main-menu li>a {
             color: #888888;
         }
+
         header {
             border-bottom: 0.3px solid rgb(200, 200, 200);
             background-color: #fff;
         }
+
         .toggle-menu .bar {
             background: #000;
         }
-        {% endif %}
+
+            {
+            % endif %
+        }
 
         .nav-btn:hover {
             color: #FF8A00
         }
+
         .link-btn:hover {
             color: #FF8A00
         }
+
         #form-sign-up {
             overflow: scroll;
         }
@@ -130,13 +145,13 @@
 
                     <div class="site-mobile-logo">
                         <a href="{% url 'homepage-home' %}" class="logo">
-                                {% if  request.path == '/' %}
-                                    <img src="{% static 'homepage/img/headerlogowebsite-mobile-2.png' %}" alt="site logo"
-                                    class="main-logo">
-                                {% else %}
-                                     <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
-                                    class="main-logo">
-                                {% endif %}
+                            {% if  request.path == '/' %}
+                            <img src="{% static 'homepage/img/headerlogowebsite-mobile-2.png' %}" alt="site logo"
+                                class="main-logo">
+                            {% else %}
+                            <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
+                                class="main-logo">
+                            {% endif %}
 
                         </a>
                     </div>
@@ -150,10 +165,10 @@
                         <div class="site-logo">
                             <a href="{% url 'homepage-home' %}" class="logo">
                                 {% if request.path == '/' %}
-                                    <img src="{% static 'homepage/img/headerlogowebsite-mobile-2.png' %}" alt="site logo"
+                                <img src="{% static 'homepage/img/headerlogowebsite-mobile-2.png' %}" alt="site logo"
                                     class="main-logo">
                                 {% else %}
-                                     <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
+                                <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
                                     class="main-logo">
                                 {% endif %}
                                 <img src="{% static 'homepage/img/headerlogowebsite-mobile.png' %}" alt="site logo"
@@ -166,21 +181,23 @@
                             <ul class="site-main-menu">
                                 <li><a href="{% url 'blog-home' %}">Blog</a></li>
                                 {% if user.profile.is_client %}
-                                    <li><a href="{% url 'service-job' %}">Post a Job</a></li>
+                                <li><a href="{% url 'service-job' %}">Post a Job</a></li>
                                 {% else %}
-                                    <li><a href="{% url 'homepage-become-a-manager' %}">Become a Manager</a></li>
+                                <li><a href="{% url 'homepage-become-a-manager' %}">Become a Manager</a></li>
                                 {% endif %}
                                 {% if user.is_authenticated %}
-                                    <li><a href="{% url 'users-logout' %}">Logout</a></li>
-                                    <li><a id="username-link" href="{% url 'homepage-overview' %}" class="">Welcome, {{ user.username }} </a></li>
+                                <li><a href="{% url 'users-logout' %}">Logout</a></li>
+                                <li><a id="username-link" href="{% url 'homepage-overview' %}" class="">Welcome,
+                                        {{ user.username }} </a></li>
                                 {% else %}
-                                    <li><a class="float-right" href="#" data-toggle="modal" data-target="#login-modal">Login</a></li>
+                                <li><a class="float-right" href="#" data-toggle="modal"
+                                        data-target="#login-modal">Login</a></li>
                                 {% endif %}
                             </ul>
 
                             <div class="nav-right">
                                 {% if not user.is_authenticated %}
-                                    <a href="signup.html" class="nav-btn" data-toggle="modal"
+                                <a href="signup.html" class="nav-btn" data-toggle="modal"
                                     data-target="#signup-modal">Sign Up</a>
                                 {% endif %}
                             </div>
@@ -208,7 +225,8 @@
 
                                 <ul class="footer-menu">
                                     <li><a href="{% url 'homepage-privacy-policy' %}">Privacy Policy</a></li>
-                                    <li><a href="{% url 'homepage-terms-and-conditions' %}">Terms and Conditions</a></li>
+                                    <li><a href="{% url 'homepage-terms-and-conditions' %}">Terms and Conditions</a>
+                                    </li>
                                     <li><a href="#">Partnerships</a></li>
                                 </ul>
                             </div>
@@ -262,7 +280,7 @@
             </div><!-- /.container -->
         </footer><!-- /#footer -->
     </div>
-{% if not user.is_authenticated %}
+    {% if not user.is_authenticated %}
     <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -271,7 +289,8 @@
                 </div>
                 <div class="modal-body">
                     {% include "users/login.html" %}
-                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#signup-modal">Not a member yet? Sign Up</a>
+                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal"
+                        data-target="#signup-modal">Not a member yet? Sign Up</a>
                 </div>
             </div>
         </div>
@@ -285,12 +304,13 @@
                 </div>
                 <div class="modal-body" id="form-sign-up" style="overflow:scroll; height:400px;">
                     {% include "users/signup.html" %}
-                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal" data-target="#login-modal">Already a member? Login now</a>
+                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal"
+                        data-target="#login-modal">Already a member? Login now</a>
                 </div>
             </div>
         </div>
     </div>
-{% endif %}
+    {% endif %}
     <!-- Dependency Scripts -->
     <script src="{% static 'homepage/temp-static/dependencies/popper.js/popper.min.js' %}"></script>
     <script src="{% static 'homepage/temp-static/dependencies/jquery/jquery.min.js' %}"></script>
@@ -301,17 +321,21 @@
     <script src="{% static 'homepage/temp-static/dependencies/countUp.js/countUp.min.js' %}"></script>
     <script src="{% static 'homepage/temp-static/dependencies/isotope-layout/isotope.pkgd.min.js' %}"></script>
     <script src="{% static 'homepage/temp-static/dependencies/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
-    <script src="{% static 'homepage/temp-static/dependencies/jquery.parallax-scroll/js/jquery.parallax-scroll.js' %}"></script>
-    <script src="{% static 'homepage/temp-static/dependencies/magnific-popup/js/jquery.magnific-popup.min.js' %}"></script>
+    <script
+        src="{% static 'homepage/temp-static/dependencies/jquery.parallax-scroll/js/jquery.parallax-scroll.js' %}"></script>
+    <script
+        src="{% static 'homepage/temp-static/dependencies/magnific-popup/js/jquery.magnific-popup.min.js' %}"></script>
     <script src="{% static 'homepage/temp-static/dependencies/gmap3/js/gmap3.min.js' %}"></script>
-    <script type='text/javascript' src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDk2HrmqE4sWSei0XdKGbOMOHN3Mm2Bf-M&#038;ver=2.1.6'></script>
+    <script type='text/javascript'
+        src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDk2HrmqE4sWSei0XdKGbOMOHN3Mm2Bf-M&#038;ver=2.1.6'></script>
 
     <!-- Site Scripts -->
     {% if static_header %}
-        <script src="{% static 'homepage/temp-static/assets/js/header2.js' %}"></script>
+    <script src="{% static 'homepage/temp-static/assets/js/header2.js' %}"></script>
     {% else %}
-        <script src="{% static 'homepage/temp-static/assets/js/header.js' %}"></script>
+    <script src="{% static 'homepage/temp-static/assets/js/header.js' %}"></script>
     {% endif %}
     <script src="{% static 'homepage/temp-static/assets/js/app.js' %}"></script>
 </body>
+
 </html>
