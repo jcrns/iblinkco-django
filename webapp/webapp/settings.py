@@ -21,14 +21,14 @@ ALLOWED_HOSTS = ["127.0.0.1", "iblinkco-django.herokuapp.com"]
 print('sdsdsdd')
 INSTALLED_APPS = [
     # Project Apps
-    # 'homepage.apps.HomepageConfig',
-    'billing.apps.BillingConfig',
-    'management.apps.ManagementConfig',
-    'blog.apps.BlogConfig',
-    'dashboard.apps.DashboardConfig',
-    'users.apps.UsersConfig',
-    'service.apps.ServiceConfig',
-    'chat.apps.ChatConfig',
+    'homepage',
+    'billing',
+    'management',
+    'blog',
+    'dashboard',
+    'users',
+    'service',
+    'chat',
     'channels',
     
     # Django libraries
