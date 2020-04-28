@@ -65,29 +65,19 @@
             overflow-y: auto;
         }
 
-            {
-            # if request.path=='/privacy_policy'or request.path=='/terms_and_conditions'or request.path=='/become_a_manager'or request.path=='/blog/'or request.path=='/overview'or request.path=='/dashboard'#
-        }
-
-            {
-            % if nav_black_link==True %
-        }
-
-        .site-header .site-main-menu li>a {
+        {% if nav_black_link == True %}
+        .site-header .site-main-menu li > a{
             color: #888888;
         }
-
         header {
             border-bottom: 0.3px solid rgb(200, 200, 200);
+            background-color: #fff;
         }
-
         .toggle-menu .bar {
             background: #000;
         }
+        {% endif %}
 
-            {
-            % endif %
-        }
 
         .nav-btn:hover {
             color: #FF8A00
