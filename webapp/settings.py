@@ -30,8 +30,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'service.apps.ServiceConfig',
     'chat.apps.ChatConfig',
-    # 'channels',
-    'whitenoise.runserver_nostatic',
+    'channels',
+    # 'whitenoise.runserver_nostatic',
 
     # Django libraries
     'django.contrib.admin',
@@ -121,13 +121,11 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-
 STATIC_URL = '/static/'
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 
-
-
+# Media Settings
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
