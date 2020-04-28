@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     'service.apps.ServiceConfig',
     'chat.apps.ChatConfig',
     # 'channels',
-    
+    'whitenoise.runserver_nostatic',
+
     # Django libraries
     'django.contrib.admin',
     'django.contrib.auth',
