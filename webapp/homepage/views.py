@@ -12,6 +12,10 @@ from users.models import Profile
 # Importing login required func
 from django.contrib.auth.decorators import login_required
 
+# Importing evaluation modal 
+from management.models import ManagerEvaluation
+
+
 # Homepage function
 def home(request):
     form_register = UserRegisterForm()

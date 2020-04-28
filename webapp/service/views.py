@@ -225,8 +225,7 @@ def checkoutHome(request, job_id):
 def charge(request):
     job = JobPost.objects.get(client=request.user)
     if request.method == "POST":
-        print("data: ", request.POST )
-        job.paid_for = True
+
         # Creating stripe customer
         customer = stripe.Customer.create(
             email=request.user.email,
@@ -244,6 +243,9 @@ def charge(request):
             currency="usd",
             description=job.service_description
         )
+        
+        # Changing paid for bool in db
+        job.paid_for = True
     return redirect('service-job-success', job_id=job.job_id)
 # Success view
 def jobSuccess(request, job_id):
