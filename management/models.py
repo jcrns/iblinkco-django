@@ -28,11 +28,11 @@ class ManagerEvaluation(models.Model):
     # Question two answer 
     answer_two_caption = models.TextField(max_length=2200, default='none')
     answer_two_what_are_problems = models.TextField(max_length=2200, default='none')
-    answer_two_img = ResizedImageField(size=[300, 300],default='default.jpg', upload_to='application_pics')
+    answer_two_img = models.ImageField(default='default.jpg', upload_to='application_pics')
 
     # Question three answer
     answer_three_caption = models.TextField(max_length=2200, default='none')
-    answer_three_img = ResizedImageField(size=[300, 300],default='default.jpg', upload_to='application_pics')
+    answer_three_img = models.ImageField(default='default.jpg', upload_to='application_pics')
 
     # Question four answer
     choose_job = models.BooleanField(default=False)

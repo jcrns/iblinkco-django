@@ -10,7 +10,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ro5rd^(wia%&wji)uc@st(6l@e)-^0e$o*wx-3w=v8^!6m=d%e'
+SECRET_KEY = "ro5rd^(wia%&wji)uc@st(6l@e)-^0e$o*wx-3w=v8^!6m=d%e"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crispy_forms',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -157,7 +158,13 @@ CHANNEL_LAYERS = {
 if os.getcwd() =='/app':
     DEBUG=False
 
-DATABASES['default'] = dj_database_url.config(
-    conn_max_age=600, ssl_require=True)
 
 django_heroku.settings(locals())
+
+# AWS E3
+AWS_ACCESS_KEY_ID = "AKIA3YGF6HNLB6JBJQHU"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_STORAGE_BUCKET_NAME = "iblinkco-django"
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
