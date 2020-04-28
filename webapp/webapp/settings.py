@@ -19,7 +19,6 @@ ALLOWED_HOSTS = ["127.0.0.1", "iblinkco-django.herokuapp.com"]
 # Application definition
 
 print('sdsdsdd\n\n\n\n')
-print(DEBUG)
 INSTALLED_APPS = [
     # Project Apps
     'homepage.apps.HomepageConfig',
@@ -156,5 +155,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-# if os.getcwd() =='/app':
-#     DEBUG=True
+if os.getcwd() =='/app':
+    DEBUG=False
+print(DEBUG)
