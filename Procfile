@@ -1,1 +1,1 @@
-web: gunicorn webapp.angeerrererer.wsgi:application --log-file -
+web: gunicorn webapp.webapp.wsgi:application --log-file -
