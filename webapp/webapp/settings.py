@@ -20,15 +20,15 @@ ALLOWED_HOSTS = ["127.0.0.1", "iblinkco-django.herokuapp.com"]
 
 INSTALLED_APPS = [
     # Project Apps
-    'webapp.homepage.apps.HomepageConfig',
-    'webapp.billing.apps.BillingConfig',
-    'webapp.management.apps.ManagementConfig',
-    'webapp.blog.apps.BlogConfig',
-    'webapp.dashboard.apps.DashboardConfig',
-    'webapp.users.apps.UsersConfig',
-    'webapp.service.apps.ServiceConfig',
-    'webapp.chat.apps.ChatConfig',
-    'webapp.channels',
+    'homepage.apps.HomepageConfig',
+    'billing.apps.BillingConfig',
+    'management.apps.ManagementConfig',
+    'blog.apps.BlogConfig',
+    'dashboard.apps.DashboardConfig',
+    'users.apps.UsersConfig',
+    'service.apps.ServiceConfig',
+    'chat.apps.ChatConfig',
+    'channels',
     
     # Django libraries
     'django.contrib.admin',
@@ -120,9 +120,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+# PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 STATIC_URL = '/static/'
+
 # STATICFILES = [
 #     os.path.join(BASE_DIR, 'static')
 # ]
