@@ -1,1 +1,1 @@
-web: gunicorn iblinkco-django.wsgi
+web: gunicorn iblinkco-django:app --log-file
