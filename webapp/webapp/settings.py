@@ -18,6 +18,7 @@ ALLOWED_HOSTS = ["127.0.0.1", "iblinkco-django.herokuapp.com"]
 
 # Application definition
 
+print('sdsdsdd')
 INSTALLED_APPS = [
     # Project Apps
     'homepage.apps.HomepageConfig',
