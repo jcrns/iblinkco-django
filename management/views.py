@@ -1,4 +1,14 @@
+# Importing libs for stripe
+import requests
+import urllib
+import stripe
+
+from django.conf import settings
+
 from django.shortcuts import render, redirect
+
+# Importing profile to access
+from users.models import Profile
 
 # Importing evaluation modal 
 from .models import ManagerEvaluation
@@ -148,3 +158,55 @@ def evaluation(request):
                 return redirect('dashboard-home')
     else:
         return redirect('dashboard-home')
+
+
+# Stripe auth view
+def stripeAuthorizeView(request):
+    if not request.user.is_authenticated:
+        return redirect('dashboard-home')
+    url = 'https://connect.stripe.com/oauth/authorize'
+    params = {
+        'response_type': 'code',
+        'scope': 'read_write',
+        'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
+        'redirect_uri': f'http://localhost:8000/users/oauth/callback'
+    }
+    url = f'{url}?{urllib.parse.urlencode(params)}'
+    return redirect(url)
+
+# Stripe Oauth callback view
+
+
+def stripeAuthorizeCallbackView(request):
+    code = request.GET.get('code')
+    if code:
+        data = {
+            'client_secret': settings.STRIPE_SECRET_KEY,
+            'grant_type': 'authorization_code',
+            'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
+            'code': code
+        }
+        url = 'https://connect.stripe.com/oauth/token'
+        resp = requests.post(url, params=data)
+        print(resp.json())
+
+        # Updating stipe id token in db
+        stripe_user_id = resp.json()['stripe_user_id']
+        profile = Profile.objects.get(user=request.user)
+        profile.stripe_user_id = stripe_user_id
+        profile.save()
+        
+        # charge = stripe.Charge.create(
+        #     currency='USD',
+        #     amount=10000,
+        #     source= 'tok_bypassPending'
+        # )
+
+        # payout = stripe.Payout.create(
+        #     amount=1000,
+        #     currency='usd',
+        #     # destination=stripe_user_id,
+        # )
+
+    response = redirect('dashboard-home')
+    return response

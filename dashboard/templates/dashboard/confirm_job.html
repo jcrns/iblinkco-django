@@ -36,10 +36,12 @@
         width: 40px;
         height: 40px;
     }
+
     #facebook-pic {
         width: 60px;
         height: 35px;
     }
+
     #without-manager {
         margin-top: 60px;
     }
@@ -64,12 +66,26 @@
     #browse-link:hover {
         text-decoration: underline;
     }
+
+    #browse-managers-btn {
+        margin: 20px;
+    }
+    #return-div {
+        padding-top: 70px;
+        padding-bottom: 100px;
+    }
 </style>
 <div class="job">
     <div class="container-fluid">
         <div class="col-md-12 d-flex align-items-stretch">
             <div class="card job-card">
                 <div class="card-body text-center">
+                    {% if not order.manager %}
+                    <div id="return-div">
+                        <h2 class="text-secondary">We will notify you as soon as we assign a manager to this job</h2>
+                        <a href="{% url 'dashboard-home' %}" class='h3'>Return to Dashbaord</a>
+                    </div>
+                    {% endif %}
                     <h2><u>Job Order</u></h2>
                     <p class="h5">
                         <span class="card-title-bold">Price: </span>
@@ -108,11 +124,18 @@
                     <p class="h5">
                         <span class="card-title-bold">Manager Selection:</span> Random
                     </p>
-                    <a href="#" id="browse-link" data-toggle="modal" data-target="#browse-modal">Browse for Managers</a>
+
+                    {% if not order.manager %}
+                    <a href="#" id="browse-managers-btn" class="btn btn-outline-success" data-toggle="modal"
+                        data-target="#browse-modal">Browse for Managers</a>
+                    {% endif %}
                     <div>
                         <a href="#" class="detail-btn btn btn-outline-danger" data-toggle="modal"
                             data-target="#cancel-modal">Cancel</a>
-                        <a href="{% url 'service-checkout' order.job_id %}" class="detail-btn btn btn-outline-primary">Pay</a>
+                        {% if order.manager %}
+                        <a href="{% url 'service-checkout' order.job_id %}"
+                            class="detail-btn btn btn-outline-primary">Pay</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

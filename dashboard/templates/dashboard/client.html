@@ -76,8 +76,9 @@
         color: #343a40;
     }
 
-    #pay-button {
-        width: 100px;
+    #view-order-button {
+        min-width: 100px;
+        max-width: 200px;
     }
 </style>
 <div class="client">
@@ -139,8 +140,12 @@
                                 {% endif %}
                             </p>
                             {% if job.paid_for is not True %}
-                            <a href="{% url 'dashboard-confirm-job' job.id %}" id="pay-button"
-                                class="btn btn-primary">Pay</a>
+                            {% if job.manager %}
+                                <a href="{% url 'dashboard-confirm-job' job.id %}" id="view-order-button"
+                                    class="btn btn-primary">Pay</a>
+                            {% else %}
+                                <a href="{% url 'dashboard-confirm-job' job.id %}" id="view-order-button" class="btn btn-primary">View Order</a>
+                            {% endif %}
                             {% else %}
                             <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success">Details</a>
                             {% endif %}

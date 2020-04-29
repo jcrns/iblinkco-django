@@ -24,13 +24,16 @@ class Profile(models.Model):
     # Business data 
     business_name = models.CharField(max_length=60, default='none')
     business_type = models.CharField(max_length=60, default='none')
-    description = models.TextField(max_length=500, default='none')
+    description = models.TextField(max_length=5000, default='none')
 
     # Other information
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
 
     # Checking if user is fully verified
     image = models.ImageField(default='profile-blank.png', upload_to='profile_pics')
+
+    # Stripe user id for manager
+    stripe_user_id = models.CharField(max_length=255, blank=True)
     
     def __str__(self):
         return f'{self.user.username} Profile'

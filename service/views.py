@@ -15,6 +15,9 @@ from .forms import JobPostForm
 # Importing job model
 from .models import JobPost
 
+# Importing profile model
+from users.models import Profile
+
 # Importing messages
 from django.contrib import messages
 
@@ -214,39 +217,57 @@ def completeProfileManager(request):
 
 # Checkout view
 def checkoutHome(request, job_id):
+
+    # Getting job
     job_obj = JobPost.objects.get(job_id=job_id)
+    
+    # Getting managers stripe uid uid to 
+    manager_name = job_obj.manager
+    manager = Profile.objects.get(user=manager_name)
+    manager_uid = manager.stripe_user_id
 
-    # Getting billing profile
-    billing_profile, billing_profile_created = BillingProfile.objects.get_or_create(user=request.user, email=request.user.email)
+    # Creating payment object
+    payment_intent = stripe.PaymentIntent.create(
+        payment_method_types=['card'],
+        amount=1000,
+        currency='usd',
+        application_fee_amount=123,
+        transfer_data={
+            'destination': manager_uid,
+        }
+    )
+    # Checking if manager is selected if not redirecting
+    if not job_obj.manager:
+        return redirect('dashboard-home')
 
-    return render(request, 'service/checkout.html', {"object": job_obj, "billing_profile": billing_profile, "static_header": True, "nav_black_link": True})
+    return render(request, 'service/checkout.html', {"object": job_obj, "client_secret": payment_intent.client_secret, "static_header": True, "nav_black_link": True})
 
 
-def charge(request):
-    job = JobPost.objects.get(client=request.user)
-    if request.method == "POST":
+# def charge(request):
+#     job = JobPost.objects.get(client=request.user)
+#     if request.method == "POST":
 
-        # Creating stripe customer
-        customer = stripe.Customer.create(
-            email=request.user.email,
-            name=request.user.username,
-            source=request.POST['stripeToken']
-        )
+#         # Creating stripe customer
+#         customer = stripe.Customer.create(
+#             email=request.user.email,
+#             name=request.user.username,
+#             source=request.POST['stripeToken']
+#         )
 
-        # Converting price to pennies for stripe
-        price = int(job.price_paid*100)
+#         # Converting price to pennies for stripe
+#         price = int(job.price_paid*100)
 
-        # Charging user
-        charge = stripe.Charge.create(
-            customer=customer,
-            amount=price,
-            currency="usd",
-            description=job.service_description
-        )
+#         # Charging user
+#         charge = stripe.Charge.create(
+#             customer=customer,
+#             amount=price,
+#             currency="usd",
+#             description=job.service_description
+#         )
         
-        # Changing paid for bool in db
-        job.paid_for = True
-    return redirect('service-job-success', job_id=job.job_id)
+#         # Changing paid for bool in db
+#         job.paid_for = True
+#     return redirect('service-job-success', job_id=job.job_id)
 # Success view
 def jobSuccess(request, job_id):
     return render(request, 'service/job_success.html', {"static_header": True, "nav_black_link": True})

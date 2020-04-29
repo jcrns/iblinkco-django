@@ -75,7 +75,8 @@ def dashboard(request):
                 update_profile_form = ProfileUpdateFormManager(instance=request.user.profile)
                 past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
                 current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
-
+                print('profile.stripe_user_id')
+                
                 # Checking if request used post method
                 if request.method == 'POST':
                 

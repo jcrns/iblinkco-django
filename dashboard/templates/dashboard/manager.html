@@ -79,16 +79,8 @@
         width: 100px;
     }
 
-    @media (max-width: 1600px) {
-        #no-job-text {
-            margin-top: -50px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        #no-job-text {
-            /* margin-top: 50px; */
-        }
+    #stripe-connect-p {
+        font-size: 20px;
     }
 </style>
 <div class="client">
@@ -139,22 +131,23 @@
                                 {{ job.instagram_username }} (Instagram)
                                 {% endif %}
                             </p>
-                            {% if job.paid_for is not True %}
-                            <a href="{% url 'dashboard-confirm-job' job.id %}" id="pay-button"
-                                class="btn btn-primary">Pay</a>
-                            {% else %}
-                            <a href="{% url 'dashboard-job-detail-manager' job.id %}"
-                                class="btn btn-success">Details</a>
-                            {% endif %}
+                            
                             {% endfor %}
                         </div>
                         {% else %}
-                        <div class="d-flex h-100 text-center">
-                            <h3 class="text-secondary d-flex align-items-center justify-content-center mx-auto"
-                                id="no-job-text">No jobs assigned
+                        <div class="d-flex h-50 text-center">
+                            <h3 class="text-secondary d-flex align-items-center justify-content-center mx-auto" id="no-job-text">No jobs
+                                assigned
                             </h3>
                         </div>
                         {% endif %}
+                        <div class="text-center">
+                            {% if user.profile.stripe_user_id %}
+                            <p id="stripe-connect-p">Stripe: <span class="text-primary">Connected</span></p>
+                            {% else %}
+                            <a href="{% url 'management-authorize-stripe' %}" class="btn btn-outline-primary">Connect Stripe Account</a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
