@@ -220,7 +220,10 @@ def checkoutHome(request, job_id):
 
     # Getting job
     job_obj = JobPost.objects.get(job_id=job_id)
-    
+
+    # Redirecting if job is paid for
+    if job_obj.paid_for == True:
+        return redirect('dashboard-home')
     # Getting managers stripe uid uid to 
     manager_name = job_obj.manager
     manager = Profile.objects.get(user=manager_name)
@@ -229,7 +232,7 @@ def checkoutHome(request, job_id):
     # Creating payment object
     payment_intent = stripe.PaymentIntent.create(
         payment_method_types=['card'],
-        amount=1000,
+        amount=3000,
         currency='usd',
         application_fee_amount=123,
         transfer_data={
@@ -270,6 +273,10 @@ def checkoutHome(request, job_id):
 #     return redirect('service-job-success', job_id=job.job_id)
 # Success view
 def jobSuccess(request, job_id):
+    job = JobPost.objects.get(client=request.user)
+    if job.paid_for == False:
+        job.paid_for = True
+        job.save()
     return render(request, 'service/job_success.html', {"static_header": True, "nav_black_link": True})
 
 # Price calculation func

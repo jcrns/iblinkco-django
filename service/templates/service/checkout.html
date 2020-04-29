@@ -137,8 +137,8 @@
                     // execution. Set up a webhook or plugin to listen for the
                     // payment_intent.succeeded event that handles any business critical
                     // post-payment actions.
-                    // location.href = 'http://localhost:8000/dashboard';
-                    alert("success")
+                    var jobId = "{{ object.job_id }}"
+                    window.location = '/job_success/' + jobId;
                 }
             }
         });
