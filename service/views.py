@@ -30,7 +30,6 @@ import stripe
 # Importing celery task
 from .tasks import manager_assignment, check_milestone_date
 from datetime import timedelta, datetime
-import redis
 
 # Importing lib to get base site
 from django.contrib.sites.shortcuts import get_current_site
