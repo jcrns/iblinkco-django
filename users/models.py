@@ -13,7 +13,6 @@ class Profile(models.Model):
     language = models.CharField(max_length=60, default='none')
     date_of_birth = models.DateField(max_length=8, blank=True, null=True)
 
-
     # Bool for if user is currently in a job
     busy = models.BooleanField(default=False)
 
@@ -36,7 +35,7 @@ class Profile(models.Model):
     stripe_user_id = models.CharField(max_length=255, blank=True)
     
     def __str__(self):
-        return f'{self.user.username} Profile'
+        return f'{self.user.username}'
     
     # def save(self, *args, **kwargs):
     #     if self.image:

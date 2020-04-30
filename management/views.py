@@ -7,8 +7,14 @@ from django.conf import settings
 
 from django.shortcuts import render, redirect
 
+# importing messages from django
+from django.contrib import messages
+
 # Importing profile to access
 from users.models import Profile
+
+# Importing job post for job acceptance
+from service.models import JobPost
 
 # Importing evaluation modal 
 from .models import ManagerEvaluation
@@ -18,6 +24,16 @@ from .forms import *
 
 # Importing login required func
 from django.contrib.auth.decorators import login_required
+
+# Importing email functions
+from django.core.mail import EmailMessage
+
+# Importing needed libs for job acceptance
+from django.template.loader import render_to_string
+from django.contrib.auth.models import User
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from webapp.tokens import token_generation
 
 # Homepage function
 @login_required(login_url="/?login=true")
@@ -210,3 +226,62 @@ def stripeAuthorizeCallbackView(request):
 
     response = redirect('dashboard-home')
     return response
+
+# Sending manager email
+def emailJobOffer(user, job, current_site):
+    
+    # Getting current site
+    mail_subject = 'Activate your iBlinkco account.'
+
+    # Creating message body and rendering from template
+    messageBody = render_to_string('management/job_assignment.html', {
+        'user' : user,
+        'order': job,
+        'domain': current_site,
+        'uid': urlsafe_base64_encode(force_bytes(job.pk)),
+        'token': token_generation.make_token(user),
+    })
+    # Getting email
+    email = user.email
+    
+    print(email)
+    
+    # Sending email 
+    email = EmailMessage(mail_subject, messageBody, to=[f'{email}'])
+    email.send()
+    return email
+
+# Manager job offer
+@login_required(login_url="/?login=true")
+def managerOfferConfirm(request, uidb64, token):
+    
+    # Getting accepted arg
+    accepted = request.GET.get('accepted')
+    print(accepted)
+    # Defining user
+    user = request.user
+    try:
+        # Decoding encoded user id
+        uid = force_text(urlsafe_base64_decode(uidb64))
+
+        # Getting user
+        job = JobPost.objects.get(pk=uid)
+    except:
+        job = None
+    
+    # Checking if job exists
+    if job is not None and token_generation.check_token(user, token):
+
+        # If job is accepted changing bool in db
+        if accepted == 'True':
+            print('sdsdsd')
+            # Changing variable in db
+            job.manager = user
+            job.save()
+            messages.success(request, f'You are now assigned to work a job with {job.client}. We will notfiy when to start the job')
+        else:
+            # Deleting token because user declined job
+            request.user.auth_token.delete()
+    else:
+        messages.warning(request, f'Activation link is invalid!')
+    return redirect('dashboard-home')

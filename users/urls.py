@@ -8,6 +8,8 @@ urlpatterns = [
     path('signup', views.registerFunc, name='users-signup'),
     path('login', views.loginFunc, name='users-login'),
     path('logout', views.logoutFunc, name='users-logout'),
+    path('activate/(P<uidb64>[0-9A-Za-z_\-]+)/(P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/',
+        views.activate, name='users-activate'),
 
     # Profile functions
     path('confirm_user', views.comfirmUser, name='users-confirm-user-type'),

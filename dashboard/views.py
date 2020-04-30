@@ -30,6 +30,8 @@ from management.models import ManagerEvaluation
 # Importing datetime
 from datetime import datetime, timezone
 
+from django.http import HttpResponse
+
 # Overview function
 @login_required(login_url="/?login=true")
 def dashboard(request):
@@ -76,7 +78,7 @@ def dashboard(request):
                 past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
                 current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
                 print('profile.stripe_user_id')
-                
+
                 # Checking if request used post method
                 if request.method == 'POST':
                 

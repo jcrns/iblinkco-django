@@ -30,6 +30,14 @@ from billing.models import BillingProfile
 # Importing stripe
 import stripe
 
+# Importing celery task
+from .tasks import manager_assignment, check_milestone_date
+from datetime import timedelta, datetime
+
+# Importing lib to get base site
+from django.contrib.sites.shortcuts import get_current_site
+
+# Importing stripe key for checkout
 stripe.api_key = "sk_test_8dRE7QLn40wUt6wZtr8upMA4"
 
 
@@ -108,6 +116,13 @@ def postJob(request):
                 # Get obj for redirect
                 job = JobPost.objects.get(client=request.user)
                 pk = job.pk
+                
+                # getting current site and passing in to func
+                current_site = get_current_site(request)
+                current_site = current_site.domain
+
+                # Running async manager selection function
+                manager_assignment.apply_async((pk, current_site), countdown=3)
                 return redirect('dashboard-confirm-job', pk=pk)
             return redirect('dashboard-home')
         else:
@@ -224,6 +239,7 @@ def checkoutHome(request, job_id):
     # Redirecting if job is paid for
     if job_obj.paid_for == True:
         return redirect('dashboard-home')
+
     # Getting managers stripe uid uid to 
     manager_name = job_obj.manager
     manager = Profile.objects.get(user=manager_name)
@@ -271,12 +287,17 @@ def checkoutHome(request, job_id):
 #         # Changing paid for bool in db
 #         job.paid_for = True
 #     return redirect('service-job-success', job_id=job.job_id)
-# Success view
+
+# Success view after job is paid for
 def jobSuccess(request, job_id):
+
     job = JobPost.objects.get(client=request.user)
     if job.paid_for == False:
         job.paid_for = True
         job.save()
+
+    # Creating milestone emails
+
     return render(request, 'service/job_success.html', {"static_header": True, "nav_black_link": True})
 
 # Price calculation func

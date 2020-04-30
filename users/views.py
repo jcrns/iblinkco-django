@@ -27,6 +27,14 @@ from .models import Profile
 # Importing Evaluation Modal
 from management.models import ManagerEvaluation
 
+# Importing needed libs for email verification
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.models import User
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from webapp.tokens import token_generation
+
 # Registering new user
 def registerFunc(request):
     if request.method == 'POST':
@@ -36,25 +44,41 @@ def registerFunc(request):
 
         # Checking if form is valid
         if form.is_valid():
-            form.save()
+            # Changing is active bool in database to false before committing
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
 
             # Getting username and email to create message and confirm email
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
-
+            
+            # Getting current site
+            current_site = get_current_site(request)
+            mail_subject = 'Activate your iBlinkco account.'
+            
+            # Creating message body and rendering from template
+            messageBody = render_to_string('users/activate_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': token_generation.make_token(user),
+            })
             # Creating thank you message
-            messages.success(request, f'Congratulations {username} you created an account for iBlinkco!')
+            messages.success(
+                request, f'Congratulations {username} you created an account for iBlinkco! Please confirm your email address to complete the registration')
 
             # Sending email 
-            email = EmailMessage('Welcome to iBlinkco', 'Thank you for signing up to iBlinkco', to=[f'{email}'])
+            email = EmailMessage(mail_subject,
+                                 messageBody, to=[f'{email}'])
             print(email)
             email.send()
-            print({email})
             
             # Redirecting to login screen
             url = createUrl('login')
             return redirect(url)
         else:
+            print(form.errors)
             messages.warning(request, f'There was a problem creating your account')
             
 
@@ -64,6 +88,32 @@ def registerFunc(request):
 
     # Redirecting to signup screen
     url = createUrl('signup')
+    return redirect(url)
+
+# Activate account function
+def activate(request, uidb64, token):
+    try:
+        # Decoding encoded user id
+        uid = force_text(urlsafe_base64_decode(uidb64))
+
+        # Getting user
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and token_generation.check_token(user, token):
+
+        # Changing value of 
+        user.is_active = True
+        user.save()
+        login(request, user)
+
+        # return redirect('home')
+        messages.success(request, f'Thank you for your email confirmation. Now you can login your account.')
+    else:
+        messages.warning(request, f'Activation link is invalid!')
+
+    # Redirecting to login screen
+    url = createUrl('login')
     return redirect(url)
 
 # Login function
