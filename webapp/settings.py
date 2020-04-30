@@ -160,7 +160,7 @@ CHANNEL_LAYERS = {
 }
 
 if os.getcwd() =='/app':
-    DEBUG=False
+    DEBUG=True
 
 
 django_heroku.settings(locals())
