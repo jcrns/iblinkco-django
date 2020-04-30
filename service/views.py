@@ -1,6 +1,3 @@
-# Importing datetime to check if user is over 18
-import datetime
-
 from django.shortcuts import render, redirect
 
 # Importing login required func
@@ -188,11 +185,11 @@ def completeProfileManager(request):
         print(dob)
 
         # Converting dob to datetime obj using current time
-        my_time = datetime.datetime.min.time()
-        dob = datetime.datetime.combine(dob, my_time)
+        my_time = datetime.min.time()
+        dob = datetime.combine(dob, my_time)
 
         # Checking age with dob
-        now = datetime.datetime.now()
+        now = datetime.now()
         age = int((now - dob).days)
         age = age/365
 
