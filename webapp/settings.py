@@ -154,13 +154,14 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": ["redis://h:954c886918c238905dc2c322c34546bd9dbc2738d32523b12bc36ed2d058c387ec@ec2-34-211-446-320.compute-1.amazonaws.com:7719"],
+            "hosts": [('127.0.0.1', 6379)],
+            #  "hosts": ["redis://h:954c886918c238905dc2c322c34546bd9dbc2738d32523b12bc36ed2d058c387ec@ec2-34-211-446-320.compute-1.amazonaws.com:7719"],
         },
     },
 }
 
 if os.getcwd() =='/app':
-    DEBUG=True
+    DEBUG=False
 
 
 django_heroku.settings(locals())
