@@ -191,8 +191,6 @@ def stripeAuthorizeView(request):
     return redirect(url)
 
 # Stripe Oauth callback view
-
-
 def stripeAuthorizeCallbackView(request):
     code = request.GET.get('code')
     if code:
