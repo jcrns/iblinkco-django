@@ -66,7 +66,7 @@ class ManagerEvaluation(models.Model):
     def managerAccepted(self):
         user = self.manager
         # Getting current site
-        mail_subject = 'Congratulations' + user.username + 'You Have Been Verified for iBlinkco'
+        mail_subject = 'Congratulations ' + user.username + ' You Have Been Verified for iBlinkco'
 
         # Creating message body and rendering from template
         messageBody = 'You are now able to conduct social media management services for clients on iblinkco.com. Be sure to consistently check your email as we will let you know when you have been assigned to a job.'
