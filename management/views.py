@@ -185,7 +185,7 @@ def stripeAuthorizeView(request):
         'response_type': 'code',
         'scope': 'read_write',
         'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
-        'redirect_uri': f'http://localhost:8000/users/oauth/callback'
+        'redirect_uri': f'https://iblinkco-django.herokuapp.com/users/oauth/callback'
     }
     url = f'{url}?{urllib.parse.urlencode(params)}'
     return redirect(url)
