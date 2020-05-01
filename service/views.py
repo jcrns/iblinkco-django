@@ -28,7 +28,7 @@ from billing.models import BillingProfile
 import stripe
 
 # Importing celery task
-from .tasks import manager_assignment, check_milestone_date
+from .tasks import manager_assignment, check_milestone_date, test
 from datetime import timedelta, datetime
 
 # Importing lib to get base site
@@ -119,7 +119,8 @@ def postJob(request):
                 current_site = current_site.domain
 
                 # Running async manager selection function
-                manager_assignment.apply_async((pk, current_site), countdown=3)
+                # manager_assignment.apply_async((pk, current_site), countdown=3)
+                test.delay()
                 
                 return redirect('dashboard-confirm-job', pk=pk)
             return redirect('dashboard-home')
