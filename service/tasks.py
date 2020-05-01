@@ -19,6 +19,9 @@ from django.contrib.auth.models import User
 # Importing manager job email func
 from management.views import emailJobOffer
 
+# Importing revoke to end future functions
+from celery.task.control import revoke
+
 # Creating func to look for manager every five minutes
 @periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
 def manager_assignment(pk, current_site):
@@ -30,6 +33,7 @@ def manager_assignment(pk, current_site):
 
         # Checking if manager already assigned if so returning
         if job_obj.manager:
+            revoke('service.tasks.manager_assignment')
             return None
 
         # Getting client
@@ -58,13 +62,14 @@ def manager_assignment(pk, current_site):
         # print(email)
         # email.send()
         # print({email})
-
+        
+        revoke('service.tasks.manager_assignment')
         return None
 
     except Exception as e:
         print("e")
         print(e)
-        
+
 # Alert milestone email
 @shared_task(bind=True)
 def check_milestone_date(job_obj, milestone):
