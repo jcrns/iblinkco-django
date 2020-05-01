@@ -68,6 +68,7 @@ service_identity = "==18.1.0"
 Twisted = "==20.3.0"
 "zope.interface" = "==5.1.0"
 celery = "*"
+redis = "*"
 
 [requires]
 python_version = "3.7"
