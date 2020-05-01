@@ -64,17 +64,7 @@ def manager_assignment(pk, current_site):
     except Exception as e:
         print("e")
         print(e)
-
-
-@shared_task
-def test():
-    # Send manager found alert email
-    email = EmailMessage(
-        'Congrats we found a manager for your job', 'Hello , We hope all is well, has been assigned to your job. ', to=[f'jaydencummings1000@gmail.com'])
-    print(email)
-    email.send()
-    print({email})
-    
+        
 # Alert milestone email
 @shared_task(bind=True)
 def check_milestone_date(job_obj, milestone):
