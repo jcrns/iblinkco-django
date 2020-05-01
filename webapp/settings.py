@@ -154,10 +154,18 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            # "hosts": [('127.0.0.1', 6379)],
-             "hosts": ["redis://h:954c886918c238905dc2c322c34546bd9dbc2738d32523b12bc36ed2d058c387ec@ec2-34-211-446-320.compute-1.amazonaws.com:7719"],
+            "hosts": [('127.0.0.1', 6379)],
+            # "hosts": ["redis://h:p433bdebe493ed86f7b09195c7983f3743ad34351fc6a892be0ac374927395332@ec2-3-81-254-48.compute-1.amazonaws.com:8879"],
         },
     },
+}
+
+# Redis caches 
+CACHES = {
+    "default": {
+        "BACKEND": "redis_cache.RedisCache",
+        "LOCATION": os.environ.get('REDIS_URL'),
+    }
 }
 
 # Defining for production
