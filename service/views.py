@@ -119,7 +119,8 @@ def postJob(request):
                 current_site = current_site.domain
 
                 # Running async manager selection function
-                manager_assignment.apply_async((pk, current_site), countdown=3)
+                manager_assignment.s(pk, current_site).apply_async(countdown=3)
+
                 return redirect('dashboard-confirm-job', pk=pk)
             return redirect('dashboard-home')
         else:
