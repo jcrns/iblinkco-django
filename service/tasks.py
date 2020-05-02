@@ -26,11 +26,18 @@ from celery.task.control import revoke
 @periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
 def manager_assignment(pk, current_site):
     print('dfdfdfdfdf')
-
+    
+    # Checking if job still exist
     try:
-        print('sdsffafdvefge')
         job_obj = JobPost.objects.get(pk=pk)
+        print('sdsffafdvefge')
+    except Exception as e:
+        print(e)
+        revoke('service.tasks.manager_assignment')
+        return None
 
+    # Trying to get and assign manager and send email
+    try:
         # Checking if manager already assigned if so returning
         if job_obj.manager:
             revoke('service.tasks.manager_assignment')
@@ -52,17 +59,7 @@ def manager_assignment(pk, current_site):
         email = emailJobOffer(manager, job_obj, current_site)
 
         print('complete')
-        # Saving manager
-        # job_obj.manager = manager
-        # job_obj.save()
 
-        # Send manager found alert email
-        # email = EmailMessage(
-        #     'Congrats we found a manager for your job', 'Hello '+ client + ', We hope all is well, ' + manager_name + ' has been assigned to your job. ', to=[f'{client.email}'])
-        # print(email)
-        # email.send()
-        # print({email})
-        
         revoke('service.tasks.manager_assignment')
         return None
 

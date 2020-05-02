@@ -72,8 +72,13 @@ def postJob(request):
             captions = form.cleaned_data.get('captions')
             search_for_content = form.cleaned_data.get('search_for_content')
             
-            price = calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement, post_for_you, captions, search_for_content)
+            calculatedPrices = calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement, post_for_you, captions, search_for_content)
             
+            # Definiing variables from calculated prices
+            price = calculatedPrices[0]
+            iblinkco_fee = calculatedPrices[1]
+            manager_payment = calculatedPrices[2]
+
             # Validating Instagram and Twitter info is appropriate
             if instagramBool == False and facebookBool == False:
                 return redirect('service-job')
@@ -104,6 +109,8 @@ def postJob(request):
                 # Assigning variables to post to form
                 job.number_of_post = number_of_post
                 job.price_paid = price
+                job.job_fee = iblinkco_fee
+                job.manager_payment = manager_payment
                 job.save()
 
                 # Updating profile to busy
@@ -234,6 +241,10 @@ def checkoutHome(request, job_id):
     # Getting job
     job_obj = JobPost.objects.get(job_id=job_id)
 
+    # Defining transfer amount for managers
+    transfer_amount = int(job_obj.manager_payment*100)
+    application_fee = int(job_obj.job_fee*100)
+
     # Redirecting if job is paid for
     if job_obj.paid_for == True:
         return redirect('dashboard-home')
@@ -246,9 +257,9 @@ def checkoutHome(request, job_id):
     # Creating payment object
     payment_intent = stripe.PaymentIntent.create(
         payment_method_types=['card'],
-        amount=3000,
+        amount=transfer_amount,
         currency='usd',
-        application_fee_amount=123,
+        application_fee_amount=application_fee,
         transfer_data={
             'destination': manager_uid,
         }
@@ -343,17 +354,20 @@ def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement
     totalValue = totalValue + engagement
     totalValue = totalValue + post_for_you
     
-
+    # Defining the payment of managers
+    manager_payment = totalValue
 
     # Getting iBlinkco deduction by taking a percent from data
     iblinkcoValue = (totalValue * 0.1 ) + 2
-    
+    print(round(iblinkcoValue, 2))
+
     # Adding iBlinkco deduction to total
     totalValue = totalValue + iblinkcoValue
-
+    
     # Get stripe 
     stripe = (totalValue*0.029) + 0.3
 
     totalValue = totalValue + stripe
     totalValue = round(totalValue, 1)
-    return totalValue
+
+    return totalValue, iblinkcoValue, manager_payment

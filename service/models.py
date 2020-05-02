@@ -27,6 +27,7 @@ class JobPost(models.Model):
     manager_payment = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     price_paid = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     paid_for = models.BooleanField(default=False)
+    job_fee = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     manager_paid = models.BooleanField(default=False)
 
     # Job Details
