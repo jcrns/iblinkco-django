@@ -146,8 +146,10 @@
                                 <p id="profile-language" class="text-weight-bold">Language:
                                     {{ manager_profile.language }}
                                 </p>
+                                {% if order.job_complete == False %}
                                 <a href="{% url 'chat-room' order.job_id %}"
                                     class="btn btn-sm btn-outline-success">Message</a>
+                                {% endif %}
 
                             </div>
                             <div id="profile-description-div" class="col-8 text-right">

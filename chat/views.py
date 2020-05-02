@@ -19,7 +19,11 @@ from users.models import Profile
 @login_required(login_url="/?login=true")
 def room(request, room_name):
     job = JobPost.objects.get(job_id=room_name)
+
     if not job:
+        return redirect('dashboard-home')
+
+    if job.job_complete == True:
         return redirect('dashboard-home')
 
     # Checking if user is client or manager then getting opposite

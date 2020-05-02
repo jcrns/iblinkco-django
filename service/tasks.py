@@ -27,10 +27,16 @@ from celery.task.control import revoke
 def manager_assignment(pk, current_site):
     print('dfdfdfdfdf')
     
-    # Checking if job still exist
+    # Checking if we can retrieve job else returning
     try:
         job_obj = JobPost.objects.get(pk=pk)
         print('sdsffafdvefge')
+
+        # Checking if job is none else returning
+        if not job_obj:
+            revoke('service.tasks.manager_assignment')
+            return None
+            
     except Exception as e:
         print(e)
         revoke('service.tasks.manager_assignment')

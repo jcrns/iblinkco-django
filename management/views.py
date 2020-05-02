@@ -178,15 +178,23 @@ def evaluation(request):
 
 # Stripe auth view
 def stripeAuthorizeView(request):
+
+    # Checking if user is signed in
     if not request.user.is_authenticated:
         return redirect('dashboard-home')
+    
+    # Definning stripe oauth url
     url = 'https://connect.stripe.com/oauth/authorize'
+
+    # Creating parameters
     params = {
         'response_type': 'code',
         'scope': 'read_write',
         'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
         'redirect_uri': f'https://iblinkco-django.herokuapp.com/users/oauth/callback'
     }
+
+    # Creating final
     url = f'{url}?{urllib.parse.urlencode(params)}'
     return redirect(url)
 
@@ -210,18 +218,6 @@ def stripeAuthorizeCallbackView(request):
         profile.stripe_user_id = stripe_user_id
         profile.save()
         
-        # charge = stripe.Charge.create(
-        #     currency='USD',
-        #     amount=10000,
-        #     source= 'tok_bypassPending'
-        # )
-
-        # payout = stripe.Payout.create(
-        #     amount=1000,
-        #     currency='usd',
-        #     # destination=stripe_user_id,
-        # )
-
     response = redirect('dashboard-home')
     return response
 
@@ -277,9 +273,9 @@ def managerOfferConfirm(request, uidb64, token):
             job.manager = user
             job.save()
             messages.success(request, f'You are now assigned to work a job with {job.client}. We will notfiy when to start the job')
-        else:
-            # Deleting token because user declined job
-            request.user.auth_token.delete()
+
+        # Deleting token
+        request.user.auth_token.delete()
     else:
         messages.warning(request, f'Activation link is invalid!')
     return redirect('dashboard-home')

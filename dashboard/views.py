@@ -237,9 +237,12 @@ class JobDetailView(DetailView):
         # Getting form with requested data
         form = milestoneUpdate(self.request.POST, self.request.FILES, instance=self.object)
         
+        # Getting job for job complete bool update
+        job = JobPost.objects.get(pk=self.object.pk)
+
         # Checking if form is valid
         if form.is_valid():
-
+            
             # Getting inputed statements
             milestone_one_statement = form.cleaned_data.get('milestone_one_statement')
             milestone_two_statement = form.cleaned_data.get(
@@ -290,6 +293,10 @@ class JobDetailView(DetailView):
 
                 form.completed_milestone_four = True
                 form.save()
+
+                # Changing job complete bool
+                job.job_complete = True
+                job.save()
 
         # # Getting posted data
         # print(self.request.POST)
