@@ -118,7 +118,8 @@ def postJob(request):
                 profile.save(update_fields=["busy"])
 
                 # Get obj for redirect
-                job = JobPost.objects.get(client=request.user)
+                job = JobPost.objects.filter(client=request.user).last()
+                print(job)
                 pk = job.pk
                 
                 # getting current site and passing in to func
@@ -126,7 +127,7 @@ def postJob(request):
                 current_site = current_site.domain
 
                 # Running async manager selection function
-                manager_assignment.apply_async((pk, current_site), countdown=1800)
+                manager_assignment.apply_async((pk, current_site), countdown=3)
                 
                 return redirect('dashboard-confirm-job', pk=pk)
             return redirect('dashboard-home')
@@ -249,58 +250,44 @@ def checkoutHome(request, job_id):
     if job_obj.paid_for == True:
         return redirect('dashboard-home')
 
-    # Getting managers stripe uid uid to 
-    manager_name = job_obj.manager
-    manager = Profile.objects.get(user=manager_name)
-    manager_uid = manager.stripe_user_id
-
-    # Creating payment object
-    payment_intent = stripe.PaymentIntent.create(
-        payment_method_types=['card'],
-        amount=transfer_amount,
-        currency='usd',
-        application_fee_amount=application_fee,
-        transfer_data={
-            'destination': manager_uid,
-        }
-    )
     # Checking if manager is selected if not redirecting
     if not job_obj.manager:
         return redirect('dashboard-home')
 
-    return render(request, 'service/checkout.html', {"object": job_obj, "client_secret": payment_intent.client_secret, "static_header": True, "nav_black_link": True})
+    return render(request, 'service/checkout.html', {"object": job_obj, "static_header": True, "nav_black_link": True})
 
 
-# def charge(request):
-#     job = JobPost.objects.get(client=request.user)
-#     if request.method == "POST":
+def charge(request, job_id):
+    job = JobPost.objects.get(job_id=job_id)
+    if request.method == "POST":
+        print('sfdsdsd')
 
-#         # Creating stripe customer
-#         customer = stripe.Customer.create(
-#             email=request.user.email,
-#             name=request.user.username,
-#             source=request.POST['stripeToken']
-#         )
+        # Creating stripe customer
+        customer = stripe.Customer.create(
+            email=request.user.email,
+            name=request.user.username,
+            source=request.POST['stripeToken']
+        )
 
-#         # Converting price to pennies for stripe
-#         price = int(job.price_paid*100)
+        # Defining transfer amount for managers
+        price = int(job.price_paid*100)
 
-#         # Charging user
-#         charge = stripe.Charge.create(
-#             customer=customer,
-#             amount=price,
-#             currency="usd",
-#             description=job.service_description
-#         )
+        # Charging user
+        charge = stripe.Charge.create(
+            customer=customer,
+            amount=price,
+            currency="usd",
+            description=job.service_description
+        )
         
-#         # Changing paid for bool in db
-#         job.paid_for = True
-#     return redirect('service-job-success', job_id=job.job_id)
+        # Changing paid for bool in db
+        job.paid_for = True
+    return redirect('service-job-success', job_id=job.job_id)
 
 # Success view after job is paid for
-def jobSuccess(request, job_id):
+def jobPaymentSuccess(request, job_id):
 
-    job = JobPost.objects.get(client=request.user)
+    job = JobPost.objects.get(job_id=job_id)
     if job.paid_for == False:
         job.paid_for = True
         job.save()

@@ -269,13 +269,16 @@ def managerOfferConfirm(request, uidb64, token):
         # If job is accepted changing bool in db
         if accepted == 'True':
             print('sdsdsd')
-            # Changing variable in db
-            job.manager = user
-            job.save()
-            messages.success(request, f'You are now assigned to work a job with {job.client}. We will notfiy when to start the job')
 
-        # Deleting token
-        request.user.auth_token.delete()
+            # Checking if manager assigned already
+            if not job.manager:
+                # Changing variable in db
+                job.manager = user
+                job.save()
+                messages.success(request, f'You are now assigned to work a job with {job.client}. We will notfiy when to start the job')
+            # Redirecting if manager already assigned
+            else:
+                messages.warning(request, f'Manager already assigned')
     else:
         messages.warning(request, f'Activation link is invalid!')
     return redirect('dashboard-home')

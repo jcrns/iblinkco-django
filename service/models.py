@@ -10,6 +10,10 @@ import datetime
 # Importing to create job id
 from webapp.utils import random_string_generator
 
+from users.models import Profile
+# Import stripe
+import stripe
+
 class JobPost(models.Model):
 
     # JOB ID
@@ -31,6 +35,8 @@ class JobPost(models.Model):
     manager_paid = models.BooleanField(default=False)
 
     # Job Details
+
+    # Defining job complete bool and original job 
     job_complete = models.BooleanField(default=False)
     captions = models.BooleanField(default=False)
     search_for_content = models.BooleanField(default=False)
@@ -76,7 +82,7 @@ class JobPost(models.Model):
 
     # Deadline for job
     deadline = models.DateTimeField(max_length=8, blank=True, null=True)
-
+    
     def __str__(self):
         print(self.manager)
         return f'{self.client} Job Request {self.job_id}'
@@ -100,6 +106,40 @@ class JobPost(models.Model):
             # Getting preparation time
             now = now + datetime.timedelta(days=2)
             self.job_preparation_deadline = now
+
+        # Checking if user job is complete
+        if self.job_complete == True:
+            print("self.manager_paid")
+
+            # Getting users involved
+            client = Profile.objects.get(user=self.client)
+            manager = Profile.objects.get(user=self.manager)
+
+            # Checking if client is busy if so changing bool false
+            print("client.profile.busy")
+            print(client.busy)
+            if client.busy == True:
+                client.busy = False
+                print(client.busy)
+                client.save()
+            print("self.manager_paid")
+            print(self.manager_paid)
+            # Checking if manager is paid
+            if self.manager_paid == False:
+                
+                # Getting manager data
+                stripe_id = manager.stripe_user_id
+
+                # Calculating payment in pennies
+                manager_payment = int(self.manager_payment*100)
+                print('asasas')
+                # Paying managers with stripe
+                stripe.Transfer.create(
+                    amount=manager_payment,
+                    currency="usd",
+                    destination=stripe_id,
+                )
+                self.manager_paid = True
 
         super(JobPost, self).save(force_insert, force_update, *args, **kwargs)
 

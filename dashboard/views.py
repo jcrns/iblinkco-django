@@ -32,6 +32,9 @@ from datetime import datetime, timezone
 
 from django.http import HttpResponse
 
+# Importing stripe
+import stripe
+
 # Overview function
 @login_required(login_url="/?login=true")
 def dashboard(request):
@@ -297,6 +300,14 @@ class JobDetailView(DetailView):
                 # Changing job complete bool
                 job.job_complete = True
                 job.save()
+
+                # Paying managers with stripe
+                stripe.Transfer.create(
+                    amount=job.manager_payment,
+                    currency="usd",
+                    destination="acct_1EF7fHDyI4HAPojy",
+                )
+                
 
         # # Getting posted data
         # print(self.request.POST)

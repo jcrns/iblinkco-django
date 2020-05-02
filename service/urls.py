@@ -7,5 +7,7 @@ urlpatterns = [
     path('complete_profile_client', views.completeProfileClient, name='service-complete-profile-client'),
     path('complete_profile_manager', views.completeProfileManager, name='service-complete-profile-manager'),
     path('checkout/<str:job_id>', views.checkoutHome, name='service-checkout'),
-    path('job_success/<str:job_id>', views.jobSuccess, name='service-job-success'),
+    path('charge/<str:job_id>', views.charge, name='service-charge'),
+    path('job_success/<str:job_id>', views.jobPaymentSuccess,
+         name='service-job-success'),
 ]
