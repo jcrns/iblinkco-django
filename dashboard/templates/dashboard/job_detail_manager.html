@@ -177,7 +177,7 @@
             <div class="col-md-6 d-flex align-items-stretch">
                 <div class="card job-card">
                     <div class="card-body">
-                        <h4>Your Client</h4>
+                        <h4>Client</h4>
                         <div class="row">
                             <div class="col-4 text-center">
                                 <img id="profile-pic" class="float-center" src="{{ client_profile.image.url }}" alt="">
@@ -230,8 +230,8 @@
                                     responsible for filling out milestones every time you get so far through a
                                     job.</small>
                                 <div id="milestone-row">
-                                    <div class="milestone-div"><span class="font-weight-bold">Milestone 1
-                                            Statement:</span>
+                                    <div class="milestone-div"><p class="font-weight-bold">Milestone 1
+                                            Statement:</p>
                                         {% if order.milestone_one_statement != 'none' %}
                                         {{ order.milestone_one_statement }}
                                         <p>
@@ -244,8 +244,8 @@
                                             data-target="#milestone-one-update">Update</span>
                                         {% endif %}
                                     </div>
-                                    <div class="milestone-div"><span class="font-weight-bold">Milestone 2
-                                            Statement:</span>
+                                    <div class="milestone-div"><p class="font-weight-bold">Milestone 2
+                                            Statement:</p>
                                         {% if order.milestone_two_statement != 'none' %}
                                         {{ order.milestone_two_statement }}
                                         <p>
@@ -258,8 +258,8 @@
                                             data-target="#milestone-two-update">Update</span>
                                         {% endif %}
                                     </div>
-                                    <div class="milestone-div"><span class="font-weight-bold">Milestone 3
-                                            Statement:</span>
+                                    <div class="milestone-div"><p class="font-weight-bold">Milestone 3
+                                            Statement:</p>
                                         {% if order.milestone_three_statement != 'none' %}
                                         {{ order.milestone_three_statement }}
                                         <p>
@@ -270,10 +270,11 @@
                                         {% else %}
                                         <span class="update-link" data-toggle="modal"
                                             data-target="#milestone-three-update">Update</span>
+                                        {% endif%}
                                     </div>
-                                    {% endif %}
-                                    <div class="milestone-div"><span class="font-weight-bold">Milestone 4
-                                            Statement:</span>
+                                    {% if order.length != 3 %}
+                                    <div class="milestone-div"><p class="font-weight-bold">Milestone 4
+                                            Statement:</p>
                                         {% if order.milestone_four_statement != 'none' %}
                                         {{ order.milestone_four_statement }}
                                         <p>
@@ -286,6 +287,7 @@
                                             data-target="#milestone-four-update">Update</span>
                                         {% endif %}
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -373,6 +375,8 @@
         </div>
     </div>
 </div>
+
+{% if order.length != 3 %}
 <div class="modal fade" id="milestone-four-update" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -392,6 +396,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endif %}
 {% if order.job_complete == False %}
 <div class="modal fade" id="cancel-modal" tabindex="-1" role="dialog">
@@ -463,17 +468,30 @@
             progressBarElement.style.width = '100%'
         } else {
             let progress = 0
-            if (milestone1 != 'none') {
-                progress += 25
-            }
-            if (milestone2 != 'none') {
-                progress += 25
-            }
-            if (milestone3 != 'none') {
-                progress += 25
-            }
-            if (milestone4 != 'none') {
-                progress += 25
+            let job_length = "{{ order.length }}";
+            if(job_length != 3){
+                if (milestone1 != 'none') {
+                    progress += 25
+                }
+                if (milestone2 != 'none') {
+                    progress += 25
+                }
+                if (milestone3 != 'none') {
+                    progress += 25
+                }
+                if (milestone4 != 'none') {
+                    progress += 25
+                }
+            } else {
+                if (milestone1 != 'none') {
+                    progress += 33
+                }
+                if (milestone2 != 'none') {
+                    progress += 33
+                }
+                if (milestone3 != 'none') {
+                    progress += 34
+                }
             }
             console.log('progress: ' + progress)
             progressBarElement.innerHTML = progress + '% complete'

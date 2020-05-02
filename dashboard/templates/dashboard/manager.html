@@ -81,6 +81,15 @@
 
     #stripe-connect-p {
         font-size: 20px;
+        position: absolute;
+        bottom: 0px;
+    }
+    #stripe-div {
+        min-height: 50px;
+    }
+    .current-jobs-div {
+        border:solid rgba(0, 0, 0, .125) 1px;
+        padding: 10px;
     }
 </style>
 <div class="client">
@@ -92,7 +101,7 @@
         </div>
         {% endfor %}
         {% endif %}
-        <h3 class="m-0 text-dark">Management Dashboard</h3>
+        <h3 class="m-0 text-dark">Dashboard</h3>
         <div class="row" id="top-row">
             <div class="col-md-6 d-flex align-items-stretch">
                 <div class="card dashboard-card" id="current-jobs">
@@ -100,16 +109,18 @@
                         <h5 class="card-title">
                             Current Jobs
                         </h5>
-                        {% if current_jobs %}
-                        <div class="current-job text-center">
-                            {% for job in current_jobs %}
-                            {% if job.manager %}
-                            <p class="h5">{{ job.manager }}</p>
-                            {% else %}
-                            <p class="h5">Job not assigned yet</p>
-                            {% endif %}
+                        <div class="current-job h-100 justify-content-center align-items-center">
+                            {% if current_jobs %}
 
-                            <p class="h2">
+                            {% for job in current_jobs %}
+                            <div class="current-jobs-div">
+                            {% if job.manager %}
+                            <h6 class="h6">{{ job.manager }}</h6>
+                            {% else %}
+                            <p class="h6">Job not assigned yet</p>
+                            {% endif %}
+                            
+                            <p class="h5">
                                 {% if job.captions == True %}
                                 Create Captions
                                 {% endif %}
@@ -120,7 +131,7 @@
                                 Look for content
                                 {% endif %}
                             </p>
-                            <p class="h6">For
+                            <p class="h5">For
                                 {% if job.facebook == True %}
                                 {{ job.facebook_username }} (Facebook)
                                 {% endif %}
@@ -131,22 +142,23 @@
                                 {{ job.instagram_username }} (Instagram)
                                 {% endif %}
                             </p>
-                            
+                            <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success">Details</a>
+                            </div>
                             {% endfor %}
-                        </div>
-                        {% else %}
-                        <div class="d-flex h-50 text-center">
-                            <h3 class="text-secondary d-flex align-items-center justify-content-center mx-auto" id="no-job-text">No jobs
-                                assigned
-                            </h3>
-                        </div>
-                        {% endif %}
-                        <div class="text-center">
+                            {% else %}
+                            <div class="d-flex h-50 text-center">
+                                <h3 class="text-secondary d-flex align-items-center justify-content-center mx-auto" id="no-job-text">No jobs
+                                    assigned
+                                </h3>
+                            </div>
+                            {% endif %}
+                            <div id="stripe-div">
                             {% if user.profile.stripe_user_id %}
                             <p id="stripe-connect-p">Stripe: <span class="text-primary">Connected</span></p>
                             {% else %}
                             <a href="{% url 'management-authorize-stripe' %}" class="btn btn-outline-primary">Connect Stripe Account</a>
                             {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -183,7 +195,7 @@
                                     <tr>
                                         <th>Services</th>
                                         <th>Price</th>
-                                        <th>Manager</th>
+                                        <th>Client</th>
                                         <th>Length</th>
                                         <th>More</th>
                                     </tr>
@@ -204,10 +216,10 @@
 
                                         </td>
                                         <td>
-                                            {{ order.price_paid }} USD
+                                            ${{ order.price_paid }} USD
                                         </td>
                                         <td>
-                                            {{ order.manager }}
+                                            {{ order.client }}
                                         </td>
                                         <td>
                                             {{ order.length }} Days

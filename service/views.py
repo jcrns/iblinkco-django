@@ -127,7 +127,7 @@ def postJob(request):
                 current_site = current_site.domain
 
                 # Running async manager selection function
-                manager_assignment.apply_async((pk, current_site), countdown=3)
+                manager_assignment.apply_async((pk, current_site), countdown=1800)
                 
                 return redirect('dashboard-confirm-job', pk=pk)
             return redirect('dashboard-home')
@@ -292,7 +292,78 @@ def jobPaymentSuccess(request, job_id):
         job.paid_for = True
         job.save()
 
-    # Creating milestone emails
+    # Creating milestone emails timing variables
+    if job.length == 14:
+
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=2)
+        milestoneOneDueDate = timedelta(days=3)
+
+        milestoneTwoWarningDate = timedelta(days=6)
+        milestoneTwoDueDate = timedelta(days=7)
+
+        milestoneThreeWarningDate = timedelta(days=9)
+        milestoneThreeDueDate = timedelta(days=10)
+
+        milestoneFourWarningDate = timedelta(days=9)
+        milestoneFourDueDate = timedelta(days=14)
+    elif job.length == 10:
+        
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=1)
+        milestoneOneDueDate = timedelta(days=2)
+
+        milestoneTwoWarningDate = timedelta(days=3)
+        milestoneTwoDueDate = timedelta(days=4)
+
+        milestoneThreeWarningDate = timedelta(days=6)
+        milestoneThreeDueDate = timedelta(days=7)
+
+        milestoneFourWarningDate = timedelta(days=6)
+        milestoneFourDueDate = timedelta(days=10)
+    elif job.length == 7:
+
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=1)
+        milestoneOneDueDate = timedelta(days=2)
+
+        milestoneTwoWarningDate = timedelta(days=2)
+        milestoneTwoDueDate = timedelta(days=3)
+
+        milestoneThreeWarningDate = timedelta(days=4)
+        milestoneThreeDueDate = timedelta(days=5)
+
+        milestoneFourWarningDate = timedelta(days=6)
+        milestoneFourDueDate = timedelta(days=7)
+
+    elif job.length == 5:
+        
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=1)
+        milestoneOneDueDate = timedelta(days=2)
+
+        milestoneTwoWarningDate = timedelta(days=2)
+        milestoneTwoDueDate = timedelta(days=3)
+
+        milestoneThreeWarningDate = timedelta(days=3)
+        milestoneThreeDueDate = timedelta(days=4)
+
+        milestoneFourWarningDate = timedelta(days=4)
+        milestoneFourDueDate = timedelta(days=5)
+        
+    elif job.length == 3:
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=1)
+        milestoneOneDueDate = timedelta(days=2)
+
+        milestoneTwoWarningDate = timedelta(days=2)
+        milestoneTwoDueDate = timedelta(days=3)
+
+        milestoneThreeWarningDate = timedelta(days=3)
+        milestoneThreeDueDate = timedelta(days=4)
+
+    # Scheduling emails
+
 
     return render(request, 'service/job_success.html', {"static_header": True, "nav_black_link": True})
 

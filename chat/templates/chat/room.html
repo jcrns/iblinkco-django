@@ -343,9 +343,9 @@
 
     // Defining connection
     const chatSocket = new ReconnectingWebSocket(
-        'ws://'
+        'wss://'
         + window.location.host
-        + '/ws/chat/'
+        + '/wss/chat/'
         + roomName
         + '/'
     );

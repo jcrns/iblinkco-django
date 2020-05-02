@@ -52,6 +52,7 @@
 
     .milestone-div {
         padding-bottom: 10px;
+        text-align: center;
     }
 
     .milestone-img {
@@ -136,7 +137,7 @@
                 <div class="card job-card">
                     <div class="card-body">
                         {% if order.manager %}
-                        <h4>Your Manager</h4>
+                        <h4>Manager</h4>
                         <div class="row">
                             <div class="col-4 text-center">
                                 <img id="profile-pic" class="float-center" src="{{ manager_profile.image.url }}" alt="">
@@ -176,8 +177,8 @@
                         <p>Managers are required to update the milestones every few days so the progress of the job can
                             be confirmed.</p>
                         <div id="milestone-row" class="row">
-                            <div class="milestone-div col-sm-12 col-md-6"><span class="font-weight-bold">Milestone 1
-                                    Statement:</span>
+                            <div class="milestone-div col-sm-12 col-md-6"><p class="font-weight-bold">Milestone 1
+                                    Statement:</p>
                                 {{ order.milestone_one_statement }}
                                 <p>
                                     {% for file in image_list_milestone_one %}
@@ -185,8 +186,8 @@
                                     {% endfor %}
                                 </p>
                             </div>
-                            <div class="milestone-div col-sm-12 col-md-6"><span class="font-weight-bold">Milestone 2
-                                    Statement:</span>
+                            <div class="milestone-div col-sm-12 col-md-6"><p class="font-weight-bold">Milestone 2
+                                    Statement:</p>
                                 {{ order.milestone_two_statement }}
                                 <p>
                                     {% for file in image_list_milestone_two %}
@@ -194,8 +195,8 @@
                                     {% endfor %}
                                 </p>
                             </div>
-                            <div class="milestone-div col-sm-12 col-md-6"><span class="font-weight-bold">Milestone 3
-                                    Statement:</span>
+                            <div class="milestone-div col-sm-12 col-md-6"><p class="font-weight-bold">Milestone 3
+                                    Statement:</p>
                                 {{ order.milestone_three_statement }}
                                 <p>
                                     {% for file in image_list_milestone_three %}
@@ -203,8 +204,9 @@
                                     {% endfor %}
                                 </p>
                             </div>
-                            <div class="milestone-div col-sm-12 col-md-6"><span class="font-weight-bold">Milestone 4
-                                    Statement:</span>
+                            {% if order.length != 3 %}
+                            <div class="milestone-div col-sm-12 col-md-6"><p class="font-weight-bold">Milestone 4
+                                    Statement:</p>
                                 {{ order.milestone_four_statement }}
                                 <p>
                                     {% for file in image_list_milestone_four %}
@@ -212,6 +214,7 @@
                                     {% endfor %}
                                 </p>
                             </div>
+                            {% endif %}
                         </div>
                         <h5>Job Completion</h5>
                         <div class="progress" id="milestone-bar">
@@ -261,17 +264,30 @@
             progressBarElement.style.width = '100%'
         } else {
             let progress = 0
-            if (milestone1 != 'none') {
-                progress += 25
-            }
-            if (milestone2 != 'none') {
-                progress += 25
-            }
-            if (milestone3 != 'none') {
-                progress += 25
-            }
-            if (milestone4 != 'none') {
-                progress += 25
+            let job_length = "{{ order.length }}";
+            if (job_length != 3) {
+                if (milestone1 != 'none') {
+                    progress += 25
+                }
+                if (milestone2 != 'none') {
+                    progress += 25
+                }
+                if (milestone3 != 'none') {
+                    progress += 25
+                }
+                if (milestone4 != 'none') {
+                    progress += 25
+                }
+            } else {
+                if (milestone1 != 'none') {
+                    progress += 33
+                }
+                if (milestone2 != 'none') {
+                    progress += 33
+                }
+                if (milestone3 != 'none') {
+                    progress += 34
+                }
             }
             console.log('progress: ' + progress)
             progressBarElement.innerHTML = progress + '% complete'
