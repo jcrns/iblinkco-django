@@ -15,7 +15,7 @@ SECRET_KEY = "ro5rd^(wia%&wji)uc@st(6l@e)-^0e$o*wx-3w=v8^!6m=d%e"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "iblinkco-django.herokuapp.com"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition

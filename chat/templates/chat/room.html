@@ -344,7 +344,7 @@
     if(window.location.protocol == 'https:'){
         var wsStart = 'wss://'
     } else {
-        var wsStart = 'ws://'
+        var wsStart = 'wss://'
     }
     alert(window.location.protocol)
     // Defining connection
@@ -355,7 +355,7 @@
         + roomName
         + '/'
     );
-    
+    chatSocket.
     console.log(window.location)
     console.log(chatSocket)
 
@@ -452,6 +452,9 @@
     // On open func 
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
+        setTimeout(function () {
+            connect();
+        }, 1000);
     };
 
     document.querySelector('#chat-message-input').focus();
