@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="{% static 'homepage/css/chat.css' %}" type="text/css">
 <div class="chat">
     <div class="container">
-        <h3 class=" text-center">Message {{ involvedUserName }}</h3>
+        <h3 class=" text-center" id="message-name" data-image="{{ involvedUser.image.url }}">Message {{ involvedUserName }}</h3>
         <div class="messaging">
             <div class="inbox_msg">
                 <div class="mesgs h-100">
@@ -32,6 +32,7 @@
         </div>
     </div>
 </div>
+
 <script>
     (function (global, factory) {
         if (typeof define === 'function' && define.amd) {
@@ -340,12 +341,12 @@
     var roomName = {{ room_name }}
     var username = {{ username }}
 
-
+    
     // Defining connection
     const chatSocket = new ReconnectingWebSocket(
-        'wss://'
+        'ws://'
         + window.location.host
-        + '/wss/chat/'
+        + '/ws/chat/'
         + roomName
         + '/'
     );
@@ -412,12 +413,16 @@
             const receiveMsgImgDiv = document.createElement('div');
             receiveMsgImgDiv.setAttribute("class","incoming_msg_img");
             receiveMsgMainDiv.appendChild(receiveMsgImgDiv)
-
+            
             const receiveMsgImg = document.createElement('img');
+
+            // Getting image url
+            const involvedUserImage = document.getElementById('message-name').dataset.image;
+
             if('{{ user.profile.is_manager }}' == 'True'){
-                receiveMsgImg.src = '{{ user.profile.image.url }}'
+                receiveMsgImg.src = involvedUserImage;
             } else {
-                receiveMsgImg.src = '{{ involvedUser.image.url }}'
+                receiveMsgImg.src = '{{ user.profile.image.url }}';
             }
             receiveMsgImgDiv.appendChild(receiveMsgImg)
 
