@@ -341,12 +341,12 @@
     var roomName = {{ room_name }}
     var username = {{ username }}
 
-    if(window.location.protocol == 'https'){
+    if(window.location.protocol == 'https:'){
         var wsStart = 'wss://'
     } else {
         var wsStart = 'ws://'
     }
-    alert(wsStart)
+    alert(window.location.protocol)
     // Defining connection
     const chatSocket = new ReconnectingWebSocket(
         wsStart
