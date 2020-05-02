@@ -343,13 +343,16 @@
 
     
     // Defining connection
-    const chatSocket = new ReconnectingWebSocket(
+    const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
         + '/ws/chat/'
         + roomName
         + '/'
     );
+    
+    console.log(window.location)
+    console.log(chatSocket)
 
     // Defining method on open
     chatSocket.onopen = function(e) {
