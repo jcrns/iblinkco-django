@@ -11,6 +11,9 @@
         overflow: hidden;
         margin: 26px 0 26px;
     }
+    #msg_history {
+        min-height: 90%;
+    }
 </style>
 <link rel="stylesheet" href="{% static 'homepage/css/chat.css' %}" type="text/css">
 <div class="chat">
@@ -345,7 +348,7 @@
     } else {
         var wsStart = 'ws://'
     }
-    alert(window.location.protocol)
+
     // Defining connection
     const chatSocket = new ReconnectingWebSocket(
         wsStart
