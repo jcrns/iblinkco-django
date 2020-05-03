@@ -32,7 +32,6 @@
         </div>
     </div>
 </div>
-
 <script>
     (function (global, factory) {
         if (typeof define === 'function' && define.amd) {
@@ -344,7 +343,7 @@
     if(window.location.protocol == 'https:'){
         var wsStart = 'wss://'
     } else {
-        var wsStart = 'wss://'
+        var wsStart = 'ws://'
     }
     alert(window.location.protocol)
     // Defining connection
@@ -427,11 +426,7 @@
             // Getting image url
             const involvedUserImage = document.getElementById('message-name').dataset.image;
 
-            if('{{ user.profile.is_manager }}' == 'True'){
-                receiveMsgImg.src = involvedUserImage;
-            } else {
-                receiveMsgImg.src = '{{ user.profile.image.url }}';
-            }
+            receiveMsgImg.src = involvedUserImage;
             receiveMsgImgDiv.appendChild(receiveMsgImg)
 
 
