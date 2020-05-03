@@ -114,11 +114,7 @@
 
                             {% for job in current_jobs %}
                             <div class="current-jobs-div">
-                            {% if job.manager %}
-                            <h6 class="h6">{{ job.manager }}</h6>
-                            {% else %}
-                            <p class="h6">Job not assigned yet</p>
-                            {% endif %}
+                            <h6 class="h6">{{ job.client }}</h6>
                             
                             <p class="h5">
                                 {% if job.captions == True %}

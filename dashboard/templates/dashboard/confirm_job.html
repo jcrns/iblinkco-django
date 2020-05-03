@@ -137,8 +137,10 @@
                         <a href="#" class="detail-btn btn btn-outline-danger" data-toggle="modal"
                             data-target="#cancel-modal">Cancel</a>
                         {% if order.manager %}
-                        <a href="{% url 'service-checkout' order.job_id %}"
-                            class="detail-btn btn btn-outline-primary">Pay</a>
+                            {% if user.profile.is_client == True %}
+                            <a href="{% url 'service-checkout' order.job_id %}"
+                                class="detail-btn btn btn-outline-primary">Pay</a>
+                            {% endif %}
                         {% endif %}
                     </div>
                 </div>

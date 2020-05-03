@@ -8,7 +8,7 @@ User = get_user_model()
 class ChatConsumer(WebsocketConsumer):
 
     def fetch_messages(self, data):
-        messages = Message.last_10_messages()
+        messages = Message.last_10_messages(self.room_group_name)
         content = {
             'command' : 'messages',
             'messages' : self.messages_to_json(messages)
@@ -35,11 +35,16 @@ class ChatConsumer(WebsocketConsumer):
         print('new message')
         print(data)
         author = data['from']
+        if not data['message']:
+            print('none')
+            return None
         author_user = User.objects.filter(username=author)[0]
         message = Message.objects.create(
+            job=self.room_group_name,
             author=author_user, 
             content=data['message'],
             )
+        print(message)
         content = {
             'command' : 'new_message',
             'message' : self.message_to_json(message)
@@ -57,6 +62,9 @@ class ChatConsumer(WebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
 
+        print("\n\n\n\n\n\n\n\n\nself.room_group_name\n\n\n\n\n\n\n\n\n\n")
+        print(self.room_group_name)
+        print(self.channel_name)
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
             self.channel_name

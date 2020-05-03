@@ -11,9 +11,9 @@
         overflow: hidden;
         margin: 26px 0 26px;
     }
-    #msg_history {
+    /* #msg_history {
         min-height: 90%;
-    }
+    } */
 </style>
 <link rel="stylesheet" href="{% static 'homepage/css/chat.css' %}" type="text/css">
 <div class="chat">
@@ -23,13 +23,13 @@
             <div class="inbox_msg">
                 <div class="mesgs h-100">
                     <div id="msg_history"></div>
-                    <div class="type_msg">
-                        <div class="input_msg_write">
-                            <input id="chat-message-input" type="text" class="write_msg" placeholder="Type a message" />
-                            <button id="chat-message-submit" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
-                                    aria-hidden="true"></i></button>
-                        </div>
-                    </div>
+                </div>
+            </div>
+            <div class="type_msg">
+                <div class="input_msg_write">
+                    <input id="chat-message-input" type="text" class="write_msg" placeholder="Type a message">
+                    <button id="chat-message-submit" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
+                            aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>
@@ -334,13 +334,14 @@
 
 
 
+    
+    function scrollDown(){
+        let scroll = document.getElementsByClassName('inbox_msg')[0];
+        scroll.scrollTop = scroll.scrollHeight;
+    }
 
-
-
-
-
-    //
     var roomName = {{ room_name }}
+    alert(roomName);
     var username = {{ username }}
 
     if(window.location.protocol == 'https:'){
@@ -373,15 +374,20 @@
 
         // Getting data
         const data = JSON.parse(e.data);
+
         // Checking if messages are being retrieved
         if(data['command'] == 'messages'){
-            
+            const msgHistoryDiv = document.getElementById('msg_history');
+            msgHistoryDiv.innerHTML = '';
             for(i=0; i<data['messages'].length; i++){
                 createMessage(data['messages'][i]);
                 console.log(JSON.stringify(data['messages'][i]))
             }
+            scrollDown();
         } else if(data['command'] == 'new_message'){
-            createMessage(data['message'])
+            createMessage(data['message']);
+            // Scrolling down
+            scrollDown();
         }
     };
 
@@ -390,32 +396,40 @@
         const author = data['author'];
 
         console.log("message: " + JSON.stringify(data))
+        
         // Getting main div
         const mainDiv = document.getElementById('msg_history');
         
+        // Check if message is img
+        console.log("\n\n\n\n\nmessage" + message)
+
         // Checking if user is sending message
         if (author == username) {
-            // alert('user')
 
-
-            // Creating elements
+            // Creating main sending div
             const userTxt = document.createElement('div');
             userTxt.setAttribute("class", "outgoing_msg");
             mainDiv.appendChild(userTxt)
 
-            const sentMsg = document.createElement('div');
-            sentMsg.classList.add("sent_msg");
-            userTxt.appendChild(sentMsg)
+            // Checking if message is image
+            if (checkUrlImage(message) == false) {
+                // Creating elements
 
-            const sentMsgText = document.createElement('p');
-            sentMsgText.innerHTML = message;
-            sentMsg.appendChild(sentMsgText)
+                const sentMsg = document.createElement('div');
+                sentMsg.classList.add("sent_msg");
+                userTxt.appendChild(sentMsg)
+
+                const sentMsgText = document.createElement('p');
+                sentMsgText.innerHTML = message;
+                sentMsg.appendChild(sentMsgText)
+            } else {
+
+            }
 
         // User is not sender
         } else {
-            // alert('non user')
-            
-            // Creating elements
+
+            // Creating main incoming msg section
             const receiveMsgMainDiv = document.createElement('div');
             receiveMsgMainDiv.setAttribute("class","incoming_msg");
             mainDiv.appendChild(receiveMsgMainDiv)
@@ -424,29 +438,37 @@
             receiveMsgImgDiv.setAttribute("class","incoming_msg_img");
             receiveMsgMainDiv.appendChild(receiveMsgImgDiv)
             
-            const receiveMsgImg = document.createElement('img');
 
+            // Adding profile image of user in party
+            const receiveMsgImg = document.createElement('img');
             // Getting image url
             const involvedUserImage = document.getElementById('message-name').dataset.image;
-
+            // Applying image to element
             receiveMsgImg.src = involvedUserImage;
             receiveMsgImgDiv.appendChild(receiveMsgImg)
 
-
+            // Creating main div
             const recieveMsgDiv = document.createElement('div');
             recieveMsgDiv.setAttribute("class", "received_msg");
             receiveMsgMainDiv.appendChild(recieveMsgDiv)
+            
+            // Checking if message is image
+            if (checkUrlImage(message) == false) {
 
-            const recieveMsgTextDiv = document.createElement('div');
-            recieveMsgTextDiv.setAttribute("class", "received_withd_msg");
-            recieveMsgDiv.appendChild(recieveMsgTextDiv)
+                const recieveMsgTextDiv = document.createElement('div');
+                recieveMsgTextDiv.setAttribute("class", "received_withd_msg");
+                recieveMsgDiv.appendChild(recieveMsgTextDiv)
 
-            const recieveMsgText = document.createElement('p');
-            recieveMsgText.innerHTML = message;
-            recieveMsgTextDiv.appendChild(recieveMsgText)
+                const recieveMsgText = document.createElement('p');
+                recieveMsgText.innerHTML = message;
+                recieveMsgTextDiv.appendChild(recieveMsgText)
+            } else {
+
+            }
+
         }
-        // document.querySelector('#chat-log').value += (message + '\n');
     }
+    
     // On open func 
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
@@ -472,5 +494,12 @@
         }));
         messageInputDom.value = '';
     };
+    
+    function checkUrlImage(url) {
+        var urlParts = url.split('?');
+        var trueUrl = urlParts[0];
+        return (trueUrl.match(/\.(jpeg|jpg|gif|png)$/) != null);
+    }
+
 </script>
 {% endblock %}
