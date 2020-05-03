@@ -1,7 +1,7 @@
 # Importing json
 import json
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Importing safestring for json
 from django.utils.safestring import mark_safe
@@ -15,9 +15,13 @@ from service.models import JobPost
 # Importing profile to access
 from users.models import Profile
 
+# Importing close old connections
+from django.db import close_old_connections
+
 # Room for chat
 @login_required(login_url="/?login=true")
 def room(request, room_name):
+    close_old_connections()
     job = JobPost.objects.get(job_id=room_name)
 
     if not job:
@@ -36,6 +40,7 @@ def room(request, room_name):
         involvedUser = Profile.objects.get(user=involvedUserName)
     print(involvedUser.image.url)
     return render(request, 'chat/room.html', {
+        'image_url': involvedUser.image.url,
         'room_name': mark_safe(json.dumps(room_name)),
         'username': mark_safe(json.dumps(request.user.username)),
         "static_header" : True, 
@@ -43,3 +48,4 @@ def room(request, room_name):
         "involvedUser" : involvedUser,
         "involvedUserName" : involvedUserName,
     })
+

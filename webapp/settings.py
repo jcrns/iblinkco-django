@@ -147,6 +147,7 @@ AUTHENTICATION_BACKENDS = (
     'users.backends.EmailBackend',
     # 'django.contrib.auth.backends.ModelBackend',
 )
+db_from_env = dj_database_url.config()
 
 # Channels
 ASGI_APPLICATION = 'webapp.routing.application'
