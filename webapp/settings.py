@@ -148,7 +148,7 @@ AUTHENTICATION_BACKENDS = (
     # 'django.contrib.auth.backends.ModelBackend',
 )
 db_from_env = dj_database_url.config()
-CONN_MAX_AGE = 60
+CONN_MAX_AGE = 30
 
 # Channels
 ASGI_APPLICATION = 'webapp.routing.application'
