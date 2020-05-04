@@ -15,13 +15,10 @@ from service.models import JobPost
 # Importing profile to access
 from users.models import Profile
 
-from django.db import connections
 # Room for chat
 @login_required(login_url="/?login=true")
 def room(request, room_name):
-    print("connections")
-    print(connections)
-    job = JobPost.objects.get(job_id=room_name)
+    job = JobPost.objects.filter(job_id=room_name).first()
 
     if not job:
         return redirect('dashboard-home')

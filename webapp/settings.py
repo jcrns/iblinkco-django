@@ -103,7 +103,6 @@ django_heroku.settings(locals(), logging=not DEBUG, databases=not DEBUG)
 # del DATABASES['default']['OPTIONS']['sslmode']
 
 
-print(DATABASES)
 # DATABASES['default']=dj_database_url.config(
 #                             conn_max_age=600, ssl_require=True)
 
@@ -186,7 +185,7 @@ CACHES = {
 
 # Defining for production
 if os.getcwd() =='/app':
-    DEBUG=True
+    DEBUG=False
 
 
 # Stripe

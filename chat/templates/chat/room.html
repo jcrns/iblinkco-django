@@ -11,6 +11,13 @@
         overflow: hidden;
         margin: 26px 0 26px;
     }
+    .msg-img {
+        max-width: 200px;
+        max-width: 200px;
+    }
+    .msg-img:hover {
+        cursor: pointer;
+    }
     /* #msg_history {
         min-height: 90%;
     } */
@@ -406,23 +413,31 @@
         if (author == username) {
 
             // Creating main sending div
-            const userTxt = document.createElement('div');
-            userTxt.setAttribute("class", "outgoing_msg");
-            mainDiv.appendChild(userTxt)
+            const sendTxt = document.createElement('div');
+            sendTxt.setAttribute("class", "outgoing_msg");
+            mainDiv.appendChild(sendTxt)
 
+            const sentMsg = document.createElement('div');
+            sentMsg.classList.add("sent_msg");
+            sendTxt.appendChild(sentMsg)
+
+            const sentMsgText = document.createElement('p');
+            sentMsg.appendChild(sentMsgText)
             // Checking if message is image
             if (checkUrlImage(message) == false) {
                 // Creating elements
 
-                const sentMsg = document.createElement('div');
-                sentMsg.classList.add("sent_msg");
-                userTxt.appendChild(sentMsg)
-
-                const sentMsgText = document.createElement('p');
                 sentMsgText.innerHTML = message;
-                sentMsg.appendChild(sentMsgText)
             } else {
+                
+                const sendMsgImg = document.createElement('img');
+                sendMsgImg.setAttribute("class", "msg-img");
+                sendMsgImg.src = message;
 
+                // Setting onclick for element
+                sendMsgImg.setAttribute("onclick", "imageOnClick(this)")
+
+                sentMsgText.appendChild(sendMsgImg)
             }
 
         // User is not sender
@@ -451,18 +466,23 @@
             recieveMsgDiv.setAttribute("class", "received_msg");
             receiveMsgMainDiv.appendChild(recieveMsgDiv)
             
+            const recieveMsgTextDiv = document.createElement('div');
+            recieveMsgTextDiv.setAttribute("class", "received_withd_msg");
+            recieveMsgDiv.appendChild(recieveMsgTextDiv)
+
+            const recieveMsgImgP = document.createElement('p');
+            recieveMsgTextDiv.appendChild(recieveMsgImgP)
             // Checking if message is image
             if (checkUrlImage(message) == false) {
-
-                const recieveMsgTextDiv = document.createElement('div');
-                recieveMsgTextDiv.setAttribute("class", "received_withd_msg");
-                recieveMsgDiv.appendChild(recieveMsgTextDiv)
-
-                const recieveMsgText = document.createElement('p');
-                recieveMsgText.innerHTML = message;
-                recieveMsgTextDiv.appendChild(recieveMsgText)
+                
+                recieveMsgImgP.innerHTML = message;
             } else {
 
+                const recieveMsgImg = document.createElement('img');
+                recieveMsgImg.setAttribute("class", "msg-img");
+                recieveMsgImg.src = message;
+
+                recieveMsgImgP.appendChild(recieveMsgImg)
             }
 
         }
@@ -498,6 +518,13 @@
         var urlParts = url.split('?');
         var trueUrl = urlParts[0];
         return (trueUrl.match(/\.(jpeg|jpg|gif|png)$/) != null);
+    }
+
+    function imageOnClick(e) {
+        console.log(e.src);
+        link = e.src;
+        var openLink = window.open(link, '_blank');
+        openLink.focus();
     }
 
 </script>

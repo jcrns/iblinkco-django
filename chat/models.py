@@ -41,7 +41,6 @@ class Message(models.Model):
         # last_ten = Message.objects.filter(job=job_id).order_by('-timestamp')[:20]
         last_ten = Message.objects.filter(job=job_id).order_by('-timestamp')
         last_ten = reversed(last_ten)
-        print(last_ten)
         return last_ten
 
     connections.close_all()
