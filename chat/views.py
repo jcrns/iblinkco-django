@@ -15,13 +15,12 @@ from service.models import JobPost
 # Importing profile to access
 from users.models import Profile
 
-# Importing close old connections
 from django.db import connections
-
 # Room for chat
 @login_required(login_url="/?login=true")
 def room(request, room_name):
-    connections.close_all()
+    print("connections")
+    print(connections)
     job = JobPost.objects.get(job_id=room_name)
 
     if not job:
