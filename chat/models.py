@@ -14,10 +14,10 @@ class Message(models.Model):
     def __str__(self):
         return self.author.username
 
-    def last_10_messages():
+    def last_10_messages(job_id):
 
         # last_ten = Message.objects.filter(job=job_id).order_by('-timestamp')[:20]
-        last_ten = Message.objects.filter().order_by('-timestamp')
+        last_ten = self.objects.filter().order_by('-timestamp')
         last_ten = reversed(last_ten)
         print(last_ten)
         return last_ten
