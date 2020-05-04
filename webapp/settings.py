@@ -96,7 +96,9 @@ DATABASES = {
         # 'CONN_MAX_AGE': 10
     }
 }
-django_heroku.settings(locals(), logging=not DEBUG, databases=not DEBUG)
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
+# django_heroku.settings(locals(), logging= DEBUG, databases= DEBUG)
 
 # del DATABASES['default']['OPTIONS']['sslmode']
 
@@ -161,8 +163,6 @@ AUTHENTICATION_BACKENDS = (
     'users.backends.EmailBackend',
     # 'django.contrib.auth.backends.ModelBackend',
 )
-db_from_env = dj_database_url.config()
-CONN_MAX_AGE = 1
 
 # Channels
 ASGI_APPLICATION = 'webapp.routing.application'
