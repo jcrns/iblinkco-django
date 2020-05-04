@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from service.models import JobPost
+from django.db import connections
 
 # Create your models here.l
 class Message(models.Model):
@@ -20,5 +21,8 @@ class Message(models.Model):
         last_ten = reversed(last_ten)
         print(last_ten)
         return last_ten
+
+    connections.close_all()
+
     
 
