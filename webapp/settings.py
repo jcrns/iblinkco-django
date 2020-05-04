@@ -189,8 +189,6 @@ if os.getcwd() =='/app':
     DEBUG=True
 
 
-django_heroku.settings(locals())
-
 # Stripe
 STRIPE_PUBLISHABLE_KEY = 'pk_test_S49pZhR9n8Qm0MM34RGzsMyG'
 STRIPE_SECRET_KEY = 'sk_test_8dRE7QLn40wUt6wZtr8upMA4'
