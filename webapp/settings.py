@@ -98,7 +98,7 @@ DATABASES = {
 }
 db_from_env = dj_database_url.config(ssl_require=False)
 DATABASES['default'].update(db_from_env)
-django_heroku.settings(locals(), logging= DEBUG, databases= DEBUG)
+django_heroku.settings(locals(), logging=not DEBUG, databases=not DEBUG)
 
 # del DATABASES['default']['OPTIONS']['sslmode']
 
