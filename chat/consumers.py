@@ -8,7 +8,7 @@ User = get_user_model()
 class ChatConsumer(WebsocketConsumer):
 
     def fetch_messages(self, data):
-        messages = Message.last_10_messages()
+        messages = Message.last_10_messages(self.room_group_name)
         content = {
             'command' : 'messages',
             'messages' : self.messages_to_json(messages)
@@ -149,6 +149,7 @@ class ChatConsumer(WebsocketConsumer):
 #     }
 
 #     def connect(self):
+#         
 #         self.room_name = self.scope['url_route']['kwargs']['room_name']
 #         self.room_group_name = 'chat_%s' % self.room_name
 
