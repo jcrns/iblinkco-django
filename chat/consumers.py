@@ -39,7 +39,6 @@ class ChatConsumer(WebsocketConsumer):
             return None
         author_user = User.objects.filter(username=author)[0]
         message = Message.objects.create(
-            job=self.room_group_name,
             author=author_user, 
             content=data['message'],
             )
