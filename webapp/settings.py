@@ -96,7 +96,8 @@ DATABASES = {
         # 'CONN_MAX_AGE': 10
     }
 }
-django_heroku.settings(locals())
+django_heroku.settings(locals(), logging=not DEBUG, databases=not DEBUG)
+
 # del DATABASES['default']['OPTIONS']['sslmode']
 
 
