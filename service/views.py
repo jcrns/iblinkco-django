@@ -258,10 +258,14 @@ def checkoutHome(request, job_id):
 
 
 def charge(request, job_id):
-    job = JobPost.objects.get(job_id=job_id)
     if request.method == "POST":
-        print('sfdsdsd')
 
+        # Getting a job
+        job = JobPost.objects.filter(job_id=job_id).last()
+
+        # Redirecting if job is none
+        if not job:
+            return redirect('dashboard-home')
         # Creating stripe customer
         customer = stripe.Customer.create(
             email=request.user.email,
@@ -350,8 +354,19 @@ def charge(request, job_id):
             milestoneThreeWarningDate = timedelta(days=3)
             milestoneThreeDueDate = timedelta(days=4)
 
+        print('how\n\n\n\n\n\n\n')
         # Scheduling emails
-        check_milestone_client_email
+        milestone_manger_email.apply_async((job.id, 1, True), eta=datetime.utcnow() + milestoneOneWarningDate)
+        milestone_manger_email.apply_async((job.id, 1, False), eta=datetime.utcnow() + milestoneOneDueDate)
+        milestone_manger_email.apply_async((job.id, 2, True), eta=datetime.utcnow() + milestoneTwoWarningDate)
+        milestone_manger_email.apply_async((job.id, 2, False), eta=datetime.utcnow() + milestoneTwoDueDate)
+        milestone_manger_email.apply_async((job.id, 3, True), eta=datetime.utcnow() + milestoneThreeWarningDate)
+        milestone_manger_email.apply_async((job.id, 3, False), eta=datetime.utcnow() + milestoneThreeDueDate)
+
+        if job.length != 3:
+            milestone_manger_email.apply_async((job.id, 4, True), eta=datetime.utcnow() + milestoneFourWarningDate)
+            milestone_manger_email.apply_async((job.id, 4, False), eta=datetime.utcnow() + milestoneFourDueDate)
+
 
         # Changing paid for bool in db
         job.paid_for = True
