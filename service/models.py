@@ -11,8 +11,13 @@ import datetime
 from webapp.utils import random_string_generator
 
 from users.models import Profile
+
+# Importing email
+from django.core.mail import EmailMessage
+
 # Import stripe
 import stripe
+
 
 class JobPost(models.Model):
 

@@ -279,7 +279,7 @@ def charge(request, job_id):
         # Charging user
         charge = stripe.Charge.create(
             customer=customer,
-            amount=1000000,
+            amount=price,
             currency="usd",
             description=job.service_description
         )
