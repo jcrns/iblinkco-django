@@ -91,7 +91,7 @@ class JobPost(models.Model):
     # Overriding the save function to check if manager was assigned
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
         customer = stripe.Customer.create(
-            email='ha',
+            email='test@gmail.com',
             name='test',
             source='acct_1GdEJ2Is34Tq03ZL'
         )
