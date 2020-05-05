@@ -147,8 +147,11 @@ class JobPost(models.Model):
                 client = User.objects.get(username=client)
                 client_email = client.email
                 
+                manager = self.manager
+                client = self.client
+                
                 # Getting client email
-                rateJobEmail(self.manager, self.client, client_email)
+                rateJobEmail(manager, client, client_email)
 
 
         super(JobPost, self).save(force_insert, force_update, *args, **kwargs)
