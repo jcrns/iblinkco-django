@@ -370,15 +370,17 @@ def charge(request, job_id):
 
         # Changing paid for bool in db
         job.paid_for = True
+        job.save()
     return redirect('service-job-success', job_id=job.job_id)
 
 # Success view after job is paid for
 def jobPaymentSuccess(request, job_id):
 
     job = JobPost.objects.get(job_id=job_id)
+
+    # Checking if user paid already
     if job.paid_for == False:
-        job.paid_for = True
-        job.save()
+        return redirect('dashboard-home')
 
 
     return render(request, 'service/job_success.html', {"static_header": True, "nav_black_link": True})

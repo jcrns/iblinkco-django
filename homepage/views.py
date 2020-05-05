@@ -46,6 +46,10 @@ def partnerships(request):
 def helpAndSupport(request):
     return render(request, 'homepage/help-and-support.html', {"nav_black_link" : True} )
 
+
+def refunds(request):
+    return render(request, 'homepage/refunds.html', {"nav_black_link": True})
+
 def becomeManager(request):
     if request.user.is_authenticated:
     

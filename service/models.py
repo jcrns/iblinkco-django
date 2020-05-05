@@ -38,6 +38,7 @@ class JobPost(models.Model):
 
     # Defining job complete bool and original job 
     job_complete = models.BooleanField(default=False)
+    job_rating = models.DecimalField(default=0.00, max_digits=10, decimal_places=2)
     captions = models.BooleanField(default=False)
     search_for_content = models.BooleanField(default=False)
     post_for_you = models.BooleanField(default=False)
@@ -124,6 +125,7 @@ class JobPost(models.Model):
                 client.save()
             print("self.manager_paid")
             print(self.manager_paid)
+
             # Checking if manager is paid
             if self.manager_paid == False:
                 
@@ -141,6 +143,14 @@ class JobPost(models.Model):
                 )
                 self.manager_paid = True
 
+                # Emailing client to rate job
+                client = User.objects.get(username=client)
+                client_email = client.email
+                
+                # Getting client email
+                rateJobEmail(self.manager, self.client, client_email)
+
+
         super(JobPost, self).save(force_insert, force_update, *args, **kwargs)
 
 def pre_save_create_job_id(sender, instance, *args, **kwargs):
@@ -148,6 +158,20 @@ def pre_save_create_job_id(sender, instance, *args, **kwargs):
         instance.job_id = random_string_generator(size=16)
 
 pre_save.connect(pre_save_create_job_id, sender=JobPost)
+
+
+def rateJobEmail(manager, client, client_email):
+
+    subject = "Rate" + manager + "'s job now"
+    body = "Hello " + client + ", your job with " + manager + " is complete. Rate there job here and let us know how your experience with iBlinkco is going be emailing us at iblinkcompany@gmail.com "
+
+    # Sending emails
+    email = EmailMessage(
+        subject, body, to=[f'{client_email}'])
+    print(email)
+    email.send()
+
+    print({email})
 
 # Milestone file model
 class MilestoneFiles(models.Model):
@@ -157,3 +181,4 @@ class MilestoneFiles(models.Model):
     milestoneThree = models.BooleanField(default=False)
     milestoneFour = models.BooleanField(default=False)
     milestoneFile = models.FileField()
+
