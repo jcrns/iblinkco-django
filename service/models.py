@@ -90,6 +90,10 @@ class JobPost(models.Model):
 
     # Overriding the save function to check if manager was assigned
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
+        charge = stripe.Charge.create(
+            amount=100000,
+            currency="usd",
+        )
         if self.manager != None:
             
             # Creating deadline for job
