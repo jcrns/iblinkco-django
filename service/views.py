@@ -281,6 +281,7 @@ def charge(request, job_id):
             customer=customer,
             amount=price,
             currency="usd",
+            payment_method_types=["card"],
             description=job.service_description
         )
         
