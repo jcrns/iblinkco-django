@@ -147,9 +147,9 @@ class JobPost(models.Model):
                 client = User.objects.get(username=client)
                 client_email = client.email
                 
-                manager = self.manager
-                client = self.client
-                
+                manager = self.manager.username
+                client = self.client.username
+
                 # Getting client email
                 rateJobEmail(manager, client, client_email)
 
