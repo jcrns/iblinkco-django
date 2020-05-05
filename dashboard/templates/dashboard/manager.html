@@ -149,6 +149,9 @@
                             </div>
                             {% endif %}
                             <div id="stripe-div">
+                            {% if not user.profile.stripe_user_id %}
+                            <p class="text-center">Connect to a stipe account to be assigned your first job</p>
+                            {% endif %}
                             {% if user.profile.stripe_user_id %}
                             <p id="stripe-connect-p">Stripe: <span class="text-primary">Connected</span></p>
                             {% else %}

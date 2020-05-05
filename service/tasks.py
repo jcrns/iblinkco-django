@@ -55,11 +55,22 @@ def manager_assignment(pk, current_site):
 
         # Getting capable managers with filter
         managers = Profile.objects.filter(is_manager=True, language=client.profile.language)
+        
+        for manager in managers:
+            # Randomly selecting managers
+            manager_name = random.choice(managers)
 
-        # Randomly selecting managers
-        manager_name = random.choice(managers)
-        print(manager_name)
-        manager = User.objects.get(username=manager_name)
+            # Getting manager user
+            manager = User.objects.get(username=manager_name)
+
+            # Checking if user has stripe connected
+            if not manager.profile.stripe_user_id:
+                print("manager.profile.stripe_user_id")
+                print(manager.profile.stripe_user_id)
+                break
+
+
+
 
         # Emailing manager about job
         email = emailJobOffer(manager, job_obj, current_site)
@@ -220,3 +231,18 @@ def milestone_manger_email(pk, milestoneState, warning):
     except Exception as e:
         print(e)
         
+
+# Task to send rate job email
+@shared_task
+def rateJobEmail(manager, client, client_email):
+
+    subject = "Rate" + manager + "'s job now"
+    body = "Hello " + client + ", your job with " + manager +  " is complete. Rate there job here and let us know how your experience with iBlinkco is going be emailing us at iblinkcompany@gmail.com "
+
+    # Sending emails
+    email = EmailMessage(
+        subject, body, to=[f'{client_email}'])
+    print(email)
+    email.send()
+
+    print({email})

@@ -191,7 +191,8 @@ def stripeAuthorizeView(request):
         'response_type': 'code',
         'scope': 'read_write',
         'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
-        'redirect_uri': f'https://iblinkco-django.herokuapp.com/users/oauth/callback'
+        'redirect_uri': f'http://localhost:8000/users/oauth/callback'
+        # 'redirect_uri': f'http://iblinkco-django.herokuapp.com/users/oauth/callback'
     }
 
     # Creating final
@@ -201,25 +202,28 @@ def stripeAuthorizeView(request):
 # Stripe Oauth callback view
 def stripeAuthorizeCallbackView(request):
     code = request.GET.get('code')
-    if code:
-        data = {
-            'client_secret': settings.STRIPE_SECRET_KEY,
-            'grant_type': 'authorization_code',
-            'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
-            'code': code
-        }
-        url = 'https://connect.stripe.com/oauth/token'
-        resp = requests.post(url, params=data)
-        print(resp.json())
+    if not request.user.is_authenticated():
+        if code:
+            data = {
+                'client_secret': settings.STRIPE_SECRET_KEY,
+                'grant_type': 'authorization_code',
+                'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
+                'code': code
+            }
+            url = 'https://connect.stripe.com/oauth/token'
+            resp = requests.post(url, params=data)
+            print(resp.json())
 
-        # Updating stipe id token in db
-        stripe_user_id = resp.json()['stripe_user_id']
-        profile = Profile.objects.get(user=request.user)
-        profile.stripe_user_id = stripe_user_id
-        profile.save()
-        
+            # Updating stipe id token in db
+            stripe_user_id = resp.json()['stripe_user_id']
+            print(request.user)
+            profile = Profile.objects.get(user=request.user)
+            profile.stripe_user_id = stripe_user_id
+            profile.save()
+            
     response = redirect('dashboard-home')
     return response
+    
 
 # Sending manager email
 def emailJobOffer(user, job, current_site):

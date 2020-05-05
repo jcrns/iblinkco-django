@@ -277,7 +277,7 @@ def charge(request, job_id):
         price = int(job.price_paid*100)
 
         # Charging user
-        charge = stripe.Charge.create(
+        stripe.PaymentIntent.create(
             customer=customer,
             amount=price,
             currency="usd",
