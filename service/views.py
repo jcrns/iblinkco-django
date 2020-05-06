@@ -136,8 +136,11 @@ def postJob(request):
     form = JobPostForm
     user = request.user
     profile = request.user.profile
+    print("profile.busy")
+    print(profile.busy)
     if profile.is_client == True:
         if profile.busy is not True:
+            print(profile.busy)
             return render(request, 'service/post_job.html', { 'form' : form, "static_header" : True, "nav_black_link" : True })
         else:
             return redirect('dashboard-home')
@@ -277,11 +280,10 @@ def charge(request, job_id):
         price = int(job.price_paid*100)
 
         # Charging user
-        stripe.PaymentIntent.create(
+        charge = stripe.Charge.create(
             customer=customer,
             amount=price,
             currency="usd",
-            payment_method_types=["card"],
             description=job.service_description
         )
         

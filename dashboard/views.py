@@ -159,6 +159,22 @@ class JobDetailView(DetailView):
         manager_name = context['object'].manager
         client_name = context['object'].client
         
+        # Calculating total post per day
+        length = context['object'].length
+        instagram = context['object'].instagram
+        facebook = context['object'].facebook
+
+        # Calculating number of platforms
+        platforms = 0
+        if instagram == True:
+            platforms+=1
+        if facebook == True:
+            platforms+=1
+
+        numberOfPost = context['object'].number_of_post
+
+        postPerDay = round((numberOfPost*platforms)/length)
+
         # Creating time left for job preparation
         jobPrepDeadline = context['object'].job_preparation_deadline
         now = datetime.now(timezone.utc)
@@ -223,6 +239,7 @@ class JobDetailView(DetailView):
 
         # Applying additional info
         context['job_prep_days_left'] = JobPrepTimeLeftStr
+        context['post_per_day'] = postPerDay
 
         # Adding additional context for styling
         context['static_header'] = True
@@ -237,12 +254,37 @@ class JobDetailView(DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object() 
         
-        # Getting form with requested data
-        form = milestoneUpdate(self.request.POST, self.request.FILES, instance=self.object)
+        # Getting template name
+        print("self.template_name")
+        print(self.template_name)
         
         # Getting job for job complete bool update
         job = JobPost.objects.get(pk=self.object.pk)
 
+        # Checking if it is client view
+        if self.template_name == 'dashboard/job_detail_client.html':
+            print('sfsdsdsdsds')
+            starNumber = int(request.POST['star-number'])
+            milestones = int(request.POST['milestones'])
+
+            print(starNumber, "  " ,milestones)
+            if milestones == 1:
+                print(starNumber)
+                job.milestone_one_rated = starNumber
+            elif milestones == 2:
+                job.milestone_two_rated = starNumber
+            elif milestones == 3:
+                job.milestone_three_rated = starNumber
+            elif milestones == 4:
+                job.milestone_four_rated = starNumber
+
+            job.save()
+
+            return redirect('dashboard-job-detail-client', pk=self.object.pk)
+
+        # Getting form with requested data
+        form = milestoneUpdate(self.request.POST, self.request.FILES, instance=self.object)
+        
         # Checking if form is valid
         if form.is_valid():
             
@@ -255,59 +297,54 @@ class JobDetailView(DetailView):
             milestone_four_statement = form.cleaned_data.get(
                 'milestone_four_statement')
 
+            form.save()
             # Checking which milestone is being updated
-            if milestone_one_statement:
-                # Getting different images
-                for field in self.request.FILES.keys():
-                    for formfile in self.request.FILES.getlist(field):
-                        # Saving images in the db
-                        MilestoneFiles.objects.create(
-                            job=self.object, milestoneFile=formfile, milestoneOne=True)
+            # if milestone_one_statement:
+            #     # Getting different images
+            #     for field in self.request.FILES.keys():
+            #         for formfile in self.request.FILES.getlist(field):
+            #             # Saving images in the db
+            #             MilestoneFiles.objects.create(
+            #                 job=self.object, milestoneFile=formfile, milestoneOne=True)
 
-                form.completed_milestone_one = True
-                form.save()
+            #     form.completed_milestone_one = True
+            #     form.save()
 
-            elif milestone_two_statement:
-                for field in self.request.FILES.keys():
-                    for formfile in self.request.FILES.getlist(field):
-                        # Saving images in the db
-                        MilestoneFiles.objects.create(
-                            job=self.object, milestoneFile=formfile, milestoneTwo=True)
+            # elif milestone_two_statement:
+            #     for field in self.request.FILES.keys():
+            #         for formfile in self.request.FILES.getlist(field):
+            #             # Saving images in the db
+            #             MilestoneFiles.objects.create(
+            #                 job=self.object, milestoneFile=formfile, milestoneTwo=True)
 
-                form.completed_milestone_two = True
-                form.save()
+            #     form.completed_milestone_two = True
+            #     form.save()
 
-            elif milestone_three_statement:
-                for field in self.request.FILES.keys():
-                    for formfile in self.request.FILES.getlist(field):
-                        # Saving images in the db
-                        MilestoneFiles.objects.create(
-                            job=self.object, milestoneFile=formfile, milestoneThree=True)
+            # elif milestone_three_statement:
+            #     for field in self.request.FILES.keys():
+            #         for formfile in self.request.FILES.getlist(field):
+            #             # Saving images in the db
+            #             MilestoneFiles.objects.create(
+            #                 job=self.object, milestoneFile=formfile, milestoneThree=True)
 
-                form.completed_milestone_three = True
-                form.save()
+            #     form.completed_milestone_three = True
+            #     form.save()
 
-            elif milestone_four_statement:
-                for field in self.request.FILES.keys():
-                    for formfile in self.request.FILES.getlist(field):
-                        # Saving images in the db
-                        MilestoneFiles.objects.create(
-                            job=self.object, milestoneFile=formfile, milestoneFour=True)
+            #     # If job length is 3 and third milestone is posted
+            #     if job.length == 3:
+            #         # Changing job complete bool
+            #         job.job_complete = True
+            #         job.save()
 
-                form.completed_milestone_four = True
-                form.save()
+            # elif milestone_four_statement:
+            #     for field in self.request.FILES.keys():
+            #         for formfile in self.request.FILES.getlist(field):
+            #             # Saving images in the db
+            #             MilestoneFiles.objects.create(
+            #                 job=self.object, milestoneFile=formfile, milestoneFour=True)
 
-                # Changing job complete bool
-                job.job_complete = True
-                job.save()
-
-                # Paying managers with stripe
-                stripe.Transfer.create(
-                    amount=job.manager_payment,
-                    currency="usd",
-                    destination="acct_1EF7fHDyI4HAPojy",
-                )
-                
+            #     form.completed_milestone_four = True
+            #     form.save()
 
         # # Getting posted data
         # print(self.request.POST)

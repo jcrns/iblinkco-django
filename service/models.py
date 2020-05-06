@@ -62,20 +62,27 @@ class JobPost(models.Model):
     # Milestones
     completed_milestone_one = models.BooleanField(default=False)
     milestone_one_statement = models.CharField(max_length=1000, default='none')
-    milestone_one_files = models.FileField(default='default.jpg',  upload_to='milestone_files')
+    milestone_one_completed_job_goal = models.BooleanField(default=False)
+    milestone_one_rated = models.IntegerField(blank=True)
 
     completed_milestone_two = models.BooleanField(default=False)
     milestone_two_statement = models.CharField(max_length=1000, default='none')
-    milestone_two_files = models.FileField(default='default.jpg',  upload_to='milestone_files')
+    milestone_two_completed_job_goal = models.BooleanField(default=False)
+    milestone_two_rated = models.IntegerField(blank=True)
+
 
     completed_milestone_three = models.BooleanField(default=False)
     milestone_three_statement = models.CharField(max_length=1000, default='none')
-    milestone_three_files = models.FileField(default='default.jpg', upload_to='milestone_files')
+    milestone_three_completed_job_goal = models.BooleanField(default=False)
+    milestone_three_rated = models.IntegerField(blank=True)
+
 
 
     completed_milestone_four = models.BooleanField(default=False)
     milestone_four_statement = models.CharField(max_length=1000, default='none')
-    milestone_four_files = models.FileField(default='default.jpg',  upload_to='milestone_files')
+    milestone_four_completed_job_goal = models.BooleanField(default=False)
+    milestone_four_rated = models.IntegerField(blank=True)
+
 
     # Job Preparation
     job_preparation_completed = models.BooleanField(default=False)
@@ -89,6 +96,10 @@ class JobPost(models.Model):
     # Deadline for job
     deadline = models.DateTimeField(max_length=8, blank=True, null=True)
     
+    # Client job rating
+    # How was your experience with {client}?
+    client_job_rating = models.IntegerField(default=0, blank=True)
+
     def __str__(self):
         print(self.manager)
         return f'{self.client} Job Request {self.job_id}'
@@ -114,6 +125,8 @@ class JobPost(models.Model):
             self.job_preparation_deadline = now
 
         # Checking if user job is complete
+        print("self.job_complete")
+        print(self)
         if self.job_complete == True:
             print("self.manager_paid")
 
@@ -181,7 +194,16 @@ def rateJobEmail(manager, client, client_email):
 
     print({email})
 
+# Milestone models
+# class Milestone(models.Model):
+#     job = models.CharField(max_length=120)
+#     milestone_number = models.IntegerField()
+#     milestone_four_statement = models.CharField(
+#         max_length=1000, default='none')
+
 # Milestone file model
+
+
 class MilestoneFiles(models.Model):
     job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
     milestoneOne = models.BooleanField(default=False)
@@ -189,4 +211,3 @@ class MilestoneFiles(models.Model):
     milestoneThree = models.BooleanField(default=False)
     milestoneFour = models.BooleanField(default=False)
     milestoneFile = models.FileField()
-

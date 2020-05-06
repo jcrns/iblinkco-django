@@ -191,8 +191,8 @@ def stripeAuthorizeView(request):
         'response_type': 'code',
         'scope': 'read_write',
         'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
-        'redirect_uri': f'http://localhost:8000/users/oauth/callback'
-        # 'redirect_uri': f'http://iblinkco-django.herokuapp.com/users/oauth/callback'
+        # 'redirect_uri': f'http://localhost:8000/users/oauth/callback'
+        'redirect_uri': f'http://iblinkco-django.herokuapp.com/users/oauth/callback'
     }
 
     # Creating final
@@ -201,6 +201,7 @@ def stripeAuthorizeView(request):
 
 # Stripe Oauth callback view
 def stripeAuthorizeCallbackView(request):
+    user = request.user
     code = request.GET.get('code')
     if not request.user.is_authenticated():
         if code:
@@ -216,8 +217,7 @@ def stripeAuthorizeCallbackView(request):
 
             # Updating stipe id token in db
             stripe_user_id = resp.json()['stripe_user_id']
-            print(request.user)
-            profile = Profile.objects.get(user=request.user)
+            profile = Profile.objects.get(user=user)
             profile.stripe_user_id = stripe_user_id
             profile.save()
             

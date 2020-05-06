@@ -115,25 +115,28 @@ def check_milestone_client_email(pk, milestone):
         # Creating str variables
         if milestone == 1:
             milestone = 'One'
-            body = 'Hello ' + client + ', We hope all is well, How is your job with ' + manager +' going so far? Make sure to let us know by contacting us at iblinkcompany@gmail.com'
+            body = 'Hello ' + client + ', We hope all is well, go to iblinkco.com to see rate ' + manager +' job so far? Make sure to let us know by contacting us at iblinkcompany@gmail.com'
        
         elif milestone == 2:
             milestone = 'Two'
-            body = 'Hey ' + client + ', your manager, ' + manager + ' second milestone is due. email us at iblinkcompany@gmail.com. '
+            body = 'Hey ' + client + ', your manager, ' + manager + ' second milestone is has been updated. Go to iblinkco.com to see it. If you have any questions email us at iblinkcompany@gmail.com. '
        
         elif milestone == 3:
             milestone  = 'Three'
-            body = 'Hello ' + client + ', you are more than halfway done with your job with, ' + manager + '. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
+            body = 'Hello ' + client + ', you are more than halfway done with your job with, ' + manager + ' and they have just updated their third milestone. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
 
         elif milestone == 4:
             milestone = 'Four'
-            body = 'Hello ' + client + ', your job with, ' + manager + ' will be completed today. Make sure to long into your iBlinkco account now to see the work they have done and to give a rating on their job.  '
+            body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
 
         # Sending emails
-        
+        if job.length == 3:
+            if milestone == 3:
+                milestone = 'Third'
+                body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
         # Client email
         email = EmailMessage(
-            'Milestone ' + milestone + ' Check In', body, to=[f'{client_email}'])
+            'Milestone ' + milestone + ' Check In and Rate', body, to=[f'{client_email}'])
         print(email)
         email.send()
         print({email})

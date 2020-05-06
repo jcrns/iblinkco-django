@@ -71,28 +71,28 @@ class JobPostFormUpdate(forms.ModelForm):
 
 
 class milestoneUpdate(forms.ModelForm):
+
     milestone_one_statement = forms.CharField(required=False, widget=forms.Textarea(
-        attrs={'placeholder': 'Services', 'rows': '10', 'class': 'form-control'}))
+        attrs={'placeholder': 'Description', 'rows': '10', 'class': 'form-control'}))
     milestone_two_statement = forms.CharField(required=False, widget=forms.Textarea(
-        attrs={'placeholder': 'Services', 'rows': '10', 'class': 'form-control'}))
+        attrs={'placeholder': 'Description', 'rows': '10', 'class': 'form-control'}))
     milestone_three_statement = forms.CharField(required=False, widget=forms.Textarea(
-        attrs={'placeholder': 'Services', 'rows': '10', 'class': 'form-control'}))
+        attrs={'placeholder': 'Description', 'rows': '10', 'class': 'form-control'}))
     milestone_four_statement = forms.CharField(required=False, widget=forms.Textarea(
-        attrs={'placeholder': 'Services', 'rows': '10', 'class': 'form-control'}))
+        attrs={'placeholder': 'Description', 'rows': '10', 'class': 'form-control'}))
 
-    milestone_one_files = forms.FileField(
-        widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    milestone_one_post_goal_complete = forms.BooleanField(label='Completed Goal of 3 Post', initial=False, required=False, widget=forms.CheckboxInput(
+        attrs={'class': 'form-control', 'style' : 'text-align:left;'}))
 
-    milestone_two_files = forms.FileField(required=False,
-        widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    milestone_two_post_goal_complete = forms.BooleanField(label='Completed Goal of 3 Post', initial=False, required=False, widget=forms.CheckboxInput(
+        attrs={'class': 'form-control', 'style': 'text-align:left;'}))
 
-    milestone_three_files = forms.FileField(required=False,
-        widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    milestone_three_post_goal_complete = forms.BooleanField(label='Completed Goal of 3 Post', initial=False, required=False, widget=forms.CheckboxInput(
+        attrs={'class': 'form-control', 'style': 'text-align:left;'}))
 
-    milestone_four_files = forms.FileField(required=False,
-        widget=forms.ClearableFileInput(attrs={'multiple': True}))
+    milestone_four_post_goal_complete = forms.BooleanField(label='Completed Goal of 3 Post', initial=False, required=False, widget=forms.CheckboxInput(
+        attrs={'class': 'form-control', 'style': 'text-align:left;'}))
 
     class Meta:
         model = JobPost
-        fields = ["milestone_one_statement", "milestone_two_statement", "milestone_three_statement", "milestone_four_statement", "milestone_one_files",
-                  "milestone_two_files", "milestone_three_files", "milestone_four_files"]
+        fields = ["milestone_one_statement", "milestone_two_statement", "milestone_three_statement", "milestone_four_statement"]

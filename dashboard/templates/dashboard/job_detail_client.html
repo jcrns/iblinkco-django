@@ -58,6 +58,43 @@
     .milestone-img {
         max-width: 100px;
     }
+
+    /* Stars */
+    .rating>span:hover:before {
+        content: "\2605";
+        position: absolute;
+    }
+
+    .rating {
+        unicode-bidi: bidi-override;
+        direction: rtl;
+    }
+
+    .rating>span:hover:before,
+    .rating>span:hover~span:before {
+        content: "\2605";
+        position: absolute;
+    }
+
+    .rating {
+        unicode-bidi: bidi-override;
+        direction: rtl;
+    }
+
+    .rating>span {
+        display: inline-block;
+        position: relative;
+        font-size: 30px;
+        width: 1.1em;
+    }
+
+    .rating>span:hover:before,
+    .rating>span:hover~span:before {
+        content: "\2605";
+        position: absolute;
+        color: yellow;
+        cursor: pointer;
+    }
 </style>
 <div class="job">
     <div class="container-fluid">
@@ -176,46 +213,93 @@
                         <h4>Milestones</h4>
                         <p>Managers are required to update the milestones every few days so the progress of the job can
                             be confirmed.</p>
-                        <div id="milestone-row" class="row">
-                            <div class="milestone-div col-sm-12 col-md-6"><p class="font-weight-bold">Milestone 1
-                                    Statement:</p>
-                                {{ order.milestone_one_statement }}
-                                <p>
-                                    {% for file in image_list_milestone_one %}
-                                    <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
-                                    {% endfor %}
-                                </p>
+                        <form method="POST" id="rating-post">
+                            {% csrf_token %}
+                            <div id="milestone-row" class="row">
+
+                                <div class="milestone-div col-sm-12 col-md-6">
+                                    <p class="font-weight-bold">Milestone 1
+                                        Statement:</p>
+                                    {{ order.milestone_one_statement }}
+                                    <div class="milestone-rating">
+                                        {% if order.milestone_one_rated == 0 %}
+                                        {% if order.milestone_one_statement != 'none' %}
+                                        How did {{ order.manager }} do during this milestone?
+                                        <div class="rating">
+                                            <span onclick="getRating(this, 1)" data-star=1>☆</span><span
+                                                onclick="getRating(this, 1)" data-star=2>☆</span><span
+                                                onclick="getRating(this, 1)" data-star=3>☆</span><span
+                                                onclick="getRating(this, 1)" data-star=4>☆</span><span
+                                                onclick="getRating(this, 1)" data-star=5>☆</span>
+                                        </div>
+                                        {% endif %}
+                                        {% else %}
+                                        <p>You gave {{ order.manager }} {{ order.milestone_one_rated }} stars on the job</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="milestone-div col-sm-12 col-md-6">
+                                    <p class="font-weight-bold">Milestone 2
+                                        Statement:</p>
+                                    {{ order.milestone_two_statement }}
+                                    <div class="milestone-rating">
+                                        {% if order.milestone_two_rated == 0 %}
+                                        {% if order.milestone_two_statement != 'none' %}
+                                        How did {{ order.manager }} do during this milestone?
+                                        <div class="rating">
+                                            <span onclick="getRating(this, 2)" data-star=1>☆</span><span
+                                                onclick="getRating(this, 2)" data-star=2>☆</span><span
+                                                onclick="getRating(this, 2)" data-star=3>☆</span><span
+                                                onclick="getRating(this, 2)" data-star=4>☆</span><span
+                                                onclick="getRating(this, 2)" data-star=5>☆</span>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="milestone-div col-sm-12 col-md-6">
+                                    <p class="font-weight-bold">Milestone 3
+                                        Statement:</p>
+                                    {{ order.milestone_three_statement }}
+                                    <div class="milestone-rating">
+                                        {% if order.milestone_three_rated == 0 %}
+                                        {% if order.milestone_three_statement != 'none' %}
+                                        How did {{ order.manager }} do during this milestone?
+                                        <div class="rating">
+                                            <span onclick="getRating(this, 3)" data-star=1>☆</span><span
+                                                onclick="getRating(this,3)" data-star=2>☆</span><span
+                                                onclick="getRating(this, 3)" data-star=3>☆</span><span
+                                                onclick="getRating(this, 3)" data-star=4>☆</span><span
+                                                onclick="getRating(this, 3)" data-star=5>☆</span>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if order.length != 3 %}
+                                <div class="milestone-div col-sm-12 col-md-6">
+                                    <p class="font-weight-bold">Milestone 4
+                                        Statement:</p>
+                                    {{ order.milestone_four_statement }}
+                                    <div class="milestone-rating">
+                                        {% if order.milestone_four_rated == 0 %}
+                                        {% if order.milestone_four_statement != 'none' %}
+                                        How did {{ order.manager }} do during this milestone?
+                                        <div class="rating">
+                                            <span onclick="getRating(this, 4)" data-star=1>☆</span><span
+                                                onclick="getRating(this, 4)" data-star=2>☆</span><span
+                                                onclick="getRating(this, 4)" data-star=3>☆</span><span
+                                                onclick="getRating(this, 4)" data-star=4>☆</span><span
+                                                onclick="getRating(this, 4)" data-star=5>☆</span>
+                                        </div>
+                                        {% endif %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
-                            <div class="milestone-div col-sm-12 col-md-6"><p class="font-weight-bold">Milestone 2
-                                    Statement:</p>
-                                {{ order.milestone_two_statement }}
-                                <p>
-                                    {% for file in image_list_milestone_two %}
-                                    <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
-                                    {% endfor %}
-                                </p>
-                            </div>
-                            <div class="milestone-div col-sm-12 col-md-6"><p class="font-weight-bold">Milestone 3
-                                    Statement:</p>
-                                {{ order.milestone_three_statement }}
-                                <p>
-                                    {% for file in image_list_milestone_three %}
-                                    <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
-                                    {% endfor %}
-                                </p>
-                            </div>
-                            {% if order.length != 3 %}
-                            <div class="milestone-div col-sm-12 col-md-6"><p class="font-weight-bold">Milestone 4
-                                    Statement:</p>
-                                {{ order.milestone_four_statement }}
-                                <p>
-                                    {% for file in image_list_milestone_four %}
-                                    <img src="{{ file.milestoneFile.url }}" class="milestone-img" alt="">
-                                    {% endfor %}
-                                </p>
-                            </div>
-                            {% endif %}
-                        </div>
+                        </form>
+
                         <h5>Job Completion</h5>
                         <div class="progress" id="milestone-bar">
                             <div id="progress-bar-job-completion" class="progress-bar bg-success" role="progressbar"
@@ -255,7 +339,30 @@
 </div>
 {% endif %}
 <script>
+    function getRating(e, milestone) {
+        console.log(e);
 
+        // Getting star
+        star = e.dataset.star
+
+        // Creating element and appending
+        var form = document.getElementById('rating-post');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'star-number');
+        hiddenInput.setAttribute('value', star);
+        form.appendChild(hiddenInput);
+
+
+        var hiddenInputMilestone = document.createElement('input');
+        hiddenInputMilestone.setAttribute('type', 'hidden');
+        hiddenInputMilestone.setAttribute('name', 'milestones');
+        hiddenInputMilestone.setAttribute('value', milestone);
+        form.appendChild(hiddenInputMilestone);
+
+        // Submit the form
+        form.submit();
+    }
     function progressBar(job_complete, milestone1 = 'none', milestone2 = 'none', milestone3 = 'none', milestone4 = 'none') {
         let progressBarElement = document.getElementById('progress-bar-job-completion')
         let progressBarIncompleteElement = document.getElementById('progress-bar-job-incompletion')
