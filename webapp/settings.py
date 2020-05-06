@@ -1,6 +1,7 @@
 import dj_database_url
 import os
 import django_heroku
+from celery import Celery
 # import psycopg2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -18,6 +19,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+app = Celery('example')
+app.conf.update(BROKER_URL=os.environ.get('REDIS_URL'),CELERY_RESULT_BACKEND=os.environ.get('REDIS_URL'))
 
 # Application definition
 

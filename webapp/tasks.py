@@ -26,7 +26,7 @@ from celery.task.control import revoke
 @periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
 def manager_assignment(pk, current_site):
     print('dfdfdfdfdf')
-    
+
     # Checking if we can retrieve job else returning
     try:
         job_obj = JobPost.objects.get(pk=pk)
@@ -54,8 +54,9 @@ def manager_assignment(pk, current_site):
         client = User.objects.get(username=client_name)
 
         # Getting capable managers with filter
-        managers = Profile.objects.filter(is_manager=True, language=client.profile.language)
-        
+        managers = Profile.objects.filter(
+            is_manager=True, language=client.profile.language)
+
         for manager in managers:
             # Randomly selecting managers
             manager_name = random.choice(managers)
@@ -68,9 +69,6 @@ def manager_assignment(pk, current_site):
                 print("manager.profile.stripe_user_id")
                 print(manager.profile.stripe_user_id)
                 break
-
-
-
 
         # Emailing manager about job
         email = emailJobOffer(manager, job_obj, current_site)
@@ -115,25 +113,30 @@ def check_milestone_client_email(pk, milestone):
         # Creating str variables
         if milestone == 1:
             milestone = 'One'
-            body = 'Hello ' + client + ', We hope all is well, go to iblinkco.com to see rate ' + manager +' job so far? Make sure to let us know by contacting us at iblinkcompany@gmail.com'
-       
+            body = 'Hello ' + client + ', We hope all is well, go to iblinkco.com to see rate ' + \
+                manager + ' job so far? Make sure to let us know by contacting us at iblinkcompany@gmail.com'
+
         elif milestone == 2:
             milestone = 'Two'
-            body = 'Hey ' + client + ', your manager, ' + manager + ' second milestone is has been updated. Go to iblinkco.com to see it. If you have any questions email us at iblinkcompany@gmail.com. '
-       
+            body = 'Hey ' + client + ', your manager, ' + manager + \
+                ' second milestone is has been updated. Go to iblinkco.com to see it. If you have any questions email us at iblinkcompany@gmail.com. '
+
         elif milestone == 3:
-            milestone  = 'Three'
-            body = 'Hello ' + client + ', you are more than halfway done with your job with, ' + manager + ' and they have just updated their third milestone. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
+            milestone = 'Three'
+            body = 'Hello ' + client + ', you are more than halfway done with your job with, ' + manager + \
+                ' and they have just updated their third milestone. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
 
         elif milestone == 4:
             milestone = 'Four'
-            body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
+            body = 'Hello ' + client + ', your job with, ' + manager + \
+                ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
 
         # Sending emails
         if job.length == 3:
             if milestone == 3:
                 milestone = 'Third'
-                body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
+                body = 'Hello ' + client + ', your job with, ' + manager + \
+                    ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
         # Client email
         email = EmailMessage(
             'Milestone ' + milestone + ' Check In and Rate', body, to=[f'{client_email}'])
@@ -181,66 +184,79 @@ def milestone_manger_email(pk, milestoneState, warning):
         if milestoneState == 1:
 
             # Checking if this is a warning email
-            if warning == True:    
+            if warning == True:
                 subject = 'Your First Milestone of your Job With ' + client + ' is Almost Due!'
-                body = 'Hello ' + manager + ', We hope all is well, How is your job with ' + client + ' going so far? Make sure to update your first milestone by tomorrow. If you have any questions, contact us at iblinkcompany@gmail.com'
-            
+                body = 'Hello ' + manager + ', We hope all is well, How is your job with ' + client + \
+                    ' going so far? Make sure to update your first milestone by tomorrow. If you have any questions, contact us at iblinkcompany@gmail.com'
+
             # Sending due email
             else:
                 subject = 'Your First Milestone is Due Today!'
-                body = 'Hello ' + manager + ', We hope all is well, your first milestone with ' + client + ' is due today. If you have any questions let us know by contacting us at iblinkcompany@gmail.com'
+                body = 'Hello ' + manager + ', We hope all is well, your first milestone with ' + client + \
+                    ' is due today. If you have any questions let us know by contacting us at iblinkcompany@gmail.com'
 
         elif milestoneState == 2:
             if warning == True:
 
                 subject = 'Your Second Milestone of your Job With ' + client + ' is Due Tomorrow!'
-                body = 'Hi ' + manager + ', We hope all is well, you are currently working towards you second milestone of your job with ' + client + ' Do not forget to update the milestone on the website and if you have any questions let us know by contacting us at iblinkcompany@gmail.com'
+                body = 'Hi ' + manager + ', We hope all is well, you are currently working towards you second milestone of your job with ' + client + \
+                    ' Do not forget to update the milestone on the website and if you have any questions let us know by contacting us at iblinkcompany@gmail.com'
             else:
                 subject = 'Your Second Milestone of your Job With ' + client + ' is Due Tomorrow!'
-                body = 'Hey ' + manager + ', your manager, ' + manager + ' second milestone is due. email us at iblinkcompany@gmail.com. '
+                body = 'Hey ' + manager + ', your manager, ' + manager + \
+                    ' second milestone is due. email us at iblinkcompany@gmail.com. '
 
         elif milestoneState == 3:
             if warning == True:
                 subject = 'Your Third Milestone of your Job With ' + client + ' is Due Tomorrow!'
-                body = 'Hello ' + manager + ', you are more than halfway done with your job with, ' + manager + '. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
+                body = 'Hello ' + manager + ', you are more than halfway done with your job with, ' + manager + \
+                    '. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
             else:
                 subject = 'Your Third Milestone of your Job With ' + client + ' is Due Today!'
-                body = 'Hey ' + manager + ', your third milestone of your job with , ' + manager + ' is due. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
-        
+                body = 'Hey ' + manager + ', your third milestone of your job with , ' + manager + \
+                    ' is due. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
+
         elif milestoneState == 4:
             if warning == True:
-                subject = 'Your Fourth and Final Milestone of your Job With ' + client + ' is Due Tomorrow!'
-                body = 'Hello ' + manager + ', you are more than halfway done with your job with, ' + manager + '. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
+                subject = 'Your Fourth and Final Milestone of your Job With ' + \
+                    client + ' is Due Tomorrow!'
+                body = 'Hello ' + manager + ', you are more than halfway done with your job with, ' + manager + \
+                    '. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
             else:
                 subject = 'Your last milestone with ' + client + ' is due'
-                body = 'Hello ' + manager + ', your job with, ' + manager + ' will be completed today. Make sure to long into your iBlinkco account to finish your fourth milestone if you have not. '
+                body = 'Hello ' + manager + ', your job with, ' + manager + \
+                    ' will be completed today. Make sure to long into your iBlinkco account to finish your fourth milestone if you have not. '
 
         if job_obj.length == 3:
             if milestoneState == 3:
                 if warning == True:
-                    subject = 'Your Third and Final Milestone of your Job With ' + client + ' is Due Tomorrow!'
-                    body = 'Hello ' + manager + ', you are more than halfway done with your job with, ' + manager + '. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
+                    subject = 'Your Third and Final Milestone of your Job With ' + \
+                        client + ' is Due Tomorrow!'
+                    body = 'Hello ' + manager + ', you are more than halfway done with your job with, ' + manager + \
+                        '. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
                 else:
                     subject = 'Your last milestone with ' + client + ' is due today'
-                    body = 'Hello ' + manager + ', your job with, ' + manager + ' will be completed today. Make sure to long into your iBlinkco account to finish your third milestone if you have not. '
-     
+                    body = 'Hello ' + manager + ', your job with, ' + manager + \
+                        ' will be completed today. Make sure to long into your iBlinkco account to finish your third milestone if you have not. '
+
        # Sending emails
         email = EmailMessage(
             subject, body, to=[f'{manager_email}'])
         print(email)
         email.send()
         print({email})
-        
+
     except Exception as e:
         print(e)
-        
+
 
 # Task to send rate job email
 @shared_task
 def rateJobEmail(manager, client, client_email):
 
     subject = "Rate" + manager + "'s job now"
-    body = "Hello " + client + ", your job with " + manager +  " is complete. Rate there job here and let us know how your experience with iBlinkco is going be emailing us at iblinkcompany@gmail.com "
+    body = "Hello " + client + ", your job with " + manager + \
+        " is complete. Rate there job here and let us know how your experience with iBlinkco is going be emailing us at iblinkcompany@gmail.com "
 
     # Sending emails
     email = EmailMessage(

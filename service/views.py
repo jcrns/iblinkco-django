@@ -28,7 +28,7 @@ from billing.models import BillingProfile
 import stripe
 
 # Importing celery task
-from .tasks import manager_assignment, check_milestone_client_email, milestone_manger_email
+from webapp.tasks import manager_assignment, check_milestone_client_email, milestone_manger_email
 from datetime import timedelta, datetime
 
 # Importing lib to get base site
