@@ -35,6 +35,9 @@ from django.http import HttpResponse
 # Importing stripe
 import stripe
 
+# Adding task
+from webapp.tasks import testTask
+
 # Overview function
 @login_required(login_url="/?login=true")
 def dashboard(request):
@@ -287,11 +290,13 @@ class JobDetailView(DetailView):
         
         # Checking if form is valid
         if form.is_valid():
-            
+            print(form)
             # Getting inputed statements
             milestone_one_statement = form.cleaned_data.get('milestone_one_statement')
-            milestone_two_statement = form.cleaned_data.get(
-                'milestone_two_statement')
+            milestone_two_post_goal_complete = form.cleaned_data.get(
+                'milestone_two_post_goal_complete')
+            print(milestone_two_post_goal_complete)
+            milestone_two_statement = form.cleaned_data.get('milestone_two_statement')
             milestone_three_statement = form.cleaned_data.get(
                 'milestone_three_statement')
             milestone_four_statement = form.cleaned_data.get(
@@ -439,3 +444,10 @@ def jobPrepEnded(request, pk):
     job.job_preparation_completed = True
     job.save()
     return redirect('dashboard-job-detail-manager', pk=pk)
+
+def test(request):
+    if request.method == 'POST':
+        print('sdsdsds')
+        testTask.delay()
+        return redirect('dashboard-test')
+    return render(request, 'dashboard/test.html')

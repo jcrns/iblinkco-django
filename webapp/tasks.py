@@ -34,19 +34,19 @@ def manager_assignment(pk, current_site):
 
         # Checking if job is none else returning
         if not job_obj:
-            revoke('service.tasks.manager_assignment')
+            revoke('webapp.tasks.manager_assignment')
             return None
 
     except Exception as e:
         print(e)
-        revoke('service.tasks.manager_assignment')
+        revoke('webapp.tasks.manager_assignment')
         return None
 
     # Trying to get and assign manager and send email
     try:
         # Checking if manager already assigned if so returning
         if job_obj.manager:
-            revoke('service.tasks.manager_assignment')
+            revoke('webapp.tasks.manager_assignment')
             return None
 
         # Getting client
@@ -75,7 +75,7 @@ def manager_assignment(pk, current_site):
 
         print('complete')
 
-        revoke('service.tasks.manager_assignment')
+        revoke('webapp.tasks.manager_assignment')
         return None
 
     except Exception as e:
@@ -92,12 +92,12 @@ def check_milestone_client_email(pk, milestone):
 
         # Checking if job is none else returning
         if not job_obj:
-            revoke('service.tasks.check_milestone_client_email')
+            revoke('webapp.tasks.check_milestone_client_email')
             return None
 
     except Exception as e:
         print(e)
-        revoke('service.tasks.check_milestone_client_email')
+        revoke('webapp.tasks.check_milestone_client_email')
         return None
 
     # Check if job still exist if not returning
@@ -160,12 +160,12 @@ def milestone_manger_email(pk, milestoneState, warning):
 
         # Checking if job is none else returning
         if not job_obj:
-            revoke('service.tasks.milestone_manger_email')
+            revoke('webapp.tasks.milestone_manger_email')
             return None
 
     except Exception as e:
         print(e)
-        revoke('service.tasks.milestone_manger_email')
+        revoke('webapp.tasks.milestone_manger_email')
         return None
 
     # Checking if we can retrieve job else returning
@@ -265,3 +265,13 @@ def rateJobEmail(manager, client, client_email):
     email.send()
 
     print({email})
+
+@shared_task
+def testTask():
+    subject = "test"
+    body = "please work!"
+    client_email = "iblinkcompany@gmail.com"
+    email = EmailMessage(subject, body, to=[f'{client_email}'])
+    print(email)
+    email.send()
+

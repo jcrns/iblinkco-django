@@ -314,7 +314,7 @@
                     <form method="POST" enctype='multipart/form-data'>
                         {% csrf_token %}
                         <p>Completed Goal of {{ post_per_day }} Posts</p>
-                        {{ form.milestone_one_post_goal_complete }}
+                        {{ form.milestone_one_completed_job_goal }}
                         <p>Give a brief description of</p>
                         <ul>
                             <li>Post you have found and used for your client</li>
@@ -340,7 +340,7 @@
                     <form method="POST" enctype='multipart/form-data'>
                         {% csrf_token %}
                         <p>Completed Goal of {{ post_per_day }} Posts</p>
-                        {{ form.milestone_two_post_goal_complete }}
+                        {{ form.milestone_two_completed_job_goal }}
                         <p>Give a brief description of</p>
                         <ul>
                             <li>Post you have found and used for your client</li>
@@ -374,7 +374,7 @@
                             <li>Communication with your client</li>
                         </ul>
                         <input type="hidden" name="milestone-number" id="milestone-number" value="1">
-                        {{ form.milestone_three_statement }}
+                        {{ form.milestone_three_completed_job_goal }}
                         <input type="submit" class="btn btn-outline-primary" value="Submit">
 
                     </form>
@@ -394,7 +394,7 @@
                     <form method="POST" enctype='multipart/form-data'>
                         {% csrf_token %}
                         <p>Completed Goal of {{ post_per_day }} Posts</p>
-                        {{ form.milestone_one_post_goal_complete }}
+                        {{ form.milestone_four_completed_job_goal }}
                         <p>Give a brief description of</p>
                         <ul>
                             <li>Post you have found and used for your client</li>
