@@ -1,21 +1,5 @@
 import django
-import os
-django.setup()
-
-from celery import Celery
-from celery.schedules import crontab
-
-app = Celery()
-app.conf.update(
-    BROKER_URL='redis://h:p433bdebe493ed86f7b09195c7983f3743ad34351fc6a892be0ac374927395332@ec2-3-81-254-48.compute-1.amazonaws.com:8879',
-    CELERY_ACCEPT_CONTENT = ['json'],
-    CELERY_TASK_SERIALIZER = 'json'
-    )
-# Celery
-CELERY_BROKER_URL = 'redis://h:p433bdebe493ed86f7b09195c7983f3743ad34351fc6a892be0ac374927395332@ec2-3-81-254-48.compute-1.amazonaws.com:8879'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-
+django.setup() 
 
 # Importing celery
 from celery.task.schedules import crontab
@@ -284,13 +268,3 @@ def rateJobEmail(manager, client, client_email):
     email.send()
 
     print({email})
-
-@shared_task
-def testTask():
-    subject = "test"
-    body = "please work!"
-    client_email = "iblinkcompany@gmail.com"
-    email = EmailMessage(subject, body, to=[f'{client_email}'])
-    print(email)
-    email.send()
-
