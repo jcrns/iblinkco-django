@@ -19,7 +19,6 @@ from django.core.mail import EmailMessage
 # Import stripe
 import stripe
 
-
 class JobPost(models.Model):
 
     # JOB ID
@@ -192,15 +191,22 @@ def manager_previously_existed_check(sender, instance, **kwargs):
                 instance.job_preparation_deadline = now
                 
                 # Preparing for email by getting vars
+                client = instance.client
                 client = User.objects.get(username=client)
-                client = User.objects.get(username=client)
+                manager = instance.manager
+                manager = User.objects.get(username=manager)
+
+                # Defining emails vars
                 client_email = client.email
+                manager_email = manager.email
                 
+                # Getting users usernames
                 manager = instance.manager.username
                 client = instance.client.username
 
                 # Sending email to client
-                mamagerAssignedEmail(client, manager, client_email)
+                managerAssignedEmails(
+                    manager, client, client_email, manager_email)
 
 def pre_save_create_job_id(sender, instance, *args, **kwargs):
     if not instance.job_id:
@@ -209,15 +215,26 @@ def pre_save_create_job_id(sender, instance, *args, **kwargs):
 pre_save.connect(pre_save_create_job_id, sender=JobPost)
 
 
-def mamagerAssignedEmail(manager, client, client_email):
+def managerAssignedEmails(manager, client, client_email, manager_email):
 
-    subject = "Rate" + manager + "'s job now"
-    body = "Hello " + client + ", your job with " + manager + \
-        " is complete. Rate there job here and let us know how your experience with iBlinkco is going be emailing us at iblinkcompany@gmail.com "
+    subject = "Congrats your job request has been assigned to " + manager
+    body = "Hello " + client + ", your latest job request now has an assignment! The job will start with a 2 day prep period for the manager. Thank you! If you have any further question or concerns email us at iblinkcompany@gmail.com "
 
     # Sending emails
     email = EmailMessage(
         subject, body, to=[f'{client_email}'])
+    print(email)
+    email.send()
+
+    print({email})
+
+    subject = "Congrats you have been assigned to work with " + client + " on their latest job request"
+    body = "Hello " + manager + ", you have been assigned to work with " + client + \
+        " on their latest job request! The job will start with a 2 day prep period for the manager. Thank you! If you have any further question or concerns email us at iblinkcompany@gmail.com "
+
+    # Sending emails
+    email = EmailMessage(
+        subject, body, to=[f'{manager_email}'])
     print(email)
     email.send()
 
