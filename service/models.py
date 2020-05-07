@@ -255,15 +255,18 @@ def rateJobEmail(manager, client, client_email):
     print({email})
 
 # Milestone models
-# class Milestone(models.Model):
-#     job = models.CharField(max_length=120)
-#     milestone_number = models.IntegerField()
-#     milestone_four_statement = models.CharField(
-#         max_length=1000, default='none')
+class Milestone(models.Model):
+    job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    milestone_number = models.IntegerField(default=0)
+    milestone_rating = models.IntegerField(default=0)
+    milestone_statement = models.CharField(
+        max_length=1000, default='none')
+    milestone_post_goal_completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.milestone_number} Milestone for {self.job}'
 
 # Milestone file model
-
-
 class MilestoneFiles(models.Model):
     job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
     milestoneOne = models.BooleanField(default=False)

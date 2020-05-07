@@ -10,7 +10,7 @@ from users.forms import ProfileUpdateFormClient, ProfileUpdateFormManager
 from .forms import JobPostForm
 
 # Importing job model
-from .models import JobPost
+from .models import JobPost, Milestone
 
 # Importing profile model
 from users.models import Profile
@@ -128,7 +128,16 @@ def postJob(request):
 
                 # Running async manager selection function
                 manager_assignment.apply_async((pk, current_site), countdown=1800)
+
+
+                # Create job milestones
+                Milestone.objects.create(job=job, milestone_number=1)                
+                Milestone.objects.create(job=job, milestone_number=2)                
+                Milestone.objects.create(job=job, milestone_number=3)
                 
+                # Checking if job is large enough for 3 milestones
+                if job.length != 3:
+                    Milestone.objects.create(job=job, milestone_number=4)
                 return redirect('dashboard-confirm-job', pk=pk)
             return redirect('dashboard-home')
         else:

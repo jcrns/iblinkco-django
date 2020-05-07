@@ -16,7 +16,7 @@ from django.shortcuts import get_object_or_404
 from users.models import Profile
 
 # Importing jobs to access
-from service.models import JobPost, MilestoneFiles
+from service.models import JobPost, MilestoneFiles, Milestone
 
 # Importing job form for form updates in detail views
 from service.forms import JobPostFormUpdate, milestoneUpdate
@@ -226,6 +226,12 @@ class JobDetailView(DetailView):
         image_list_milestone_four = MilestoneFiles.objects.filter(
                 job=context['object'], milestoneFour=True)
 
+        # Getting and saving milestones
+        milestones = Milestone.objects.filter(job=context['object'])
+        context['milestones'] = milestones
+
+
+
         # Applying milestone images
         context['image_list_milestone_one'] = image_list_milestone_one
         context['image_list_milestone_two'] = image_list_milestone_two
@@ -265,41 +271,52 @@ class JobDetailView(DetailView):
         if self.template_name == 'dashboard/job_detail_client.html':
             print('sfsdsdsdsds')
             starNumber = int(request.POST['star-number'])
-            milestones = int(request.POST['milestones'])
+            milestoneNumber = int(request.POST['milestones'])
 
-            print(starNumber, "  " ,milestones)
-            if milestones == 1:
+            milestone = Milestone.objects.get(job=job, milestone_number=milestoneNumber)
+
+            if milestoneNumber == 1:
                 print(starNumber)
-                job.milestone_one_rated = starNumber
-            elif milestones == 2:
-                job.milestone_two_rated = starNumber
-            elif milestones == 3:
-                job.milestone_three_rated = starNumber
-            elif milestones == 4:
-                job.milestone_four_rated = starNumber
+                milestone.milestone_rating = starNumber
+            elif milestoneNumber == 2:
+                milestone.milestone_rating = starNumber
+            elif milestoneNumber == 3:
+                milestone.milestone_rating = starNumber
+            elif milestoneNumber == 4:
+                milestone.milestone_rating = starNumber
 
-            job.save()
+            milestone.save()
 
             return redirect('dashboard-job-detail-client', pk=self.object.pk)
 
         # Getting form with requested data
         form = milestoneUpdate(self.request.POST, self.request.FILES, instance=self.object)
         
+        print(form.errors)
+        
         # Checking if form is valid
         if form.is_valid():
-            print(form)
-            # Getting inputed statements
-            milestone_one_statement = form.cleaned_data.get('milestone_one_statement')
-            milestone_two_post_goal_complete = form.cleaned_data.get(
-                'milestone_two_post_goal_complete')
-            print(milestone_two_post_goal_complete)
-            milestone_two_statement = form.cleaned_data.get('milestone_two_statement')
-            milestone_three_statement = form.cleaned_data.get(
-                'milestone_three_statement')
-            milestone_four_statement = form.cleaned_data.get(
-                'milestone_four_statement')
+            
+            # Getting milestone vars
+            milestone_number = request.POST['milestone-number']
+            milestone_statement = request.POST['milestone_statement']
+            milestone_post_goal_completed = request.POST['milestone_post_goal_completed']
+            
+            # Changing checkbox var
+            if milestone_post_goal_completed == 'on':
+                milestone_post_goal_completed = True
+            else:
+                milestone_post_goal_completed = False
 
-            form.save()
+            # Saving milestones
+            milestone = Milestone.objects.get(job=job, milestone_number=milestone_number)
+
+            milestone.milestone_statement = milestone_statement
+            milestone.milestone_post_goal_completed = milestone_post_goal_completed
+
+            milestone.save()
+
+
             # Checking which milestone is being updated
             # if milestone_one_statement:
             #     # Getting different images
