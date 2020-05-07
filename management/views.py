@@ -276,13 +276,24 @@ def managerOfferConfirm(request, uidb64, token):
 
             # Checking if manager assigned already
             if not job.manager:
+
                 # Changing variable in db
                 job.manager = user
                 job.save()
                 messages.success(request, f'You are now assigned to work a job with {job.client}. We will notfiy when to start the job')
+            
             # Redirecting if manager already assigned
             else:
                 messages.warning(request, f'Manager already assigned')
     else:
         messages.warning(request, f'Activation link is invalid!')
     return redirect('dashboard-home')
+
+# Func for when manager cancels job
+@login_required(login_url="/?login=true")
+def managerCancels(request):
+    if request.POST:
+        print('requests')
+        # Reassigning manager to the job
+
+        # Lower rating of manager

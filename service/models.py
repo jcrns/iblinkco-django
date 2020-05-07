@@ -2,6 +2,7 @@ from django.db import models
 
 # Importing to configure before save
 from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 from django.contrib.auth.models import User
 from .choices import * 
@@ -106,24 +107,7 @@ class JobPost(models.Model):
 
     # Overriding the save function to check if manager was assigned
     def save(self, force_insert=False, force_update=False, *args, **kwargs):
-        if self.manager != None:
-            
-            # Creating deadline for job
-            now = datetime.date.today()
-            print('current time', now)
-
-            # Getting absolute job length by adding regular job length and preparation time
-            realJobLength = self.length + 2
-
-            # Adding the absolute job length to current time
-            deadline = now + datetime.timedelta(days=realJobLength)
-            print('new deadline', deadline)
-            self.deadline = deadline
-
-            # Getting preparation time
-            now = now + datetime.timedelta(days=2)
-            self.job_preparation_deadline = now
-
+        
         # Checking if user job is complete
         print("self.job_complete")
         print(self)
@@ -174,11 +158,70 @@ class JobPost(models.Model):
 
         super(JobPost, self).save(force_insert, force_update, *args, **kwargs)
 
+
+# Checking if acceptance has changed
+@receiver(pre_save, sender=JobPost)
+def manager_previously_existed_check(sender, instance, **kwargs):
+    try:
+        obj = sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
+        # Object is new, so field hasn't technically changed, but you may want to do something else here.
+        pass
+    else:
+        
+        # Checking if manager used to be null
+        if not obj.manager:
+
+            # Checking if job manager changed from null
+            if not obj.manager == instance.manager:
+                
+                # Creating deadline for job
+                now = datetime.date.today()
+                print('current time', now)
+
+                # Getting absolute job length by adding regular job length and preparation time
+                realJobLength = instance.length + 2
+
+                # Adding the absolute job length to current time
+                deadline = now + datetime.timedelta(days=realJobLength)
+                print('new deadline', deadline)
+                instance.deadline = deadline
+
+                # Getting preparation time
+                now = now + datetime.timedelta(days=2)
+                instance.job_preparation_deadline = now
+                
+                # Preparing for email by getting vars
+                client = User.objects.get(username=client)
+                client = User.objects.get(username=client)
+                client_email = client.email
+                
+                manager = instance.manager.username
+                client = instance.client.username
+
+                # Sending email to client
+                mamagerAssignedEmail(client, manager, client_email)
+
 def pre_save_create_job_id(sender, instance, *args, **kwargs):
     if not instance.job_id:
         instance.job_id = random_string_generator(size=16)
 
 pre_save.connect(pre_save_create_job_id, sender=JobPost)
+
+
+def mamagerAssignedEmail(manager, client, client_email):
+
+    subject = "Rate" + manager + "'s job now"
+    body = "Hello " + client + ", your job with " + manager + \
+        " is complete. Rate there job here and let us know how your experience with iBlinkco is going be emailing us at iblinkcompany@gmail.com "
+
+    # Sending emails
+    email = EmailMessage(
+        subject, body, to=[f'{client_email}'])
+    print(email)
+    email.send()
+
+    print({email})
 
 
 def rateJobEmail(manager, client, client_email):

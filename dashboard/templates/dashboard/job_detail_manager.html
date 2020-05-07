@@ -419,12 +419,8 @@
             <div class="modal-body">
                 <div class="text-center">
                     <h3>Are you sure you want to cancel the job</h3>
-                    {% if order.manager %}
-                    <p>We will charge extra depending on how far you have made it through the job</p>
-                    {% else %}
-                    <p>We won't charge because you haven't been paired with a manager yet</p>
-                    {% endif %}
-                    <a href="#" id="cancel-button" class="btn btn-danger">Cancel Now</a>
+                    <p>You will not be paid for any work done for this job and your rating may decrease which will affect your ability to get future jobs</p>
+                    <a href="{% url 'dashboard-job-delete' order.id %}" id="cancel-button" class="btn btn-danger">Cancel Now</a>
                 </div>
             </div>
         </div>

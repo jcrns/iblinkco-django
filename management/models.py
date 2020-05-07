@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from PIL import Image
 from django_resized import ResizedImageField
 from django.core.mail import EmailMessage
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 class ManagerEvaluation(models.Model):
     # Manager
@@ -44,18 +46,18 @@ class ManagerEvaluation(models.Model):
         super(ManagerEvaluation, self).__init__(*args, **kwargs)
         self.__original_accepted = self.accepted
 
-    # Overriding save func
-    def save(self, force_insert=False, force_update=False, *args, **kwargs):
-        print("self.__original_accepted")
-        print(self.__original_accepted)
-        print(self.accepted)
-        # Check if user has changed
-        if self.__original_accepted != self.accepted:
-            if self.accepted == True:
-                # Sending Email if user was accepted
-                self.managerAccepted()
-        super(ManagerEvaluation, self).save(force_insert, force_update, *args, **kwargs)
-        self.__original_accepted = self.accepted
+    # # Overriding save func
+    # def save(self, force_insert=False, force_update=False, *args, **kwargs):
+    #     print("self.__original_accepted")
+    #     print(self.__original_accepted)
+    #     print(self.accepted)
+    #     # Check if user has changed
+    #     if self.__original_accepted != self.accepted:
+    #         if self.accepted == True:
+    #             # Sending Email if user was accepted
+    #             self.managerAccepted()
+    #     super(ManagerEvaluation, self).save(force_insert, force_update, *args, **kwargs)
+    #     self.__original_accepted = self.accepted
 
     def __str__(self):
         return f'{self.manager} Evaluation'
@@ -80,3 +82,17 @@ class ManagerEvaluation(models.Model):
         email = EmailMessage(mail_subject, messageBody, to=[f'{email}'])
         email.send()
         return email
+
+# Checking if acceptance has changed
+@receiver(pre_save, sender=ManagerEvaluation)
+def manager_acceptance(sender, instance, **kwargs):
+    try:
+        obj = sender.objects.get(pk=instance.pk)
+    except sender.DoesNotExist:
+        # Object is new, so field hasn't technically changed, but you may want to do something else here.
+        pass
+    else:
+        if not obj.accepted == instance.accepted:  # Field has changed
+            if instance.accepted == True:
+                # Sending Email if user was accepted
+                ManagerEvaluation.managerAccepted(instance)
