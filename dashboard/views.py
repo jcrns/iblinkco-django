@@ -448,7 +448,7 @@ def jobPrepEnded(request, pk):
 def test(request):
     if request.method == 'POST':
         print('sdsdsds')
+        testTask.apply_async(countdown=5)
         testTask.apply_async(countdown=100)
-        testTask.apply_async(countdown=1800)
         return redirect('dashboard-test')
     return render(request, 'dashboard/test.html')
