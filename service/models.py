@@ -63,25 +63,25 @@ class JobPost(models.Model):
     completed_milestone_one = models.BooleanField(default=False)
     milestone_one_statement = models.CharField(max_length=1000, default='none')
     milestone_one_completed_job_goal = models.BooleanField(default=False)
-    milestone_one_rated = models.IntegerField(blank=True)
+    milestone_one_rated = models.IntegerField(default=0, blank=True)
 
     completed_milestone_two = models.BooleanField(default=False)
     milestone_two_statement = models.CharField(max_length=1000, default='none')
     milestone_two_completed_job_goal = models.BooleanField(default=False)
-    milestone_two_rated = models.IntegerField(blank=True)
+    milestone_two_rated = models.IntegerField(default=0, blank=True)
 
 
     completed_milestone_three = models.BooleanField(default=False)
     milestone_three_statement = models.CharField(max_length=1000, default='none')
     milestone_three_completed_job_goal = models.BooleanField(default=False)
-    milestone_three_rated = models.IntegerField(blank=True)
+    milestone_three_rated = models.IntegerField(default=0, blank=True)
 
 
 
     completed_milestone_four = models.BooleanField(default=False)
     milestone_four_statement = models.CharField(max_length=1000, default='none')
     milestone_four_completed_job_goal = models.BooleanField(default=False)
-    milestone_four_rated = models.IntegerField(blank=True)
+    milestone_four_rated = models.IntegerField(default=0, blank=True)
 
 
     # Job Preparation
