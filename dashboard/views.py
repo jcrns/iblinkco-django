@@ -35,9 +35,6 @@ from django.http import HttpResponse
 # Importing stripe
 import stripe
 
-# Adding task
-from webapp.tasks import testTask
-
 # Overview function
 @login_required(login_url="/?login=true")
 def dashboard(request):
