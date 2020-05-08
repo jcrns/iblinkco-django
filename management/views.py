@@ -203,23 +203,23 @@ def stripeAuthorizeView(request):
 def stripeAuthorizeCallbackView(request):
     user = request.user
     code = request.GET.get('code')
-    if not request.user.is_authenticated():
-        if code:
-            data = {
-                'client_secret': settings.STRIPE_SECRET_KEY,
-                'grant_type': 'authorization_code',
-                'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
-                'code': code
-            }
-            url = 'https://connect.stripe.com/oauth/token'
-            resp = requests.post(url, params=data)
-            print(resp.json())
+    # if not request.user.is_authenticated():
+    if code:
+        data = {
+            'client_secret': settings.STRIPE_SECRET_KEY,
+            'grant_type': 'authorization_code',
+            'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
+            'code': code
+        }
+        url = 'https://connect.stripe.com/oauth/token'
+        resp = requests.post(url, params=data)
+        print(resp.json())
 
-            # Updating stipe id token in db
-            stripe_user_id = resp.json()['stripe_user_id']
-            profile = Profile.objects.get(user=user)
-            profile.stripe_user_id = stripe_user_id
-            profile.save()
+        # Updating stipe id token in db
+        stripe_user_id = resp.json()['stripe_user_id']
+        profile = Profile.objects.get(user=user)
+        profile.stripe_user_id = stripe_user_id
+        profile.save()
             
     response = redirect('dashboard-home')
     return response
