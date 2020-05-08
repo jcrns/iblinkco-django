@@ -268,3 +268,39 @@ def rateJobEmail(manager, client, client_email):
     email.send()
 
     print({email})
+
+# Task to notify manager about milestone being rated
+@shared_task
+def milestoneRatedEmail(manager, client, manager_email, milestone_number, star_count):
+
+    # Checking what number
+    if milestone_number == 1:
+        milestone_number = 'one'
+    elif milestone_number == 2:
+        milestone_number = 'two'
+    elif milestone_number == 3:
+        milestone_number = 'three'
+    elif milestone_number == 4:
+        milestone_number = 'four'
+
+    subject = client + " has rated your job during milestone " + str(milestone_number) + " " + str(star_count) + " stars"
+    
+    if star_count == 5:
+        greatness_of_job = " seems to be going great! They gave you " + str(star_count) + " on your last milestone."
+    elif star_count == 4:
+        greatness_of_job = " seems to be going good. They gave you " + str(star_count) + " on your last milestone which means they like the job but maybe you can do better."
+    elif star_count == 3:
+        greatness_of_job = " is tolerable. They gave you " + str(star_count) + " on your last milestone. We encourage you step up for the next milestone to avoid having your overall rating significantly penalized."
+    elif star_count < 3:
+        greatness_of_job = " wasn't as good as they expected. They gave you " + str(star_count) + " on your last milestone. We encourage you step up for the next milestone to avoid having your overall rating significantly penalized. Too many low stars on your accounts can get your account disabled."
+
+    ending = " If you have any questions or concerns email us at iblinkcompany@gmail.com"
+    body = "Hello " + manager + ", your job with " + client + greatness_of_job + ending
+
+    # Sending emails
+    email = EmailMessage(
+        subject, body, to=[f'{manager_email}'])
+    print(email)
+    email.send()
+
+    print({email})

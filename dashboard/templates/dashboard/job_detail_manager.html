@@ -103,6 +103,10 @@
     .milestone-div {
         padding: 10px;
     }
+    
+    hr {
+        max-width: 400px;
+    }
 </style>
 <div class="job">
     <div class="container-fluid">
@@ -236,10 +240,19 @@
                                                                     job.</p>
                                 <div id="milestone-row" class="row text-center">
                                     {% for milestone in milestones %}
-                                        <div class="col-6">
-                                            <p class="font-weight-bold">Milestone {{ milestone.milestone_number }} Statement:</p>
+                                        <div class="col-6 milestone-div">
+                                            <h6 class="font-weight-bold">Milestone {{ milestone.milestone_number }}</h6>
                                             {% if milestone.milestone_statement != 'none' %}
-                                            {{ milestone.milestone_statement }}
+                                            <div>
+                                                <p class="font-weight-bold">Goals</p>
+                                                <p>
+                                                    Complete {{ post_per_day }} post per day: {{ milestone.milestone_post_goal_completed }}
+                                                </p>
+                                            </div>
+                                            <p class="font-weight-bold">Details</p>
+                                            
+                                            <p>{{ milestone.milestone_statement }}</p>
+                                            <hr>
                                             {% if milestone.milestone_rating != 0 %}
                                                 <p>{{ order.client }} gave you a {{ milestone.milestone_rating }} star on during this milestone</p>
                                             {% endif %}
@@ -326,67 +339,89 @@
     //     milestone = milestoneDivs[milestone]
     //     milestone.style.display = 'block';
     // }
-    function onLoad() {
 
-        // Adding style to all image fields
-        var inputs = document.getElementsByTagName("input");
-        for (i = 0; i < inputs.length; i++) {
-            var input = inputs[i];
-            var inputClass = input.getAttribute("class");
-            console.log("class: " + inputClass)
-            if (inputClass == null) {
-                // alert('yay')
-                input.setAttribute("class", "form-control");
-            }
-        }
-    }
-    onLoad();
-
-    function progressBar(job_complete, milestone1 = 'none', milestone2 = 'none', milestone3 = 'none', milestone4 = 'none') {
+    function progress(job_complete, milestoneStatement){
         let progressBarElement = document.getElementById('progress-bar-job-completion')
         let progressBarIncompleteElement = document.getElementById('progress-bar-job-incompletion')
         if (job_complete == 'True') {
             progressBarElement.innerHTML = '100% Complete'
             progressBarElement.style.width = '100%'
         } else {
-            let progress = 0
             let job_length = "{{ order.length }}";
+            var barWidthStartUnformatted = progressBarElement.style.width;
+            if(barWidthStartUnformatted == ''){
+                barWidthStartUnformatted = 0
+            }
+            var barWidthStart = parseInt(barWidthStartUnformatted)
             if (job_length != 3) {
-                if (milestone1 != 'none') {
-                    progress += 25
-                }
-                if (milestone2 != 'none') {
-                    progress += 25
-                }
-                if (milestone3 != 'none') {
-                    progress += 25
-                }
-                if (milestone4 != 'none') {
-                    progress += 25
+                var barWidth = 25
+                if (milestoneStatement != 'none') {
+                    barWidthStart = barWidthStart + barWidth
                 }
             } else {
-                if (milestone1 != 'none') {
-                    progress += 33
-                }
-                if (milestone2 != 'none') {
-                    progress += 33
-                }
-                if (milestone3 != 'none') {
-                    progress += 34
-                }
-            }
-            console.log('progress: ' + progress)
-            progressBarElement.innerHTML = progress + '% complete'
-            progressBarElement.style.width = progress + '%'
+                var barWidth = 33
+                if (milestoneStatement != 'none') {
+                    if (barWidthStart == 66) {
+                        barWidthStart = 100
+                    } else {
 
-            if (progress == 0) {
-                progressIncomplete = 100 - progress
-                progressBarIncompleteElement.style.width = progressIncomplete + '%'
-                progressBarIncompleteElement.innerHTML = progress + '% Complete'
+                        barWidthStart = barWidthStart + barWidth
+                    }
+                }
             }
+            console.log('progress: ' + barWidthStart)
+            progressBarElement.innerHTML = barWidthStart + '% complete'
+            progressBarElement.style.width = barWidthStart + '%'
         }
     }
-    progressBar("{{ order.job_complete }}", "{{ order.milestone_one_statement }}", "{{ order.milestone_two_statement }}", "{{ order.milestone_four_statement }}", "{{ order.milestone_four_statement }}")
+    {% for milestone in milestones %}
+        progress("{{ order.job_complete }}", "{{ milestone.milestone_statement }}")
+    {% endfor %}
+    // function progressBar(job_complete, milestone1 = 'none', milestone2 = 'none', milestone3 = 'none', milestone4 = 'none') {
+    //     let progressBarElement = document.getElementById('progress-bar-job-completion')
+    //     let progressBarIncompleteElement = document.getElementById('progress-bar-job-incompletion')
+    //     if (job_complete == 'True') {
+    //         progressBarElement.innerHTML = '100% Complete'
+    //         progressBarElement.style.width = '100%'
+    //     } else {
+    //         let progress = 0
+    //         let job_length = "{{ order.length }}";
+    //         if (job_length != 3) {
+    //             if (milestone1 != 'none') {
+    //                 progress += 25
+    //             }
+    //             if (milestone2 != 'none') {
+    //                 progress += 25
+    //             }
+    //             if (milestone3 != 'none') {
+    //                 progress += 25
+    //             }
+    //             if (milestone4 != 'none') {
+    //                 progress += 25
+    //             }
+    //         } else {
+    //             if (milestone1 != 'none') {
+    //                 progress += 33
+    //             }
+    //             if (milestone2 != 'none') {
+    //                 progress += 33
+    //             }
+    //             if (milestone3 != 'none') {
+    //                 progress += 34
+    //             }
+    //         }
+    //         console.log('progress: ' + progress)
+    //         progressBarElement.innerHTML = progress + '% complete'
+    //         progressBarElement.style.width = progress + '%'
+
+    //         if (progress == 0) {
+    //             progressIncomplete = 100 - progress
+    //             progressBarIncompleteElement.style.width = progressIncomplete + '%'
+    //             progressBarIncompleteElement.innerHTML = progress + '% Complete'
+    //         }
+    //     }
+    // }
+    // progressBar("{{ order.job_complete }}", "{{ order.milestone_one_statement }}", "{{ order.milestone_two_statement }}", "{{ order.milestone_four_statement }}", "{{ order.milestone_four_statement }}")
 
 </script>
 {% endblock %}

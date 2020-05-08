@@ -52,9 +52,11 @@
 
     .milestone-div {
         padding-bottom: 10px;
-        text-align: center;
+        /* text-align: center; */
     }
-
+    hr {
+        max-width: 400px;
+    }
     .milestone-img {
         max-width: 100px;
     }
@@ -212,30 +214,46 @@
                     <div class="card-body">
                         <h4>Milestones</h4>
                         <p>Managers are required to update the milestones every few days so the progress of the job can
-                                                    be confirmed.</p>
+                            be confirmed.</p>
                         <form method="POST" id="rating-post">
                             {% csrf_token %}
                             <div class="row text-center">
                                 {% for milestone in milestones %}
-                                <div class="col-6">
-                                    <p class="font-weight-bold">Milestone {{ milestone.milestone_number }} Statement:</p>
-                                    {{ milestone.milestone_statement }}
-                                        <div class="milestone-rating">
+                                <div class="col-6 milestone-div">
+                                    <h6>Milestone {{ milestone.milestone_number }}</h6>
+                                    <div>
+                                        <p class="font-weight-bold">Goals</p>
+                                    <p>
+                                        Complete {{ post_per_day }} post per day: {{ milestone.milestone_post_goal_completed }}
+                                    </p>
+                                    </div>
+                                    <p class="font-weight-bold">Details</p>
+
+                                    <p>{{ milestone.milestone_statement }}</p>
+                                    <div class="milestone-rating">
                                         {% if milestone.milestone_rating == 0 %}
-                                            {% if milestone.milestone_statement != 'none' %}
-                                            How did {{ order.manager }} do during this milestone?
-                                            <div class="rating">
-                                                <span onclick="getRating(this, {{ milestone.milestone_number }})" data-star=1>☆</span>
-                                                <span onclick="getRating(this, {{ milestone.milestone_number }})" data-star=2>☆</span>
-                                                <span onclick="getRating(this, {{ milestone.milestone_number }})" data-star=3>☆</span>
-                                                <span onclick="getRating(this, {{ milestone.milestone_number }})" data-star=4>☆</span>
-                                                <span onclick="getRating(this, {{ milestone.milestone_number }})" data-star=5>☆</span>
-                                            </div>
-                                            {% endif %}
-                                        {% else %}
-                                            <p>You gave {{ order.manager }} {{ milestone.milestone_rating }} stars on the job</p>
-                                        {% endif %}
+                                        {% if milestone.milestone_statement != 'none' %}
+                                        How did {{ order.manager }} do during this milestone?
+                                        <div class="rating">
+                                            <span class="milestone-star" onclick="getRating(this, {{ milestone.milestone_number }})"
+                                                data-star=5>☆</span>
+                                            <span class="milestone-star" onclick="getRating(this, {{ milestone.milestone_number }})"
+                                                data-star=4>☆</span>
+                                            <span class="milestone-star" onclick="getRating(this, {{ milestone.milestone_number }})"
+                                                data-star=3>☆</span>
+                                            <span class="milestone-star" onclick="getRating(this, {{ milestone.milestone_number }})"
+                                                data-star=2>☆</span>
+                                            <span class="milestone-star" onclick="getRating(this, {{ milestone.milestone_number }})"
+                                                data-star=1>☆</span>
+                                            <p id="rating-message"></p>
                                         </div>
+                                        {% endif %}
+                                        {% else %}
+                                        <p>You gave {{ order.manager }} {{ milestone.milestone_rating }} stars on the
+                                            job</p>
+                                        {% endif %}
+                                    </div>
+                                    <hr>
                                 </div>
                                 {% endfor %}
                             </div>
@@ -279,6 +297,37 @@
 </div>
 {% endif %}
 <script>
+
+    // Getting stars and checking if they exist
+    var milestoneStarClass = document.getElementsByClassName('milestone-star');
+    if (milestoneStarClass.length > 0) {
+
+        var stars = document.querySelector('.milestone-star');
+
+        stars.addEventListener('mouseover', changeStarMsgOnHover);
+        stars.addEventListener('mouseout', clearingMsg);
+    }
+
+    function changeStarMsgOnHover(e) {
+        ratingMsg = document.getElementById('rating-message')
+        star = e.dataset.star
+        if(star == 5){
+            ratingMsg.innerHTML("Manager has done a fantastic job");
+        } else if (star == 4){
+            ratingMsg.innerHTML("Manager has done a great job but could've done better ");
+        } else if (star == 3) {
+            ratingMsg.innerHTML("Manager has done an ok job but I expected more ");
+        } else if (star == 2) {
+            ratingMsg.innerHTML("Manager has done a bad job and I expected way more ");
+        } else if(star == 1){
+            ratingMsg.innerHTML("Manager has done a horrible job.");
+        }
+    }
+
+    function clearingMsg(e) {
+        ratingMsg.innerHTML('')
+    }
+
     function getRating(e, milestone) {
         console.log(e);
 
@@ -303,50 +352,43 @@
         // Submit the form
         form.submit();
     }
-    function progressBar(job_complete, milestone1 = 'none', milestone2 = 'none', milestone3 = 'none', milestone4 = 'none') {
+
+    function progress(job_complete, milestoneStatement) {
         let progressBarElement = document.getElementById('progress-bar-job-completion')
         let progressBarIncompleteElement = document.getElementById('progress-bar-job-incompletion')
         if (job_complete == 'True') {
             progressBarElement.innerHTML = '100% Complete'
             progressBarElement.style.width = '100%'
         } else {
-            let progress = 0
             let job_length = "{{ order.length }}";
+            var barWidthStartUnformatted = progressBarElement.style.width;
+            if (barWidthStartUnformatted == '') {
+                barWidthStartUnformatted = 0
+            }
+            var barWidthStart = parseInt(barWidthStartUnformatted)
             if (job_length != 3) {
-                if (milestone1 != 'none') {
-                    progress += 25
-                }
-                if (milestone2 != 'none') {
-                    progress += 25
-                }
-                if (milestone3 != 'none') {
-                    progress += 25
-                }
-                if (milestone4 != 'none') {
-                    progress += 25
+                var barWidth = 25
+                if (milestoneStatement != 'none') {
+                    barWidthStart = barWidthStart + barWidth
                 }
             } else {
-                if (milestone1 != 'none') {
-                    progress += 33
-                }
-                if (milestone2 != 'none') {
-                    progress += 33
-                }
-                if (milestone3 != 'none') {
-                    progress += 34
-                }
-            }
-            console.log('progress: ' + progress)
-            progressBarElement.innerHTML = progress + '% complete'
-            progressBarElement.style.width = progress + '%'
+                var barWidth = 33
+                if (milestoneStatement != 'none') {
+                    if (barWidthStart == 66) {
+                        barWidthStart = 100
+                    } else {
 
-            if (progress == 0) {
-                progressIncomplete = 100 - progress
-                progressBarIncompleteElement.style.width = progressIncomplete + '%'
-                progressBarIncompleteElement.innerHTML = progress + '% Complete'
+                        barWidthStart = barWidthStart + barWidth
+                    }
+                }
             }
+            console.log('progress: ' + barWidthStart)
+            progressBarElement.innerHTML = barWidthStart + '% complete'
+            progressBarElement.style.width = barWidthStart + '%'
         }
     }
-    progressBar("{{ order.job_complete }}", "{{ order.milestone_one_statement }}", "{{ order.milestone_two_statement }}", "{{ order.milestone_four_statement }}", "{{ order.milestone_four_statement }}")
+    {% for milestone in milestones %}
+    progress("{{ order.job_complete }}", "{{ milestone.milestone_statement }}")
+    {% endfor %}
 </script>
 {% endblock %}

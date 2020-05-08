@@ -18,6 +18,9 @@ from users.models import Profile
 # Importing jobs to access
 from service.models import JobPost, MilestoneFiles, Milestone
 
+# Importing user
+from django.contrib.auth.models import User
+
 # Importing job form for form updates in detail views
 from service.forms import JobPostFormUpdate, milestoneUpdate
 
@@ -34,6 +37,9 @@ from django.http import HttpResponse
 
 # Importing stripe
 import stripe
+
+# Importing task
+from webapp.tasks import milestoneRatedEmail
 
 # Overview function
 @login_required(login_url="/?login=true")
@@ -269,21 +275,50 @@ class JobDetailView(DetailView):
 
         # Checking if it is client view
         if self.template_name == 'dashboard/job_detail_client.html':
-            print('sfsdsdsdsds')
+            
+            # Getting data from request
             starNumber = int(request.POST['star-number'])
             milestoneNumber = int(request.POST['milestones'])
 
+            # Getting milestone
             milestone = Milestone.objects.get(job=job, milestone_number=milestoneNumber)
+
+
+
+            # Preparing for email by getting vars
+            client = job.client
+            client = User.objects.get(username=client)
+            manager = job.manager
+            manager = User.objects.get(username=manager)
+
+            # Defining emails vars
+            client_email = client.email
+            manager_email = manager.email
+            
+            # Getting users usernames
+            manager = job.manager.username
+            client = job.client.username
+
 
             if milestoneNumber == 1:
                 print(starNumber)
                 milestone.milestone_rating = starNumber
+
+                # Sending out email to manager about rating
+                milestoneRatedEmail(manager, client, manager_email, milestoneNumber, starNumber).delay()
+
             elif milestoneNumber == 2:
                 milestone.milestone_rating = starNumber
+                milestoneRatedEmail(manager, client, manager_email, milestoneNumber, starNumber).delay()
+
             elif milestoneNumber == 3:
                 milestone.milestone_rating = starNumber
+                milestoneRatedEmail(manager, client, manager_email, milestoneNumber, starNumber).delay()
+
             elif milestoneNumber == 4:
                 milestone.milestone_rating = starNumber
+                milestoneRatedEmail(
+                    manager, client, manager_email, milestoneNumber, starNumber).delay()
 
             milestone.save()
 
