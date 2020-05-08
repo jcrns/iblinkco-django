@@ -178,8 +178,10 @@ class JobDetailView(DetailView):
             platforms+=1
 
         numberOfPost = context['object'].number_of_post
-
+        print("Total posts " , numberOfPost*platforms)
+        print("Length  ", length)
         postPerDay = round((numberOfPost*platforms)/length)
+        postPerDayPlatform = round(numberOfPost/length)
 
         # Creating time left for job preparation
         jobPrepDeadline = context['object'].job_preparation_deadline
@@ -252,6 +254,7 @@ class JobDetailView(DetailView):
         # Applying additional info
         context['job_prep_days_left'] = JobPrepTimeLeftStr
         context['post_per_day'] = postPerDay
+        context['post_per_day_platform'] = postPerDayPlatform
 
         # Adding additional context for styling
         context['static_header'] = True

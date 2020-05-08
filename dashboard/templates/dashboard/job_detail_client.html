@@ -125,6 +125,10 @@
                             {{ order.number_of_post }} (for each platform)
                         </p>
                         <p class="h5">
+                            Posts per day:
+                            {{ post_per_day_platform }} (for each platform)
+                        </p>
+                        <p class="h5">
                             {% if order.paid %}
                             Price Paid: ${{ order.price_paid }}
                             {% endif %}
