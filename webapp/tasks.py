@@ -126,8 +126,8 @@ def check_milestone_client_email(job_obj, milestone):
 
         # Getting client emails
         client = User.objects.get(username=client)
-        client = client.username
         client_email = str(client.email)
+        client = client.username
 
         # Creating str variables
         if milestone == 1:
@@ -170,7 +170,7 @@ def milestone_manger_email(job_obj, milestoneState, warning):
     # Checking if we can retrieve job else returning
     try:
         # Getting client and manager for email
-        manager = str(job_obj.manager)
+        manager = job_obj.manager
 
         client = job_obj.client
         client = User.objects.get(username=client)
