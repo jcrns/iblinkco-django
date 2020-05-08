@@ -122,11 +122,13 @@ def check_milestone_client_email(job_obj, milestone):
 
         # Getting client and manager for email
         manager = job_obj.manager
+        manager = User.objects.get(username=manager)
+        manager = manager.username
         client = job_obj.client
 
         # Getting client emails
         client = User.objects.get(username=client)
-        client_email = str(client.email)
+        client_email = client.email
         client = client.username
 
         # Creating str variables
