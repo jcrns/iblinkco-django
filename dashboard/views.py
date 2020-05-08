@@ -305,20 +305,20 @@ class JobDetailView(DetailView):
                 milestone.milestone_rating = starNumber
 
                 # Sending out email to manager about rating
-                milestoneRatedEmail(manager, client, manager_email, milestoneNumber, starNumber).delay()
+                milestoneRatedEmail(manager, client, manager_email, milestoneNumber, starNumber)
 
             elif milestoneNumber == 2:
                 milestone.milestone_rating = starNumber
-                milestoneRatedEmail(manager, client, manager_email, milestoneNumber, starNumber).delay()
+                milestoneRatedEmail(manager, client, manager_email, milestoneNumber, starNumber)
 
             elif milestoneNumber == 3:
                 milestone.milestone_rating = starNumber
-                milestoneRatedEmail(manager, client, manager_email, milestoneNumber, starNumber).delay()
+                milestoneRatedEmail(manager, client, manager_email, milestoneNumber, starNumber)
 
             elif milestoneNumber == 4:
                 milestone.milestone_rating = starNumber
                 milestoneRatedEmail(
-                    manager, client, manager_email, milestoneNumber, starNumber).delay()
+                    manager, client, manager_email, milestoneNumber, starNumber)
 
             milestone.save()
 

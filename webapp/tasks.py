@@ -304,3 +304,4 @@ def milestoneRatedEmail(manager, client, manager_email, milestone_number, star_c
     email.send()
 
     print({email})
+    return 'success'
