@@ -18,6 +18,9 @@
     .msg-img:hover {
         cursor: pointer;
     }
+    .timestamp {
+        font-size: 14px;
+    }
     /* #msg_history {
         min-height: 90%;
     } */
@@ -400,6 +403,7 @@
     function createMessage(data){
         const message = data['content'];
         const author = data['author'];
+        const timestamp = data['timestamp'];
 
         console.log("message: " + JSON.stringify(data))
         
@@ -423,6 +427,15 @@
 
             const sentMsgText = document.createElement('p');
             sentMsg.appendChild(sentMsgText)
+
+            const sentMsgTimestamp = document.createElement('span');
+            console.log(timestamp)
+            let date = new Date(timestamp);
+            let formattedDate = formatDate(date)
+            sentMsgTimestamp.setAttribute("class", "timestamp");
+            sentMsgTimestamp.innerHTML = formattedDate;
+            sentMsg.appendChild(sentMsgTimestamp);
+
             // Checking if message is image
             if (checkUrlImage(message) == false) {
                 // Creating elements
@@ -472,6 +485,15 @@
 
             const recieveMsgImgP = document.createElement('p');
             recieveMsgTextDiv.appendChild(recieveMsgImgP)
+            
+            const recieveMsgTimestamp = document.createElement('span');
+            console.log(timestamp)
+            let date = new Date(timestamp);
+            let formattedDate = formatDate(date)
+            recieveMsgTimestamp.setAttribute("class", "timestamp");
+            recieveMsgTimestamp.innerHTML = formattedDate;
+            recieveMsgTextDiv.appendChild(recieveMsgTimestamp);
+
             // Checking if message is image
             if (checkUrlImage(message) == false) {
                 
@@ -487,7 +509,15 @@
 
         }
     }
-    
+    function formatDate(date){
+        const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
+        const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(date);
+        const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date);
+        const hr = new Intl.DateTimeFormat('en', { hour: '2-digit' }).format(date);
+        const min = new Intl.DateTimeFormat('en', { minute: 'numeric' }).format(date);
+        const sec = new Intl.DateTimeFormat('en', { second: '2-digit' }).format(date);
+        return `${mo} ${da}, ${ye}  || ${hr}`
+    }
     // On open func 
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');

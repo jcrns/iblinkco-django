@@ -27,6 +27,9 @@ class JobPost(models.Model):
     # Users involved
     client = models.ForeignKey(User, on_delete=models.CASCADE, related_name='client', null=True)
     manager = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name='manager', blank=True)
+    
+    # Will be set to false when job ends or is cancelled
+    active = models.BooleanField(default=True)
 
     # Job Length
     number_of_post = models.IntegerField()
@@ -59,31 +62,6 @@ class JobPost(models.Model):
     instagram_username = models.CharField(max_length=100, blank=True, default='none')
     facebook_username = models.CharField(max_length=100, blank=True, default='none')
 
-    # Milestones
-    completed_milestone_one = models.BooleanField(default=False)
-    milestone_one_statement = models.CharField(max_length=1000, default='none')
-    milestone_one_completed_job_goal = models.BooleanField(default=False)
-    milestone_one_rated = models.IntegerField(default=0, blank=True)
-
-    completed_milestone_two = models.BooleanField(default=False)
-    milestone_two_statement = models.CharField(max_length=1000, default='none')
-    milestone_two_completed_job_goal = models.BooleanField(default=False)
-    milestone_two_rated = models.IntegerField(default=0, blank=True)
-
-
-    completed_milestone_three = models.BooleanField(default=False)
-    milestone_three_statement = models.CharField(max_length=1000, default='none')
-    milestone_three_completed_job_goal = models.BooleanField(default=False)
-    milestone_three_rated = models.IntegerField(default=0, blank=True)
-
-
-
-    completed_milestone_four = models.BooleanField(default=False)
-    milestone_four_statement = models.CharField(max_length=1000, default='none')
-    milestone_four_completed_job_goal = models.BooleanField(default=False)
-    milestone_four_rated = models.IntegerField(default=0, blank=True)
-
-
     # Job Preparation
     job_preparation_completed = models.BooleanField(default=False)
     job_preparation_deadline = models.DateTimeField(
@@ -111,6 +89,11 @@ class JobPost(models.Model):
         print("self.job_complete")
         print(self)
         if self.job_complete == True:
+
+            # Checking if active is True if so setting to False
+            if self.active == False:
+                self.active = True
+
             print("self.manager_paid")
 
             # Getting users involved

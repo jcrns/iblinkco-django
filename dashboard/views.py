@@ -124,22 +124,22 @@ class JobDetailView(DetailView):
     model = JobPost
     context_object_name = 'order'
     # template_name = 'dashboard/job_detail.html'
-
+    
     # Overriding the get function to redirect user if not involved in detailed post
     def get(self, request, *args, **kwargs):
         # Getting object
         self.object = self.get_object() 
         user = request.user
-
+        print(user)
         # Checking if user is manager
         if self.template_name == 'dashboard/job_detail_manager.html':
-            if user.profile.is_client == True:
+            if not user.profile.is_manager == True:
                 return redirect('dashboard-job-detail-manager', pk=self.object.pk)
 
 
         # Checking if user is client 
         if self.template_name == 'dashboard/job_detail_client.html':
-            if user.profile.is_manager == True:
+            if not user.profile.is_client == True:
                 return redirect('dashboard-job-detail-manager', pk=self.object.pk)
 
 

@@ -22,7 +22,9 @@ img {
     height: 550px;
     overflow-y: auto;
 }
-
+.timestamp {
+    font-size: 3px;
+}
 .top_spac {
     margin: 20px 0 0;
 }
