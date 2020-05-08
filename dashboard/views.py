@@ -479,9 +479,10 @@ def deleteJob(request, pk):
         # Deleting job
         job.delete()
         
-        # Making user non busy
-        profile.busy = False
-        profile.save(update_fields=["busy"])
+        # Making client non busy
+        client = Profile.objects.get(user=job.client)
+        client.busy = False
+        client.save()
     return redirect('dashboard-home')
 
 # Func to change job prep bool
