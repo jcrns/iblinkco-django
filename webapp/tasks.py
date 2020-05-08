@@ -85,23 +85,36 @@ def manager_assignment(pk, current_site):
         print("e")
         print(e)
 
-# Alert milestone email clients
-@shared_task
-def check_milestone_client_email(pk, milestone):
+# Creating main task where we will 
 
+
+@shared_task
+def milestone_send_emails(pk, milestoneState, warning):
     try:
         job_obj = JobPost.objects.get(pk=pk)
         print('sdsffafdvefge')
 
         # Checking if job is none else returning
         if not job_obj:
-            revoke('webapp.tasks.check_milestone_client_email')
+            revoke('webapp.tasks.milestone_send_emails')
             return None
 
     except Exception as e:
         print(e)
-        revoke('webapp.tasks.check_milestone_client_email')
+        revoke('webapp.tasks.milestone_send_emails')
         return None
+    print('milestones')
+
+    # Sending email to client
+    check_milestone_client_email(job_obj, milestoneState)
+
+    # Sending email to manager  
+    milestone_manger_email(job_obj, milestoneState, warning)
+    return None
+
+
+# Alert milestone email clients
+def check_milestone_client_email(job_obj, milestone):
 
     # Check if job still exist if not returning
     try:
@@ -116,30 +129,25 @@ def check_milestone_client_email(pk, milestone):
         # Creating str variables
         if milestone == 1:
             milestone = 'One'
-            body = 'Hello ' + client + ', We hope all is well, go to iblinkco.com to see rate ' + \
-                manager + ' job so far? Make sure to let us know by contacting us at iblinkcompany@gmail.com'
+            body = 'Hello ' + client + ', We hope all is well, go to iblinkco.com to see rate ' + manager + ' job so far? Make sure to let us know by contacting us at iblinkcompany@gmail.com'
 
         elif milestone == 2:
             milestone = 'Two'
-            body = 'Hey ' + client + ', your manager, ' + manager + \
-                ' second milestone is has been updated. Go to iblinkco.com to see it. If you have any questions email us at iblinkcompany@gmail.com. '
+            body = 'Hey ' + client + ', your manager, ' + manager + ' second milestone is has been updated. Go to iblinkco.com to see it. If you have any questions email us at iblinkcompany@gmail.com. '
 
         elif milestone == 3:
             milestone = 'Three'
-            body = 'Hello ' + client + ', you are more than halfway done with your job with, ' + manager + \
-                ' and they have just updated their third milestone. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
+            body = 'Hello ' + client + ', you are more than halfway done with your job with, ' + manager + ' and they have just updated their third milestone. Be sure to email us at iblinkcompany@gmail.com to update us on any problems you are having. '
 
         elif milestone == 4:
             milestone = 'Four'
-            body = 'Hello ' + client + ', your job with, ' + manager + \
-                ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
+            body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
 
         # Sending emails
         if job.length == 3:
             if milestone == 3:
                 milestone = 'Third'
-                body = 'Hello ' + client + ', your job with, ' + manager + \
-                    ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
+                body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
         # Client email
         email = EmailMessage(
             'Milestone ' + milestone + ' Check In and Rate', body, to=[f'{client_email}'])
@@ -153,23 +161,8 @@ def check_milestone_client_email(pk, milestone):
         return None
 
 # Alert milestone email managers
-@shared_task
-def milestone_manger_email(pk, milestoneState, warning):
+def milestone_manger_email(job_obj, milestoneState, warning):
     print('dfdfdfdfdf')
-
-    try:
-        job_obj = JobPost.objects.get(pk=pk)
-        print('sdsffafdvefge')
-
-        # Checking if job is none else returning
-        if not job_obj:
-            revoke('webapp.tasks.milestone_manger_email')
-            return None
-
-    except Exception as e:
-        print(e)
-        revoke('webapp.tasks.milestone_manger_email')
-        return None
 
     # Checking if we can retrieve job else returning
     try:

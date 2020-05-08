@@ -28,7 +28,7 @@ from billing.models import BillingProfile
 import stripe
 
 # Importing celery task
-from webapp.tasks import manager_assignment, check_milestone_client_email, milestone_manger_email
+from webapp.tasks import manager_assignment, check_milestone_client_email, milestone_send_emails
 from datetime import timedelta, datetime
 
 # Importing lib to get base site
@@ -138,6 +138,7 @@ def postJob(request):
                 # Checking if job is large enough for 3 milestones
                 if job.length != 3:
                     Milestone.objects.create(job=job, milestone_number=4)
+
                 return redirect('dashboard-confirm-job', pk=pk)
             return redirect('dashboard-home')
         else:
@@ -367,17 +368,22 @@ def charge(request, job_id):
             milestoneThreeDueDate = timedelta(days=4)
 
         print('how\n\n\n\n\n\n\n')
-        # Scheduling emails
-        milestone_manger_email.apply_async((job.id, 1, True), eta=datetime.utcnow() + milestoneOneWarningDate)
-        milestone_manger_email.apply_async((job.id, 1, False), eta=datetime.utcnow() + milestoneOneDueDate)
-        milestone_manger_email.apply_async((job.id, 2, True), eta=datetime.utcnow() + milestoneTwoWarningDate)
-        milestone_manger_email.apply_async((job.id, 2, False), eta=datetime.utcnow() + milestoneTwoDueDate)
-        milestone_manger_email.apply_async((job.id, 3, True), eta=datetime.utcnow() + milestoneThreeWarningDate)
-        milestone_manger_email.apply_async((job.id, 3, False), eta=datetime.utcnow() + milestoneThreeDueDate)
 
+        # Scheduling emails
+        milestone_send_emails.apply_async((job.id, 1, True), countdown=100)
+        milestone_send_emails.apply_async((job.id, 1, False), countdown=200)
+        milestone_send_emails.apply_async(
+            (job.id, 2, True), countdown=300)
+        milestone_send_emails.apply_async(
+            (job.id, 2, False), countdown=400)
+        milestone_send_emails.apply_async((job.id, 3, True), countdown=500)
+        milestone_send_emails.apply_async((job.id, 3, False), countdown=600)
+
+        # Checking if job length is large enough for 4 milestones
         if job.length != 3:
-            milestone_manger_email.apply_async((job.id, 4, True), eta=datetime.utcnow() + milestoneFourWarningDate)
-            milestone_manger_email.apply_async((job.id, 4, False), eta=datetime.utcnow() + milestoneFourDueDate)
+            milestone_send_emails.apply_async((job.id, 4, True), eta=datetime.utcnow() + milestoneFourWarningDate)
+            milestone_send_emails.apply_async(
+                (job.id, 4, False), eta=datetime.utcnow() + milestoneFourDueDate)
 
 
         # Changing paid for bool in db
