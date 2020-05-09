@@ -289,6 +289,7 @@
 </div>
 {% if order.job_preparation_completed == True %}
 {% for milestone in milestones %}
+{% if milestone.active == True %}
 <div class="modal fade" id="milestone-{{ milestone.milestone_number }}-update" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -315,6 +316,7 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endfor %}
 {% endif %}
 {% if order.job_complete == False %}

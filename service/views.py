@@ -131,7 +131,7 @@ def postJob(request):
 
 
                 # Create job milestones
-                Milestone.objects.create(job=job, milestone_number=1)                
+                Milestone.objects.create(job=job, milestone_number=1, active=True)
                 Milestone.objects.create(job=job, milestone_number=2)                
                 Milestone.objects.create(job=job, milestone_number=3)
                 

@@ -177,6 +177,7 @@ class JobDetailView(DetailView):
         if facebook == True:
             platforms+=1
 
+        # Calculating post per day
         numberOfPost = context['object'].number_of_post
         print("Total posts " , numberOfPost*platforms)
         print("Length  ", length)
@@ -220,32 +221,10 @@ class JobDetailView(DetailView):
         # Defining and saving form to context
         form = milestoneUpdate()
         context['form'] = form
-        
-        # Getting img files
-        image_list_milestone_one = MilestoneFiles.objects.filter(
-            job=context['object'], milestoneOne=True)
-
-        image_list_milestone_two = MilestoneFiles.objects.filter(
-            job=context['object'], milestoneTwo=True)
-        
-        image_list_milestone_three = MilestoneFiles.objects.filter(
-            job=context['object'], milestoneThree=True)
-        
-        image_list_milestone_four = MilestoneFiles.objects.filter(
-                job=context['object'], milestoneFour=True)
 
         # Getting and saving milestones
         milestones = Milestone.objects.filter(job=context['object'])
         context['milestones'] = milestones
-
-
-
-        # Applying milestone images
-        context['image_list_milestone_one'] = image_list_milestone_one
-        context['image_list_milestone_two'] = image_list_milestone_two
-        context['image_list_milestone_three'] = image_list_milestone_three
-        context['image_list_milestone_four'] = image_list_milestone_four
-
 
         # Applying found data to context
         context['manager_profile'] = manager_profile
@@ -351,69 +330,15 @@ class JobDetailView(DetailView):
 
             milestone.milestone_statement = milestone_statement
             milestone.milestone_post_goal_completed = milestone_post_goal_completed
-
+            milestone.active = False
             milestone.save()
 
+            # Updating next milestone as active
+            milestone_number = int(milestone_number) + 1
+            milestone = Milestone.objects.get(job=job, milestone_number=milestone_number)
+            milestone.active = True
+            milestone.save()
 
-            # Checking which milestone is being updated
-            # if milestone_one_statement:
-            #     # Getting different images
-            #     for field in self.request.FILES.keys():
-            #         for formfile in self.request.FILES.getlist(field):
-            #             # Saving images in the db
-            #             MilestoneFiles.objects.create(
-            #                 job=self.object, milestoneFile=formfile, milestoneOne=True)
-
-            #     form.completed_milestone_one = True
-            #     form.save()
-
-            # elif milestone_two_statement:
-            #     for field in self.request.FILES.keys():
-            #         for formfile in self.request.FILES.getlist(field):
-            #             # Saving images in the db
-            #             MilestoneFiles.objects.create(
-            #                 job=self.object, milestoneFile=formfile, milestoneTwo=True)
-
-            #     form.completed_milestone_two = True
-            #     form.save()
-
-            # elif milestone_three_statement:
-            #     for field in self.request.FILES.keys():
-            #         for formfile in self.request.FILES.getlist(field):
-            #             # Saving images in the db
-            #             MilestoneFiles.objects.create(
-            #                 job=self.object, milestoneFile=formfile, milestoneThree=True)
-
-            #     form.completed_milestone_three = True
-            #     form.save()
-
-            #     # If job length is 3 and third milestone is posted
-            #     if job.length == 3:
-            #         # Changing job complete bool
-            #         job.job_complete = True
-            #         job.save()
-
-            # elif milestone_four_statement:
-            #     for field in self.request.FILES.keys():
-            #         for formfile in self.request.FILES.getlist(field):
-            #             # Saving images in the db
-            #             MilestoneFiles.objects.create(
-            #                 job=self.object, milestoneFile=formfile, milestoneFour=True)
-
-            #     form.completed_milestone_four = True
-            #     form.save()
-
-        # # Getting posted data
-        # print(self.request.POST)
-        # print(self.request.FILES.keys())
-        # milestoneNumber = int(self.request.POST['milestone-number'])
-        # milestoneDescription = self.request.POST['milestone-description']
-        # milestoneFiles = self.request.FILES['milestone-files']
-        # print(milestoneFiles)
-        # print(milestoneNumber)
-        # if not milestoneDescription:
-        #     print('milestone description empty')
-        #     return redirect('dashboard-job-detail-manager', pk=self.object.pk)
         return redirect('dashboard-job-detail-manager', pk=self.object.pk)
 
 class ConfirmJobDetailView(DetailView):

@@ -6,7 +6,6 @@ from django.dispatch import receiver
 
 from django.contrib.auth.models import User
 from .choices import * 
-import datetime
 
 # Importing to create job id
 from webapp.utils import random_string_generator
@@ -19,6 +18,7 @@ from django.core.mail import EmailMessage
 # Import stripe
 import stripe
 
+from datetime import timedelta, datetime
 class JobPost(models.Model):
 
     # JOB ID
@@ -158,19 +158,19 @@ def manager_previously_existed_check(sender, instance, **kwargs):
             if not obj.manager == instance.manager:
                 
                 # Creating deadline for job
-                now = datetime.date.today()
+                now = date.today()
                 print('current time', now)
 
                 # Getting absolute job length by adding regular job length and preparation time
                 realJobLength = instance.length + 2
 
                 # Adding the absolute job length to current time
-                deadline = now + datetime.timedelta(days=realJobLength)
+                deadline = now + timedelta(days=realJobLength)
                 print('new deadline', deadline)
                 instance.deadline = deadline
 
                 # Getting preparation time
-                now = now + datetime.timedelta(days=2)
+                now = now + timedelta(days=2)
                 instance.job_preparation_deadline = now
                 
                 # Preparing for email by getting vars
@@ -245,9 +245,78 @@ class Milestone(models.Model):
     milestone_statement = models.CharField(
         max_length=1000, default='none')
     milestone_post_goal_completed = models.BooleanField(default=False)
+    active = models.BooleanField(default=False)
+    deadline = models.DateTimeField(max_length=8, blank=True, null=True)
 
     def __str__(self):
         return f'{self.milestone_number} Milestone for {self.job}'
+
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+        # Checking if deadline is null
+        if not self.deadline:
+            # Setting new deadline by checking for specific job length
+            if self.job.length == 14:
+                if self.milestone_number == 1:
+                    milestoneTimeDays = timedelta(days=3)
+                elif self.milestone_number == 2:
+                    milestoneTimeDays = timedelta(days=7)
+                elif self.milestone_number == 3:
+                    milestoneTimeDays = timedelta(days=10)
+                elif self.milestone_number == 4:
+                    milestoneTimeDays = timedelta(days=14)
+
+            elif self.job.length == 10:
+                if self.milestone_number == 1:
+                    milestoneTimeDays = timedelta(days=2)
+                elif self.milestone_number == 2:
+                    milestoneTimeDays = timedelta(days=4)
+                elif self.milestone_number == 3:
+                    milestoneTimeDays = timedelta(days=7)
+                elif self.milestone_number == 4:
+                    milestoneTimeDays = timedelta(days=10)
+
+            elif self.job.length == 10:
+                if self.milestone_number == 1:
+                    milestoneTimeDays = timedelta(days=2)
+                elif self.milestone_number == 2:
+                    milestoneTimeDays = timedelta(days=4)
+                elif self.milestone_number == 3:
+                    milestoneTimeDays = timedelta(days=7)
+                elif self.milestone_number == 4:
+                    milestoneTimeDays = timedelta(days=10)
+
+            elif self.job.length == 7:
+                if self.milestone_number == 1:
+                    milestoneTimeDays = timedelta(days=2)
+                elif self.milestone_number == 2:
+                    milestoneTimeDays = timedelta(days=3)
+                elif self.milestone_number == 3:
+                    milestoneTimeDays = timedelta(days=5)
+                elif self.milestone_number == 4:
+                    milestoneTimeDays = timedelta(days=7)
+
+            elif self.job.length == 5:
+                if self.milestone_number == 1:
+                    milestoneTimeDays = timedelta(days=2)
+                elif self.milestone_number == 2:
+                    milestoneTimeDays = timedelta(days=3)
+                elif self.milestone_number == 3:
+                    milestoneTimeDays = timedelta(days=4)
+                elif self.milestone_number == 4:
+                    milestoneTimeDays = timedelta(days=5)
+
+            elif self.job.length == 3:
+                if self.milestone_number == 1:
+                    milestoneTimeDays = timedelta(days=2)
+                elif self.milestone_number == 2:
+                    milestoneTimeDays = timedelta(days=3)
+                elif self.milestone_number == 3:
+                    milestoneTimeDays = timedelta(days=4)
+            now = datetime.now()
+            deadline = now + milestoneTimeDays
+            self.deadline = deadline
+        super(Milestone, self).save(
+            force_insert, force_update, *args, **kwargs)
 
 # Milestone file model
 class MilestoneFiles(models.Model):
