@@ -78,7 +78,7 @@ class JobPost(models.Model):
     # How was your experience with {client}?
     client_job_rating = models.IntegerField(default=0, blank=True)
 
-    job_offers = models.CharField(max_length=5000, blank=True, default='none')
+    job_offers = models.CharField(max_length=2000, blank=True, default='none')
 
 
     def __str__(self):
