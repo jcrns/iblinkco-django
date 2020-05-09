@@ -51,10 +51,10 @@ def refunds(request):
     return render(request, 'homepage/refunds.html', {"nav_black_link": True})
 
 def becomeManager(request):
+    form_register = UserRegisterForm()
+    form_login = AuthenticationForm()
     if request.user.is_authenticated:
     
         if request.user.profile.is_client == True:
             return redirect('service-job')
-        return render(request, 'homepage/become-a-manager.html', {"nav_black_link" : True} )
-    else:
-        return redirect('dashboard-home')
+    return render(request, 'homepage/become-a-manager.html', {"nav_black_link": True, 'form_register': form_register, 'form_login': form_login})
