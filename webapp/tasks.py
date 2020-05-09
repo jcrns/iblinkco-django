@@ -25,6 +25,8 @@ from management.views import emailJobOffer
 # Importing revoke to end future functions
 from celery.task.control import revoke
 
+# Importing lib to get base site
+from django.contrib.sites.shortcuts import get_current_site
 
 # Creating manager assignement function
 @periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
@@ -71,11 +73,17 @@ def manager_assignment():
                 # Ending loop
                 break
 
+            print('selected_manager: ', selected_manager)
+            
             # Checking if manager was selected
             if selected_manager:
 
+                # getting current site and passing in to func
+                current_site = get_current_site(request)
+                current_site = current_site.domain
+
                 # Emailing manager about job
-                email = emailJobOffer(selected_manager, job_obj, current_site)
+                email = emailJobOffer(selected_manager, job, current_site)
 
             else:
                 print('manager not found')
