@@ -96,3 +96,8 @@ def manager_acceptance(sender, instance, **kwargs):
             if instance.accepted == True:
                 # Sending Email if user was accepted
                 ManagerEvaluation.managerAccepted(instance)
+
+
+class JobOffer(models.Model):
+    job = models.ForeignKey(JobPost, on_delete=models.CASCADE)
+    user = models.ForeignKey(JobPost, on_delete=models.CASCADE)
