@@ -25,6 +25,8 @@ class Profile(models.Model):
     business_type = models.CharField(max_length=60, default='none')
     description = models.TextField(max_length=5000, default='none')
 
+    job_offers = models.CharField(max_length=5000, blank=True, default='none')
+
     # Other information
     date_joined = models.DateTimeField(verbose_name='date joined', auto_now_add=True)
 
