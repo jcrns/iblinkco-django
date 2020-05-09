@@ -63,8 +63,25 @@ def manager_assignment():
                     print('next')
                     continue
 
+                # Checking if user already received an application
+                job_offers = current_job.job_offers
+
+                # Spliting string into array of usernames
+                job_offers_array = job_offers.split(',')
+
                  # Randomly selecting managers
                 manager_name = random.choice(managers)
+
+                print(manager_name)
+                print(job_offers)
+                print(job_offers_array)
+
+                # Looping through if job offer already sent
+                if str(manager_name) in job_offers_array:
+                    print('sent already')
+                    continue
+
+
 
                 # Getting manager user
                 manager = User.objects.get(username=manager_name)
@@ -72,6 +89,11 @@ def manager_assignment():
                 # Assigning manager
                 selected_manager = manager
                 
+                job_offer = job_offers + ',' + str(manager_name)
+
+                current_job.job_offers = job_offer
+                current_job.save()
+
                 # Ending loop
                 break
 
@@ -84,7 +106,7 @@ def manager_assignment():
 
                 # Emailing manager about job
                 current_site = 'iblinkco-django.herokuapp.com'
-                email = emailJobOffer(selected_manager, job, current_site)
+                emailJobOffer(selected_manager, job, current_site)
                 print('aaa')
             else:
                 print('manager not found')

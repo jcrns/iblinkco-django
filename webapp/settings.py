@@ -81,7 +81,6 @@ TEMPLATES = [
         },
     },
 ]
-TEMPLATE_CONTEXT_PROCESSORS = 'django.core.context_processors.request'
 
 # AUTH_USER_MODEL = 'users.Account'
 WSGI_APPLICATION = 'webapp.wsgi.application'

@@ -232,7 +232,7 @@ def emailJobOffer(user, job, current_site):
     
     print('sssd')
     # Getting current site
-    mail_subject = 'Activate your iBlinkco account.'
+    mail_subject = 'New Job Opportunity!'
 
     # Creating variables
     
@@ -249,7 +249,7 @@ def emailJobOffer(user, job, current_site):
     # Creating strings
 
     # Creating beginning
-    beginning = 'Hi ' + str(user.username) + ', You have a job opportunity with ' + str(job.client) +', '
+    beginning = 'Hello, ' + str(user.username) + ', You have a job opportunity with ' + str(job.client) +', '
 
     # Creating middle
     middle = '\nJob Details: \nServices:'
