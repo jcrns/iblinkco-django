@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "venv/bin/python3.7",
+    "python.pythonPath": "/Users/hgpmac87/Documents/projects/iblinkco-django/venv/bin/python3.7",
     "cSpell.ignoreWords": [
         "color",
         "msapplication",
