@@ -39,7 +39,7 @@ from django.http import HttpResponse
 import stripe
 
 # Importing task
-from webapp.tasks import milestoneRatedEmail
+from webapp.tasks import milestoneRatedEmail, jobPrepEndedEmail
 
 # Overview function
 @login_required(login_url="/?login=true")
@@ -189,15 +189,19 @@ class JobDetailView(DetailView):
         now = datetime.now(timezone.utc)
         jobPrepTimeLeft = jobPrepDeadline - now
         jobPrepTimeLeft = jobPrepTimeLeft.total_seconds()
-        
+        print("Secs  " , jobPrepTimeLeft)
         jobPrepMinLeft = jobPrepTimeLeft/60
         JobPrepHourLeft = jobPrepMinLeft/60
 
+        print('Hours: ', JobPrepHourLeft)
         JobPrepDaysRemaining = JobPrepHourLeft/24
+        print('days', JobPrepDaysRemaining)
         JobPrepHoursRemaining = JobPrepHourLeft/24
+        JobPrepHoursRemaining = int((JobPrepHoursRemaining - int(JobPrepHoursRemaining))*24)
 
         if JobPrepDaysRemaining < 1:
             JobPrepTimeLeftStr = str(round(JobPrepHoursRemaining)) + " hours left"
+            print('JobPrepTimeLeftStr: ', JobPrepTimeLeftStr)
         else:
             # Checking for certain situations
             daysString = " Days left and "
@@ -205,11 +209,11 @@ class JobDetailView(DetailView):
                 daysString = " Day left and "
 
             hoursString = " hours left"
-            if round(JobPrepHoursRemaining) == 1:
+            if JobPrepHoursRemaining == 1:
                 hoursString = " hour left"
 
             JobPrepTimeLeftStr = str(int(
-                JobPrepDaysRemaining)) + daysString + str(round(JobPrepHoursRemaining)) + hoursString
+                JobPrepDaysRemaining)) + daysString + str(JobPrepHoursRemaining) + hoursString
 
         # Getting profiles and checking if user is assigned
         if manager_name:
@@ -420,5 +424,19 @@ def jobPrepEnded(request, pk):
 
     # Changing variable in db
     job.job_preparation_completed = True
+    
     job.save()
+
+    # Getting vars
+    manager = job.manager
+    manager = User.objects.get(username=manager)
+    manager = manager.username
+
+    client = job.client
+    client = User.objects.get(username=client)
+    client_email = client.email
+    client = client.username
+    
+    jobPrepEndedEmail(manager, client, client_email)
+    print('Works')
     return redirect('dashboard-job-detail-manager', pk=pk)

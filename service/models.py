@@ -158,7 +158,7 @@ def manager_previously_existed_check(sender, instance, **kwargs):
             if not obj.manager == instance.manager:
                 
                 # Creating deadline for job
-                now = date.today()
+                now = datetime.today()
                 print('current time', now)
 
                 # Getting absolute job length by adding regular job length and preparation time

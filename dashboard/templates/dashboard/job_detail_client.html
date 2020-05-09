@@ -102,6 +102,13 @@
         font-size: 20px;
         color: rgba(255, 255, 0, 0.514);
     }
+    #job-prep-div {
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+    #job-prep-div h1 {
+        color: rgba(119, 119, 119, 0.986)
+    }
 </style>
 <div class="job">
     <div class="container-fluid">
@@ -226,6 +233,7 @@
                             be confirmed.</p>
                         <form method="POST" id="rating-post">
                             {% csrf_token %}
+                            {% if order.job_preparation_completed == True %}
                             <div class="row text-center">
                                 {% for milestone in milestones %}
                                 <div class="col-6 milestone-div">
@@ -266,6 +274,13 @@
                                 </div>
                                 {% endfor %}
                             </div>
+                            {% else %}
+                            <div class="text-center" id="job-prep-div">
+                                <h1>Manager is preparing for the job</h1>
+                                <p>Job Preparation Deadline: <span>{{ job_prep_days_left }}</span></p>
+                            </div>
+                            
+                            {% endif %}
                         </form>
                         <h5>Job Completion</h5>
                         <div class="progress" id="milestone-bar">

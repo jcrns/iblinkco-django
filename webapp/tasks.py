@@ -295,3 +295,16 @@ def milestoneRatedEmail(manager, client, manager_email, milestone_number, star_c
 
     print({email})
     return 'success'
+
+
+@shared_task
+def jobPrepEndedEmail(manager, client, client_email):
+
+    subject = 'Job preparation period ended. ' + manager + ' will start working on your job.'
+    body = "Hello " + client + ", " + manager + " has ended their job preperation period and is starting to work on your requested services."
+
+    # Sending email to client
+    email = EmailMessage(
+        subject, body, to=[f'{client_email}'])
+    print(email)
+    email.send()
