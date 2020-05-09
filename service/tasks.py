@@ -105,7 +105,7 @@ def manager_assignment():
                 # getting current site and passing in to func
 
                 # Emailing manager about job
-                current_site = 'iblinkco-django.herokuapp.com'
+                current_site = 'django-connect.herokuapp.com'
                 emailJobOffer(selected_manager, job, current_site)
                 print('aaa')
             else:
