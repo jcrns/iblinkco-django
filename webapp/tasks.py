@@ -25,6 +25,45 @@ from management.views import emailJobOffer
 # Importing revoke to end future functions
 from celery.task.control import revoke
 
+@periodic_task(run_every=(crontab(minute='*/1')), ignore_result=True)
+def testFunc():
+    unassigned_jobs = JobPost.objects.filter(manager=None)
+    print(unassigned_jobs)
+
+    if not unassigned_jobs:
+        print('ha')
+    
+    # Looping through all the jobs
+    for job in unassigned_jobs:
+        print('job')
+        print(job)
+
+        # Getting capable managers with filter
+        managers = Profile.objects.filter(is_manager=True, language=client.profile.language, stripe_user_id=not None)
+        
+        if not managers:
+
+            # Getting specific job
+            current_job = JobPost.objects.get(pk=job.id)
+
+            # Looping through managers
+            for manager in managers:
+
+                 # Randomly selecting managers
+                manager_name = random.choice(managers)
+
+                # Getting manager user
+                manager = User.objects.get(username=manager_name)
+
+                # Assigning manager
+                current_job.manager = manager
+                
+                # Ending loop
+                break
+    
+    # Returning none
+    return None
+
 # Creating func to look for manager every five minutes
 @periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
 def manager_assignment(pk, current_site):
@@ -84,7 +123,8 @@ def manager_assignment(pk, current_site):
             print('complete')
 
             revoke('webapp.tasks.manager_assignment')
-        
+        else:
+            print('manager not found')
         return None
 
     except Exception as e:

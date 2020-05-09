@@ -39,7 +39,7 @@ from django.http import HttpResponse
 import stripe
 
 # Importing task
-from webapp.tasks import milestoneRatedEmail, jobPrepEndedEmail
+from webapp.tasks import milestoneRatedEmail, jobPrepEndedEmail, testFunc
 
 # Overview function
 @login_required(login_url="/?login=true")
@@ -440,3 +440,9 @@ def jobPrepEnded(request, pk):
     jobPrepEndedEmail(manager, client, client_email)
     print('Works')
     return redirect('dashboard-job-detail-manager', pk=pk)
+
+def test(request):
+    if request.POST:
+        arg = 'yessssss'
+        testFunc()
+    return render(request, 'dashboard/test.html')
