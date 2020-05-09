@@ -42,6 +42,9 @@ def manager_assignment():
         print('job')
         print(job)
 
+        client_name = job.client
+        client = User.objects.get(username=client_name)
+
         # Getting capable managers with filter
         managers = Profile.objects.filter(is_manager=True, language=client.profile.language, stripe_user_id=not None)
         
