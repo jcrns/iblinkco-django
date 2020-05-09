@@ -170,6 +170,10 @@ class JobDetailView(DetailView):
         instagram = context['object'].instagram
         facebook = context['object'].facebook
 
+        offers = context['object'].job_offers
+        print("offers")
+        print(offers)
+
         # Calculating number of platforms
         platforms = 0
         if instagram == True:
