@@ -130,10 +130,6 @@ def postJob(request):
                 current_site = get_current_site(request)
                 current_site = current_site.domain
 
-                # Running async manager selection function
-                manager_assignment.apply_async((pk, current_site), countdown=1800)
-
-
                 # Create job milestones
                 Milestone.objects.create(job=job, milestone_number=1, active=True)
                 Milestone.objects.create(job=job, milestone_number=2)                

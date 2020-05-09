@@ -25,8 +25,12 @@ from management.views import emailJobOffer
 # Importing revoke to end future functions
 from celery.task.control import revoke
 
-@periodic_task(run_every=(crontab(minute='*/1')), ignore_result=True)
-def testFunc():
+
+# Creating manager assignement function
+@periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
+def manager_assignment():
+
+    # Getting unassigned jobs
     unassigned_jobs = JobPost.objects.filter(manager=None)
     print(unassigned_jobs)
 
@@ -46,6 +50,9 @@ def testFunc():
             # Getting specific job
             current_job = JobPost.objects.get(pk=job.id)
 
+            # Creating var to store
+            selected_manager = None
+
             # Looping through managers
             for manager in managers:
 
@@ -56,84 +63,92 @@ def testFunc():
                 manager = User.objects.get(username=manager_name)
 
                 # Assigning manager
-                current_job.manager = manager
+                selected_manager = manager
                 
                 # Ending loop
                 break
-    
+
+            # Checking if manager was selected
+            if selected_manager:
+
+                # Emailing manager about job
+                email = emailJobOffer(selected_manager, job_obj, current_site)
+
+            else:
+                print('manager not found')
+
     # Returning none
     return None
 
-# Creating func to look for manager every five minutes
-@periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
-def manager_assignment(pk, current_site):
-    print('dfdfdfdfdf')
+# # Creating func to look for manager every five minutes
+# @periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
+# def manager_assignment(pk, current_site):
+#     print('dfdfdfdfdf')
 
-    # Checking if we can retrieve job else returning
-    try:
-        job_obj = JobPost.objects.get(pk=pk)
-        print('sdsffafdvefge')
+#     # Checking if we can retrieve job else returning
+#     try:
+#         job_obj = JobPost.objects.get(pk=pk)
+#         print('sdsffafdvefge')
 
-        # Checking if job is none else returning
-        if not job_obj:
-            revoke('webapp.tasks.manager_assignment')
-            return None
+#         # Checking if job is none else returning
+#         if not job_obj:
+#             revoke('webapp.tasks.manager_assignment')
+#             return None
 
-    except Exception as e:
-        print(e)
-        print('e')
-        revoke('webapp.tasks.manager_assignment')
-        return None
+#     except Exception as e:
+#         print(e)
+#         print('e')
+#         revoke('webapp.tasks.manager_assignment')
+#         return None
 
-    # Trying to get and assign manager and send email
-    try:
-        # Checking if manager already assigned if so returning
-        if job_obj.manager:
-            revoke('webapp.tasks.manager_assignment')
-            return None
+#     # Trying to get and assign manager and send email
+#     try:
+#         # Checking if manager already assigned if so returning
+#         if job_obj.manager:
+#             revoke('webapp.tasks.manager_assignment')
+#             return None
 
-        # Getting client
-        client_name = job_obj.client
-        client = User.objects.get(username=client_name)
+#         # Getting client
+#         client_name = job_obj.client
+#         client = User.objects.get(username=client_name)
 
-        # Getting capable managers with filter
-        managers = Profile.objects.filter(
-            is_manager=True, language=client.profile.language, stripe_user_id=not None)
+#         # Getting capable managers with filter
+#         managers = Profile.objects.filter(
+#             is_manager=True, language=client.profile.language, stripe_user_id=not None)
 
-        selected_manager = None
-        for manager in managers:
-            # Randomly selecting managers
-            manager_name = random.choice(managers)
+#         selected_manager = None
+#         for manager in managers:
+#             # Randomly selecting managers
+#             manager_name = random.choice(managers)
 
-            # Getting manager user
-            manager = User.objects.get(username=manager_name)
+#             # Getting manager user
+#             manager = User.objects.get(username=manager_name)
 
-            # Checking if user has stripe connected
-            if not manager.profile.stripe_user_id:
-                print("manager.profile.stripe_user_id")
-                print(manager.profile.stripe_user_id)
-                break
-            selected_manager = manager
+#             # Checking if user has stripe connected
+#             if not manager.profile.stripe_user_id:
+#                 print("manager.profile.stripe_user_id")
+#                 print(manager.profile.stripe_user_id)
+#                 break
+#             selected_manager = manager
         
-        # Checking if manager was selected
-        if selected_manager:
-            # Emailing manager about job
-            email = emailJobOffer(manager, job_obj, current_site)
+#         # Checking if manager was selected
+#         if selected_manager:
+#             # Emailing manager about job
+#             email = emailJobOffer(manager, job_obj, current_site)
 
-            print('complete')
+#             print('complete')
 
-            revoke('webapp.tasks.manager_assignment')
-        else:
-            print('manager not found')
-        return None
+#             revoke('webapp.tasks.manager_assignment')
+#         else:
+#             print('manager not found')
+#         return None
 
-    except Exception as e:
-        print("e")
-        print(e)
-
-# Creating main task where we will 
+#     except Exception as e:
+#         print("e")
+#         print(e)
 
 
+# Creating main milestone email task
 @shared_task
 def milestone_send_emails(pk, milestoneState, warning):
     try:
@@ -353,3 +368,6 @@ def jobPrepEndedEmail(manager, client, client_email):
         subject, body, to=[f'{client_email}'])
     print(email)
     email.send()
+
+
+manager_assignment()
