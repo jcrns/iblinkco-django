@@ -1,6 +1,3 @@
-import django
-django.setup() 
-
 # Importing celery
 from celery.task.schedules import crontab
 from celery.decorators import periodic_task
@@ -25,9 +22,6 @@ from management.views import emailJobOffer
 # Importing revoke to end future functions
 from celery.task.control import revoke
 
-# Importing lib to get base site
-from django.contrib.sites.shortcuts import get_current_site
-
 # Creating manager assignement function
 @periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
 def manager_assignment():
@@ -48,9 +42,10 @@ def manager_assignment():
         client = User.objects.get(username=client_name)
 
         # Getting capable managers with filter
-        managers = Profile.objects.filter(is_manager=True, language=client.profile.language, stripe_user_id=not None)
-        
-        if not managers:
+        managers = Profile.objects.filter(is_manager=True, language=client.profile.language)
+        print("Yo: ", managers)
+
+        if managers:
 
             # Getting specific job
             current_job = JobPost.objects.get(pk=job.id)
@@ -58,8 +53,15 @@ def manager_assignment():
             # Creating var to store
             selected_manager = None
 
+            print('manager: ', managers)
+
             # Looping through managers
             for manager in managers:
+                
+                # Checking if user has stripe connected
+                if not manager.stripe_user_id:
+                    print('next')
+                    continue
 
                  # Randomly selecting managers
                 manager_name = random.choice(managers)
@@ -74,17 +76,16 @@ def manager_assignment():
                 break
 
             print('selected_manager: ', selected_manager)
-            
+
             # Checking if manager was selected
             if selected_manager:
 
                 # getting current site and passing in to func
-                current_site = get_current_site(request)
-                current_site = current_site.domain
 
                 # Emailing manager about job
+                current_site = '127.0.0.1:8000'
                 email = emailJobOffer(selected_manager, job, current_site)
-
+                print('aaa')
             else:
                 print('manager not found')
 
@@ -168,12 +169,12 @@ def milestone_send_emails(pk, milestoneState, warning):
 
         # Checking if job is none else returning
         if not job_obj:
-            revoke('webapp.tasks.milestone_send_emails')
+            revoke('service.tasks.milestone_send_emails')
             return None
 
     except Exception as e:
         print(e)
-        revoke('webapp.tasks.milestone_send_emails')
+        revoke('webaservicepp.tasks.milestone_send_emails')
         return None
     print('milestones')
 
@@ -381,4 +382,4 @@ def jobPrepEndedEmail(manager, client, client_email):
     email.send()
 
 
-manager_assignment()
+# manager_assignment()

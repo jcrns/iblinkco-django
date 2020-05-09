@@ -28,7 +28,7 @@ from billing.models import BillingProfile
 import stripe
 
 # Importing celery task
-from webapp.tasks import manager_assignment, check_milestone_client_email, milestone_send_emails
+from service.tasks import manager_assignment, check_milestone_client_email, milestone_send_emails
 from datetime import timedelta, datetime
 
 # Importing lib to get base site
@@ -465,3 +465,4 @@ def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement
     totalValue = round(totalValue, 1)
 
     return totalValue, iblinkcoValue, manager_payment
+

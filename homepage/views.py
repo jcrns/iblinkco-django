@@ -15,11 +15,17 @@ from django.contrib.auth.decorators import login_required
 # Importing evaluation modal 
 from management.models import ManagerEvaluation
 
+# Your
+from django.contrib.sites.shortcuts import get_current_site
 
 # Homepage function
 def home(request):
     form_register = UserRegisterForm()
     form_login = AuthenticationForm()
+    # getting current site and passing in to func
+    current_site = get_current_site(request)
+    current_site = current_site.domain
+    print(current_site)
     return render(request, 'homepage/index.html', {'form_register': form_register, 'form_login' : form_login })
 
 # Overview function

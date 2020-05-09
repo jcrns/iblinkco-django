@@ -7,6 +7,8 @@ from django.conf import settings
 
 from django.shortcuts import render, redirect
 
+from django.urls import reverse
+
 # importing messages from django
 from django.contrib import messages
 
@@ -228,17 +230,66 @@ def stripeAuthorizeCallbackView(request):
 # Sending manager email
 def emailJobOffer(user, job, current_site):
     
+    print('sssd')
     # Getting current site
     mail_subject = 'Activate your iBlinkco account.'
 
-    # Creating message body and rendering from template
-    messageBody = render_to_string('management/job_assignment.html', {
+    # Creating variables
+    
+    uid = urlsafe_base64_encode(force_bytes(job.pk))
+    token = token_generation.make_token(user)
+    messageBody = {
         'user' : user,
         'order': job,
         'domain': current_site,
         'uid': urlsafe_base64_encode(force_bytes(job.pk)),
         'token': token_generation.make_token(user),
-    })
+    }
+
+    # Creating strings
+
+    # Creating beginning
+    beginning = 'Hi ' + str(user.username) + ', You have a job opportunity with ' + str(job.client) +', '
+
+    # Creating middle
+    middle = '\nJob Details: \nServices:'
+    
+    create_caption = ''
+    look_for_content = ''
+    if job.captions == True:
+        create_caption = '\nCreate Captions'
+
+    if job.search_for_content == True:
+        look_for_content = '\nLook for content'
+
+    engagement = ''
+    if job.engagement == True:
+        engagement = '\nCasual engagement needed'
+
+    length = '\nJob Length: ' + str(job.length) + ' days'
+
+    platforms = '\nPlatforms:'
+    instagram = ''
+    facebook = ''
+
+    if job.instagram == True:
+        instagram = '\nInstagram'
+
+    if job.facebook == True:
+        facebook = '\nFacebook'
+    
+    middle = middle + create_caption + look_for_content + engagement + length + platforms + instagram + facebook
+
+    accept = '\nAccept Job:' + '\n' 
+    acceptLink = 'http:' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=True'
+
+    decline = '\nDecline Job:' + '\n'
+    declineLink = 'http:' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=False'
+
+    ending = accept + acceptLink + decline + declineLink
+
+    messageBody = beginning + middle + ending
+
     # Getting email
     email = user.email
     
