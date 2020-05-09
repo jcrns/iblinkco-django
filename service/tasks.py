@@ -83,7 +83,7 @@ def manager_assignment():
                 # getting current site and passing in to func
 
                 # Emailing manager about job
-                current_site = '127.0.0.1:8000'
+                current_site = 'iblinkco-django.herokuapp.com'
                 email = emailJobOffer(selected_manager, job, current_site)
                 print('aaa')
             else:
