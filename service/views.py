@@ -39,6 +39,7 @@ stripe.api_key = "sk_test_8dRE7QLn40wUt6wZtr8upMA4"
 
 
 # View for django post job select
+@login_required(login_url="/?login=true")
 def postJobSelect(request):
 
     # Defining profile
@@ -54,6 +55,9 @@ def postJobSelect(request):
         return redirect('homepage-home')
 
 # View for post job custom
+
+
+@login_required(login_url="/?login=true")
 def postJob(request):
     if request.method == 'POST':
         form = JobPostForm(request.POST)
