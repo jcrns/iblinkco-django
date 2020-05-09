@@ -59,8 +59,9 @@ def manager_assignment(pk, current_site):
 
         # Getting capable managers with filter
         managers = Profile.objects.filter(
-            is_manager=True, language=client.profile.language)
+            is_manager=True, language=client.profile.language, stripe_user_id=not None)
 
+        selected_manager = None
         for manager in managers:
             # Randomly selecting managers
             manager_name = random.choice(managers)
@@ -73,13 +74,17 @@ def manager_assignment(pk, current_site):
                 print("manager.profile.stripe_user_id")
                 print(manager.profile.stripe_user_id)
                 break
+            selected_manager = manager
+        
+        # Checking if manager was selected
+        if selected_manager:
+            # Emailing manager about job
+            email = emailJobOffer(manager, job_obj, current_site)
 
-        # Emailing manager about job
-        email = emailJobOffer(manager, job_obj, current_site)
+            print('complete')
 
-        print('complete')
-
-        revoke('webapp.tasks.manager_assignment')
+            revoke('webapp.tasks.manager_assignment')
+        
         return None
 
     except Exception as e:
