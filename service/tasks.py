@@ -58,10 +58,6 @@ def manager_assignment():
             # Looping through managers
             for manager in managers:
                 
-                # Checking if user has stripe connected
-                if not manager.stripe_user_id:
-                    print('next')
-                    continue
 
                 # Checking if user already received an application
                 job_offers = current_job.job_offers
@@ -71,6 +67,11 @@ def manager_assignment():
 
                  # Randomly selecting managers
                 manager_name = random.choice(managers)
+
+               # Checking if user has stripe connected
+                if not manager_name.stripe_user_id:
+                    print('next option')
+                    continue
 
                 print(manager_name)
                 print(job_offers)
