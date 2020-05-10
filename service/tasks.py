@@ -197,7 +197,7 @@ def milestone_send_emails(pk, milestoneState, warning):
 
     except Exception as e:
         print(e)
-        revoke('webaservicepp.tasks.milestone_send_emails')
+        revoke('service.tasks.milestone_send_emails')
         return None
     print('milestones')
 
@@ -244,7 +244,7 @@ def check_milestone_client_email(job_obj, milestone):
             body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
 
         # Sending emails
-        if job.length == 3:
+        if job_obj.length == 3:
             if milestone == 3:
                 milestone = 'Third'
                 body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
@@ -271,10 +271,11 @@ def milestone_manger_email(job_obj, milestoneState, warning):
 
         client = job_obj.client
         client = User.objects.get(username=client)
-        client = client.username
+        client = str(client.username)
         
         # Getting client emails
         manager_email = User.objects.get(username=manager)
+        manager = str(manager.username)
         print(manager_email)
         manager_email = str(manager_email.email)
         print(manager_email)
