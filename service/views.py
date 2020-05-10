@@ -371,25 +371,25 @@ def charge(request, job_id):
 
         # Scheduling emails
         milestone_send_emails.apply_async(
-            (job.id, 1, True), eta=datetime.utcnow() + milestoneOneWarningDate)
+            (job.id, 1, True), eta=datetime.now() + milestoneOneWarningDate)
         milestone_send_emails.apply_async(
-            (job.id, 1, False), eta=datetime.utcnow() + milestoneOneDueDate)
+            (job.id, 1, False), eta=datetime.now() + milestoneOneDueDate)
         milestone_send_emails.apply_async(
-            (job.id, 2, True), eta=datetime.utcnow() + milestoneTwoWarningDate)
+            (job.id, 2, True), eta=datetime.now() + milestoneTwoWarningDate)
         milestone_send_emails.apply_async(
-            (job.id, 2, False), eta=datetime.utcnow() + milestoneTwoDueDate)
+            (job.id, 2, False), eta=datetime.now() + milestoneTwoDueDate)
         milestone_send_emails.apply_async(
-            (job.id, 3, True), eta=datetime.utcnow() + milestoneThreeWarningDate)
+            (job.id, 3, True), eta=datetime.now() + milestoneThreeWarningDate)
         milestone_send_emails.apply_async(
-            (job.id, 3, False), eta=datetime.utcnow() + milestoneThreeDueDate)
+            (job.id, 3, False), eta=datetime.now() + milestoneThreeDueDate)
 
         # Checking if job length is large enough for 4 milestones
         print("job.length")
         print(job.length)
         if job.length != 3:
-            milestone_send_emails.apply_async((job.id, 4, True), eta=datetime.utcnow() + milestoneFourWarningDate)
+            milestone_send_emails.apply_async((job.id, 4, True), eta=datetime.now() + milestoneFourWarningDate)
             milestone_send_emails.apply_async(
-                (job.id, 4, False), eta=datetime.utcnow() + milestoneFourDueDate)
+                (job.id, 4, False), eta=datetime.now() + milestoneFourDueDate)
         else:
             print('short job')
 

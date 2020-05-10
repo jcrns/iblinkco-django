@@ -189,7 +189,7 @@ CACHES = {
 
 # Defining for production
 if os.getcwd() =='/app':
-    DEBUG=True
+    DEBUG=False
 
 
 # Stripe
