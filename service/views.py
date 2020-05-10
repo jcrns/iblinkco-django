@@ -425,12 +425,12 @@ def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement
     if engagement == True:
         engagement = 2
     else:
-        engagement = 2
+        engagement = 0
 
     if post_for_you == True:
         post_for_you = 5
     else:
-        post_for_you = 5
+        post_for_you = 0
 
     # Adjusting prices
     platforms= float(platforms) * 0.375
@@ -447,13 +447,13 @@ def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement
     # Adding other services from managers to total
     totalValue = totalValue + engagement
     totalValue = totalValue + post_for_you
-    
+
     # Defining the payment of managers
     manager_payment = totalValue
 
     # Getting iBlinkco deduction by taking a percent from data
     iblinkcoValue = (totalValue * 0.1 ) + 2
-    print(round(iblinkcoValue, 2))
+    print("iblinkco: ", round(iblinkcoValue, 2))
 
     # Adding iBlinkco deduction to total
     totalValue = totalValue + iblinkcoValue
