@@ -280,14 +280,16 @@ def emailJobOffer(user, job, current_site):
     
     middle = middle + create_caption + look_for_content + engagement + length + platforms + instagram + facebook
 
-    accept = '\nAccept Job:' + '\n' 
-    acceptLink = 'http:' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=True'
+    accept = '\nAccept Job: \n' 
+    acceptLink = 'https:' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=True'
 
-    decline = '\nDecline Job:' + '\n'
-    declineLink = 'http:' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=False'
+    decline = '\nDecline Job: \n'
+    declineLink = 'https:' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=False'
 
+    # Creating ending
     ending = accept + acceptLink + decline + declineLink
 
+    # Creating message
     messageBody = beginning + middle + ending
 
     # Getting email
