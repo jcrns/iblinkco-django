@@ -384,10 +384,14 @@ def charge(request, job_id):
             (job.id, 3, False), eta=datetime.utcnow() + milestoneThreeDueDate)
 
         # Checking if job length is large enough for 4 milestones
+        print("job.length")
+        print(job.length)
         if job.length != 3:
             milestone_send_emails.apply_async((job.id, 4, True), eta=datetime.utcnow() + milestoneFourWarningDate)
             milestone_send_emails.apply_async(
                 (job.id, 4, False), eta=datetime.utcnow() + milestoneFourDueDate)
+        else:
+            print('short job')
 
 
         # Changing paid for bool in db

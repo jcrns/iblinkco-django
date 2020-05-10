@@ -357,6 +357,10 @@ class ConfirmJobDetailView(DetailView):
         self.object = self.get_object() 
         user = request.user
 
+        if self.object.length != 3:
+            print('yay')
+        else:
+            print('ooof')
         if self.object.paid_for == False:
             # Checking if user is either manager or client
             if user == self.object.client or user == self.object.manager:
