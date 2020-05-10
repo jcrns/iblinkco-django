@@ -370,14 +370,18 @@ def charge(request, job_id):
         print('how\n\n\n\n\n\n\n')
 
         # Scheduling emails
-        milestone_send_emails.apply_async((job.id, 1, True), countdown=100)
-        milestone_send_emails.apply_async((job.id, 1, False), countdown=200)
         milestone_send_emails.apply_async(
-            (job.id, 2, True), countdown=300)
+            (job.id, 1, True), eta=datetime.utcnow() + milestoneOneWarningDate)
         milestone_send_emails.apply_async(
-            (job.id, 2, False), countdown=400)
-        milestone_send_emails.apply_async((job.id, 3, True), countdown=500)
-        milestone_send_emails.apply_async((job.id, 3, False), countdown=600)
+            (job.id, 1, False), eta=datetime.utcnow() + milestoneOneDueDate)
+        milestone_send_emails.apply_async(
+            (job.id, 2, True), eta=datetime.utcnow() + milestoneTwoWarningDate)
+        milestone_send_emails.apply_async(
+            (job.id, 2, False), eta=datetime.utcnow() + milestoneTwoDueDate)
+        milestone_send_emails.apply_async(
+            (job.id, 3, True), eta=datetime.utcnow() + milestoneThreeWarningDate)
+        milestone_send_emails.apply_async(
+            (job.id, 3, False), eta=datetime.utcnow() + milestoneThreeDueDate)
 
         # Checking if job length is large enough for 4 milestones
         if job.length != 3:
