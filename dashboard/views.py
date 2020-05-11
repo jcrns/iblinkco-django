@@ -12,6 +12,9 @@ from django.views.generic import DetailView, DeleteView
 # Importing lib to get specific objects
 from django.shortcuts import get_object_or_404
 
+# Importing db charfield to add fields to querysets
+from django.db.models import CharField, Value
+
 # Importing profile to access 
 from users.models import Profile
 
@@ -59,6 +62,9 @@ def dashboard(request):
             past_orders = JobPost.objects.filter(client=request.user.pk, job_complete=True).order_by('-date_requested')
             currentJob = JobPost.objects.filter(client=request.user.pk, job_complete=False)
 
+            # Counting unread messages
+            unread_client = number_of_unread_messages(currentJob[0].client, currentJob[0].job_id)
+
             # Checking if request used post method
             if request.method == 'POST':
                 
@@ -71,7 +77,7 @@ def dashboard(request):
                     profile.user = request.user
                     profile.save()
                     return redirect('dashboard-home')
-            return render(request, 'dashboard/client.html', { 'profile': profile, 'current_job' : currentJob, 'past_orders' : past_orders, 'update_profile_form' : update_profile_form, "static_header" : True, "nav_black_link" : True } )
+            return render(request, 'dashboard/client.html', {'profile': profile, 'current_job': currentJob, 'past_orders': past_orders, 'update_profile_form': update_profile_form, "static_header": True, "nav_black_link": True, "unread_client": unread_client})
         else:
             return redirect('service-complete-profile-client')
     # If manager
@@ -90,6 +96,14 @@ def dashboard(request):
                 past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
                 current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
                 print('profile.stripe_user_id')
+                
+                # Adding number of unread messages to jobs
+                for job in current_jobs:
+                    # Getting number of unread messages
+                    unread_messages = number_of_unread_messages(job.manager, job.job_id)
+                    job.unread_messages = unread_messages
+                
+                # unread_manager = number_of_unread_messages(context['object'].manager, context['object'].job_id)
 
                 # Checking if request used post method
                 if request.method == 'POST':
