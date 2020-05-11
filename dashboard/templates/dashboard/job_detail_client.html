@@ -222,7 +222,9 @@
                                 {% if order.job_complete == False %}
                                 <a href="{% url 'chat-room' order.job_id %}" class="btn btn-sm btn-outline-success"><span
                                         id="message-btn-txt">Message</span></a>
+                                {% if unread_client > 0 %}
                                 <span id="new-message-count">{{ unread_client }}</span>
+                                {% endif %}
                                 {% endif %}
 
                             </div>

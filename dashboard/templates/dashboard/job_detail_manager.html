@@ -214,7 +214,9 @@
                                 </p>
                                 <a href="{% url 'chat-room' order.job_id %}"
                                     class="btn btn-sm btn-outline-success"><span id="message-btn-txt">Message</span></a>
-                                <span id="new-message-count">{{ unread_manager }}</span>
+                                {% if unread_manager > 0 %}
+                                    <span id="new-message-count">{{ unread_manager }}</span>
+                                {% endif %}
                             </div>
                             <div id="profile-description-div" class="col-8 text-right">
                                 <h5>{{ client_profile.email }}</h5>

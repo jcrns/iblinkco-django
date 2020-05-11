@@ -152,7 +152,9 @@
                                 {% endif %}
                             </p>
                             <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success" id="details-btn"><span  id="details-btn-text">Details</span></a>
+                            {% if job.unread_messages > 0 %}
                             <span id="new-message-count">{{ job.unread_messages }}</span>
+                            {% endif %}
                             </div>
                             {% endfor %}
                             {% else %}
