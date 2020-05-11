@@ -83,6 +83,23 @@
     .section-header {
         color: #424242;
     }
+
+    #details-btn-text {
+        position: relative;
+        right: -10px;
+    }
+    #new-message-count{
+        position: relative;
+        top: -20px;
+        right: -20px;
+        border-radius: 20px;
+        border: 4px solid red;
+        min-width: 20px;
+        width:100%;
+        height: 20px;
+        background-color: red;
+        font-size: 16px;
+    }
 </style>
 <div class="client">
     <div class="container-fluid">
@@ -150,7 +167,7 @@
                                 <a href="{% url 'dashboard-confirm-job' job.id %}" id="view-order-button" class="btn btn-primary">View Order</a>
                             {% endif %}
                             {% else %}
-                            <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success">Details</a>
+                            <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success" id="details-btn"><span id="details-btn-text">Details</span><span id="new-message-count">1</span></a>
                             {% endif %}
                             {% endfor %}
                         </div>

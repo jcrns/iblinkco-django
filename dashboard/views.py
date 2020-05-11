@@ -41,6 +41,9 @@ import stripe
 # Importing task
 from service.tasks import milestoneRatedEmail, jobPrepEndedEmail
 
+# Importing chats
+from chat.models import Message
+
 # Overview function
 @login_required(login_url="/?login=true")
 def dashboard(request):
@@ -170,6 +173,11 @@ class JobDetailView(DetailView):
         instagram = context['object'].instagram
         facebook = context['object'].facebook
 
+
+        # Counting unread messages
+        unread_manager = number_of_unread_messages(context['object'].manager, context['object'].job_id)
+        unread_client = number_of_unread_messages(context['object'].client, context['object'].job_id)
+
         # Calculating number of platforms
         platforms = 0
         if instagram == True:
@@ -242,6 +250,10 @@ class JobDetailView(DetailView):
         # Adding additional context for styling
         context['static_header'] = True
         context['nav_black_link'] = True
+
+        # Adding unread messages
+        context['unread_manager'] = unread_manager
+        context['unread_client'] = unread_client
 
         # Adding edit profile form
         context['edit_job_form'] = JobPostFormUpdate(instance=context['object'])
@@ -446,8 +458,15 @@ def jobPrepEnded(request, pk):
     return redirect('dashboard-job-detail-manager', pk=pk)
 
 
-def test(request):
-    if request.POST:
-        arg = 'yessssss'
-        testFunc()
-    return render(request, 'dashboard/test.html')
+def number_of_unread_messages(user, job):
+    
+    # Getting unread messages by job
+    job_id = 'chat_' + job
+    message_number = Message.objects.filter(
+        job=job_id, recipient_viewed=False).exclude(author=user).count()
+    print('message_number')
+    print(message_number)
+
+    # If message number over certain amount we may send email
+    return message_number
+    

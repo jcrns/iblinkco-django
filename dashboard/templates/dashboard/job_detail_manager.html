@@ -107,6 +107,23 @@
     hr {
         max-width: 400px;
     }
+    #message-btn-text {
+        position: relative;
+        right: -20px;
+    }
+    #new-message-count{
+        position: relative;
+        top: -20px;
+        right: -20px;
+        border-radius: 20px;
+        border: 4px solid red;
+        min-width: 20px;
+        width:100%;
+        height: 20px;
+        background-color: red;
+        font-size: 16px;
+        color: #fff;
+    }
 </style>
 <div class="job">
     <div class="container-fluid">
@@ -196,7 +213,7 @@
                                     {{ client_profile.language }}
                                 </p>
                                 <a href="{% url 'chat-room' order.job_id %}"
-                                    class="btn btn-sm btn-outline-success">Message</a>
+                                    class="btn btn-sm btn-outline-success"><span id="message-btn-txt">Message</span><span id="new-message-count">{{ unread_manager }}</span></a>
                             </div>
                             <div id="profile-description-div" class="col-8 text-right">
                                 <h5>{{ client_profile.email }}</h5>

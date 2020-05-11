@@ -82,9 +82,6 @@ class JobPost(models.Model):
 
     job_offers = models.CharField(max_length=5000, blank=True, default='none')
 
-    client_viewed_chat = models.BooleanField(default=True)
-    manager_viewed_chat = models.BooleanField(default=True)
-
     def __str__(self):
         print(self.manager)
         return f'{self.client} Job Request {self.job_id}'

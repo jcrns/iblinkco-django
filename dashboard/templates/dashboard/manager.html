@@ -138,7 +138,7 @@
                                 {{ job.instagram_username }} (Instagram)
                                 {% endif %}
                             </p>
-                            <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success">Details</a>
+                            <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success" id="details-btn"><span  id="details-btn-text">Details</span><span id="new-message-count">1</span></a>
                             </div>
                             {% endfor %}
                             {% else %}
