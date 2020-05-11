@@ -27,6 +27,9 @@ from billing.models import BillingProfile
 # Importing stripe
 import stripe
 
+# Importing os
+import os
+
 # Importing celery task
 from service.tasks import manager_assignment, check_milestone_client_email, milestone_send_emails
 from datetime import timedelta, datetime
@@ -35,7 +38,7 @@ from datetime import timedelta, datetime
 from django.contrib.sites.shortcuts import get_current_site
 
 # Importing stripe key for checkout
-stripe.api_key = "pk_live_xHcn9pcsvGii5r0DUtvQeF4H"
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 
 # View for django post job select
