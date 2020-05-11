@@ -35,7 +35,7 @@ from datetime import timedelta, datetime
 from django.contrib.sites.shortcuts import get_current_site
 
 # Importing stripe key for checkout
-stripe.api_key = "sk_test_8dRE7QLn40wUt6wZtr8upMA4"
+stripe.api_key = "pk_live_xHcn9pcsvGii5r0DUtvQeF4H"
 
 
 # View for django post job select
