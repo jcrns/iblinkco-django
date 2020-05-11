@@ -55,7 +55,6 @@ class JobPost(models.Model):
     engagement = models.BooleanField(default=False)
     service_description = models.CharField(max_length=5000, default='none')
     manager_randomly_assigned = models.BooleanField(default=True)
-    manager_randomly_assigned = models.BooleanField(default=True)
 
     # Platforms
     instagram = models.BooleanField(default=False)
@@ -82,6 +81,9 @@ class JobPost(models.Model):
     client_job_rating = models.IntegerField(default=0, blank=True)
 
     job_offers = models.CharField(max_length=5000, blank=True, default='none')
+
+    client_viewed_chat = models.BooleanField(default=True)
+    manager_viewed_chat = models.BooleanField(default=True)
 
     def __str__(self):
         print(self.manager)
