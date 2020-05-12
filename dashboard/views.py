@@ -63,7 +63,10 @@ def dashboard(request):
             currentJob = JobPost.objects.filter(client=request.user.pk, job_complete=False)
 
             # Counting unread messages
-            unread_client = number_of_unread_messages(currentJob[0].client, currentJob[0].job_id)
+            if currentJob:
+                unread_client = number_of_unread_messages(currentJob[0].client, currentJob[0].job_id)
+            else:
+                unread_client = 0
 
             # Checking if request used post method
             if request.method == 'POST':
@@ -189,8 +192,9 @@ class JobDetailView(DetailView):
 
 
         # Counting unread messages
-        unread_manager = number_of_unread_messages(context['object'].manager, context['object'].job_id)
-        unread_client = number_of_unread_messages(context['object'].client, context['object'].job_id)
+        if context['object']:
+            unread_manager = number_of_unread_messages(context['object'].manager, context['object'].job_id)
+            unread_client = number_of_unread_messages(context['object'].client, context['object'].job_id)
 
         # Calculating number of platforms
         platforms = 0
@@ -482,5 +486,6 @@ def number_of_unread_messages(user, job):
     print(message_number)
 
     # If message number over certain amount we may send email
+
     return message_number
     
