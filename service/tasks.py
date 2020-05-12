@@ -28,6 +28,7 @@ def manager_assignment():
 
     # Getting unassigned jobs
     unassigned_jobs = JobPost.objects.filter(manager=None)
+    print("unassigned_jobs")
     print(unassigned_jobs)
 
     if not unassigned_jobs:
