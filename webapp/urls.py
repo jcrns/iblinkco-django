@@ -31,6 +31,7 @@ urlpatterns = [
     path('', include('chat.urls')),
 ]
 
+# Running manager assignment func on app load
 manager_assignment()
 
 if settings.DEBUG:
