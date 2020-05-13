@@ -97,8 +97,9 @@ def dashboard(request):
             
                 # Get jobs involved
                 update_profile_form = ProfileUpdateFormManager(instance=request.user.profile)
-                past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
-                current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
+                past_jobs = JobPost.objects.filter(
+                    manager=request.user.pk, job_complete=True, cancelled=False).order_by('-date_requested')
+                current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False, cancelled=False).order_by('-date_requested')
                 print('profile.stripe_user_id')
                 
                 # Adding number of unread messages to jobs
