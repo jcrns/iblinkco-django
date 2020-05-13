@@ -59,8 +59,9 @@ def dashboard(request):
     if profile.is_client == True:
         if profile.business_type != 'none':
             update_profile_form = ProfileUpdateFormClient(instance=request.user.profile)
-            past_orders = JobPost.objects.filter(client=request.user.pk, job_complete=True).order_by('-date_requested')
-            currentJob = JobPost.objects.filter(client=request.user.pk, job_complete=False)
+            past_orders = JobPost.objects.filter(
+                client=request.user.pk, job_complete=True, cancelled=False).order_by('-date_requested')
+            currentJob = JobPost.objects.filter(client=request.user.pk, job_complete=False, cancelled=False)
 
             # Counting unread messages
             if currentJob:
@@ -162,6 +163,10 @@ class JobDetailView(DetailView):
             if not user.profile.is_client == True:
                 return redirect('dashboard-job-detail-manager', pk=self.object.pk)
 
+
+        if self.object.cancelled == True:
+            print('job is cancelled')
+            return redirect('dashboard-home')
 
         # Checking if user is either manager or client
         if user == self.object.client or user == self.object.manager:
@@ -439,8 +444,9 @@ def deleteJob(request, pk):
     # Checking if user is involved in job
     if user == job.client or user == job.manager:
         
-        # Deleting job
-        job.delete()
+        # Cancelling the job
+        job.cancelled = True
+        job.save()
         
         # Making client non busy
         client = Profile.objects.get(user=job.client)
