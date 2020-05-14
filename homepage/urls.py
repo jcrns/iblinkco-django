@@ -8,4 +8,5 @@ urlpatterns = [
     path('become_a_manager', views.becomeManager, name='homepage-become-a-manager'),
     path('overview', views.overview, name='homepage-overview'),
     path('refunds', views.refunds, name='homepage-refund-policy'),
+    path('connect_social_accounts', views.connectSocials, name='homepage-connect-socials'),
 ]
