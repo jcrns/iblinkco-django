@@ -74,6 +74,7 @@ def registerFunc(request):
             print(email)
             email.send()
             
+            print('Verification email sent')
             # Redirecting to login screen
             url = createUrl('login')
             return redirect(url)
