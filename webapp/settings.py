@@ -2,7 +2,7 @@ import dj_database_url
 import os
 import django_heroku
 # from celery import Celery
-# import psycopg2
+import redis
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -186,6 +186,9 @@ CACHES = {
         "LOCATION": os.environ.get('REDIS_URL'),
     }
 }
+
+POOL = redis.ConnectionPool(host=os.environ.get('REDIS_URL'), port=6379, db=0)
+r = redis.StrictRedis(connection_pool=POOL)
 
 # Defining for production
 if os.getcwd() =='/app':
