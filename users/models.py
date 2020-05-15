@@ -13,8 +13,13 @@ class Profile(models.Model):
     language = models.CharField(max_length=60, default='none')
     date_of_birth = models.DateField(max_length=8, blank=True, null=True)
 
+    # Client bool
     # Bool for if user is currently in a job
     busy = models.BooleanField(default=False)
+
+    # Bool for if user is currently in a job
+    can_post = models.BooleanField(default=False)
+
 
     # type of profile
     is_manager = models.BooleanField(default=False)

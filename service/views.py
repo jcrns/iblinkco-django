@@ -64,7 +64,16 @@ def postJobSelect(request):
 def postJob(request):
     if request.method == 'POST':
         form = JobPostForm(request.POST)
+
+        # Checking if user can post
+        if request.user.profile.can_post == False:
+            messages.warning(request, f"You don't have access to post any jobs")
+            return redirect('dashboard-home')
+        
+        # Setting user profile
         profile = request.user.profile
+
+        # Checking if form is valid
         if form.is_valid():
             print(form)
             # Getting posted fields
