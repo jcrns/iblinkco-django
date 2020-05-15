@@ -417,7 +417,7 @@ def testTransaction(request, job_id):
 
     # Trying to get a job
     try:
-        job = JobPost.objects.filter(job_id=job_id).last()
+        job = JobPost.objects.get(job_id=job_id)
     except Exception as e:
         print(e)
         return redirect('dashboard-home')
