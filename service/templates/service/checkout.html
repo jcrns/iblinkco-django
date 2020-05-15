@@ -50,9 +50,6 @@
 <div class="checkout">
     <div class="container">
         <h1>Checkout</h1>
-        <form action="{% url 'service-test-transaction' object.job_id %}" method="post">
-            <input type="submit" class="btn btn-link" value="Click Here If this is a Test Transaction" >
-        </form>
         <form action="{% url 'service-charge' object.job_id %}" method="post" id="payment-form">
             {% csrf_token %}
             <div class="form-row">
@@ -69,10 +66,14 @@
 
             <button id="submit-button" class="form-control btn btn-primary">Submit Payment</button>
         </form>
+        <form action="{% url 'service-test-transaction' object.job_id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-link" value="Click Here If this is a Test Transaction">
+        </form>
     </div>
 </div>
 <script>
-    
+
     // Create a Stripe client.
     var stripe = Stripe('pk_live_xHcn9pcsvGii5r0DUtvQeF4H');
 
