@@ -420,14 +420,17 @@ def testTransaction(request, job_id):
         job = JobPost.objects.get(job_id=job_id)
     except Exception as e:
         print(e)
+        messages.warning(request, f"Job was not found")
         return redirect('dashboard-home')
 
 
     # Redirecting if job is none
     if not job:
+        messages.warning(request, f"Job does not exits")
         return redirect('dashboard-home')
 
     if request.user.profile.is_client == False:
+        messages.warning(request, f"You are not a client")
         return redirect('dashboard-home')
     
     # Creating milestone emails timing variables
