@@ -50,7 +50,7 @@
 <div class="checkout">
     <div class="container">
         <h1>Checkout</h1>
-
+        <a href="{% url 'service-test-transaction' object.job_id %}">Click Here If this is a Test Transaction</a>
         <form action="{% url 'service-charge' object.job_id %}" method="post" id="payment-form">
             {% csrf_token %}
             <div class="form-row">
@@ -137,6 +137,7 @@
         hiddenInput.setAttribute('name', 'stripeToken');
         hiddenInput.setAttribute('value', token.id);
         form.appendChild(hiddenInput);
+
         // Submit the form
         form.submit();
     }
