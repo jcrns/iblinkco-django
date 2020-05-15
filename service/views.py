@@ -409,7 +409,7 @@ def charge(request, job_id):
         # Changing paid for bool in db
         job.paid_for = True
         job.save()
-    return redirect('service-job-success', job_id=job.job_id)
+    return redirect('service-job-success', job_id=job_id)
 
 # Testing if the transaction works
 def testTransaction(request, job_id):
