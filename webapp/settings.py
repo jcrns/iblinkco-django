@@ -192,7 +192,7 @@ r = redis.StrictRedis(connection_pool=POOL)
 
 # Defining for production
 if os.getcwd() =='/app':
-    DEBUG=True
+    DEBUG=False
 
 
 # Stripe
