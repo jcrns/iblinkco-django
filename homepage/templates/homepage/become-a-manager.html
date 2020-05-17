@@ -136,10 +136,18 @@
                             style="visibility: visible; animation-delay: 0.5s; animation-name: pixFadeUp;">
                             Make extra money as a social media manager unbiasedly <br> and have jobs guarenteed for you.
                         </p>
-                        <a href="#" id="main-start-button" class="pxs-btn banner-btn wow pixFadeUp"
-                            data-wow-delay="0.6s" data-toggle="modal" data-target="#signup-modal"
-                            style="visibility: visible; animation-delay: 0.6s; animation-name: pixFadeUp;">Get
+                        {% if user.is_authenticated %}
+                        {% if user.profile.is_client == False and user.profile.is_manager == False %}
+                            <a href="{{ url 'homepage-overview' }}" id="main-start-button" class="pxs-btn banner-btn wow pixFadeUp" data-wow-delay="0.6s" style="visibility: visible; animation-delay: 0.6s; animation-name: pixFadeUp;">Get
                             Started</a>
+                        {% else %}
+                            <a href="#" id="main-start-button" class="pxs-btn banner-btn wow pixFadeUp" data-wow-delay="0.6s" data-toggle="modal" data-target="#signup-modal" style="visibility: visible; animation-delay: 0.6s; animation-name: pixFadeUp;">Get Started</a>
+                        {% endif %}
+                        {% else %}
+                        <a href="#" id="main-start-button" class="pxs-btn banner-btn wow pixFadeUp" data-wow-delay="0.6s" data-toggle="modal"
+                            data-target="#signup-modal" style="visibility: visible; animation-delay: 0.6s; animation-name: pixFadeUp;">Get
+                            Started</a>
+                        {% endif %}
                     </div><!-- /.banner-content -->
                 </div>
                 <!-- /.col-lg-8 -->

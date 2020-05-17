@@ -82,6 +82,7 @@ def manager_acceptance(sender, instance, **kwargs):
             if instance.accepted == True:
                 # Sending Email if user was accepted
                 ManagerEvaluation.managerAcceptanceEmail(instance, True)
+
         elif not obj.declined == instance.declined:
             if instance.declined == True:
                 # Sending Email if user was declined
