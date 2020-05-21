@@ -20,8 +20,7 @@ img {
     background-color: #fff;
     clear: both;
     min-height: 100px;
-    max-height: 400px;
-    /* height: 50%; */
+    max-height: 450px;
     overflow-y: auto;
 }
 .timestamp {
