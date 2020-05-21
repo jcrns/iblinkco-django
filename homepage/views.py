@@ -40,6 +40,7 @@ def overview(request):
     else:
         return redirect('dashboard-home')
     
+# Simple webpages
 def termsAndConditions(request):
     return render(request, 'homepage/terms-and-conditions.html', {"nav_black_link" : True} )
 
@@ -52,10 +53,13 @@ def partnerships(request):
 def helpAndSupport(request):
     return render(request, 'homepage/help-and-support.html', {"nav_black_link" : True} )
 
-
 def refunds(request):
     return render(request, 'homepage/refunds.html', {"nav_black_link": True})
 
+def connectSocials(request):
+    return render(request, 'homepage/share-social-medias.html', {"nav_black_link": True})
+
+# Become manager page
 def becomeManager(request):
     form_register = UserRegisterForm()
     form_login = AuthenticationForm()

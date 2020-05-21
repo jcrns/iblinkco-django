@@ -28,6 +28,7 @@ def manager_assignment():
 
     # Getting unassigned jobs
     unassigned_jobs = JobPost.objects.filter(manager=None)
+    print("unassigned_jobs")
     print(unassigned_jobs)
 
     if not unassigned_jobs:
@@ -58,10 +59,6 @@ def manager_assignment():
             # Looping through managers
             for manager in managers:
                 
-                # Checking if user has stripe connected
-                if not manager.stripe_user_id:
-                    print('next')
-                    continue
 
                 # Checking if user already received an application
                 job_offers = current_job.job_offers
@@ -71,6 +68,11 @@ def manager_assignment():
 
                  # Randomly selecting managers
                 manager_name = random.choice(managers)
+
+               # Checking if user has stripe connected
+                if not manager_name.stripe_user_id:
+                    print('next option')
+                    continue
 
                 print(manager_name)
                 print(job_offers)
@@ -105,7 +107,7 @@ def manager_assignment():
                 # getting current site and passing in to func
 
                 # Emailing manager about job
-                current_site = 'iblinkco-django.herokuapp.com'
+                current_site = 'django-connect.herokuapp.com'
                 emailJobOffer(selected_manager, job, current_site)
                 print('aaa')
             else:
@@ -114,73 +116,15 @@ def manager_assignment():
     # Returning none
     return None
 
-# # Creating func to look for manager every five minutes
-# @periodic_task(run_every=(crontab(minute='*/20')), ignore_result=True)
-# def manager_assignment(pk, current_site):
-#     print('dfdfdfdfdf')
-
-#     # Checking if we can retrieve job else returning
-#     try:
-#         job_obj = JobPost.objects.get(pk=pk)
-#         print('sdsffafdvefge')
-
-#         # Checking if job is none else returning
-#         if not job_obj:
-#             revoke('webapp.tasks.manager_assignment')
-#             return None
-
-#     except Exception as e:
-#         print(e)
-#         print('e')
-#         revoke('webapp.tasks.manager_assignment')
-#         return None
-
-#     # Trying to get and assign manager and send email
-#     try:
-#         # Checking if manager already assigned if so returning
-#         if job_obj.manager:
-#             revoke('webapp.tasks.manager_assignment')
-#             return None
-
-#         # Getting client
-#         client_name = job_obj.client
-#         client = User.objects.get(username=client_name)
-
-#         # Getting capable managers with filter
-#         managers = Profile.objects.filter(
-#             is_manager=True, language=client.profile.language, stripe_user_id=not None)
-
-#         selected_manager = None
-#         for manager in managers:
-#             # Randomly selecting managers
-#             manager_name = random.choice(managers)
-
-#             # Getting manager user
-#             manager = User.objects.get(username=manager_name)
-
-#             # Checking if user has stripe connected
-#             if not manager.profile.stripe_user_id:
-#                 print("manager.profile.stripe_user_id")
-#                 print(manager.profile.stripe_user_id)
-#                 break
-#             selected_manager = manager
-        
-#         # Checking if manager was selected
-#         if selected_manager:
-#             # Emailing manager about job
-#             email = emailJobOffer(manager, job_obj, current_site)
-
-#             print('complete')
-
-#             revoke('webapp.tasks.manager_assignment')
-#         else:
-#             print('manager not found')
-#         return None
-
-#     except Exception as e:
-#         print("e")
-#         print(e)
-
+# Manager follow up email
+@shared_task
+def manager_follow_up_email(user):
+    try:
+        date_joined = user.date_joined
+        print(date_joined)
+    except expression as identifier:
+        print(identifier)
+        return None
 
 # Creating main milestone email task
 @shared_task
@@ -196,7 +140,7 @@ def milestone_send_emails(pk, milestoneState, warning):
 
     except Exception as e:
         print(e)
-        revoke('webaservicepp.tasks.milestone_send_emails')
+        revoke('service.tasks.milestone_send_emails')
         return None
     print('milestones')
 
@@ -243,7 +187,7 @@ def check_milestone_client_email(job_obj, milestone):
             body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
 
         # Sending emails
-        if job.length == 3:
+        if job_obj.length == 3:
             if milestone == 3:
                 milestone = 'Third'
                 body = 'Hello ' + client + ', your job with, ' + manager + ' has been completed. Make sure to long into your iBlinkco account now to see the work they have done and to give your final rating on their job.  '
@@ -270,10 +214,11 @@ def milestone_manger_email(job_obj, milestoneState, warning):
 
         client = job_obj.client
         client = User.objects.get(username=client)
-        client = client.username
+        client = str(client.username)
         
         # Getting client emails
         manager_email = User.objects.get(username=manager)
+        manager = str(manager.username)
         print(manager_email)
         manager_email = str(manager_email.email)
         print(manager_email)

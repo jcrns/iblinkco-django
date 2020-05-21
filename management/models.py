@@ -13,7 +13,7 @@ class ManagerEvaluation(models.Model):
     # Checking if evaluation was started 
     evaluation_started = models.BooleanField(default=False)
     
-    # Checking if manager was accepted and creating prevalue to see if it is changed
+    # Checking if manager was accepted or declined and creating prevalue to see if it is changed
     accepted = models.BooleanField(default=False)
     declined = models.BooleanField(default=False)
 
@@ -41,38 +41,24 @@ class ManagerEvaluation(models.Model):
     # Question four answer
     choose_job = models.BooleanField(default=False)
 
-    # Overriding init func
-    def __init__(self, *args, **kwargs):
-        super(ManagerEvaluation, self).__init__(*args, **kwargs)
-        self.__original_accepted = self.accepted
-
-    # # Overriding save func
-    # def save(self, force_insert=False, force_update=False, *args, **kwargs):
-    #     print("self.__original_accepted")
-    #     print(self.__original_accepted)
-    #     print(self.accepted)
-    #     # Check if user has changed
-    #     if self.__original_accepted != self.accepted:
-    #         if self.accepted == True:
-    #             # Sending Email if user was accepted
-    #             self.managerAccepted()
-    #     super(ManagerEvaluation, self).save(force_insert, force_update, *args, **kwargs)
-    #     self.__original_accepted = self.accepted
-
     def __str__(self):
         return f'{self.manager} Evaluation'
     
     # Email manager accepted
-
-
-    def managerAccepted(self):
+    def managerAcceptanceEmail(self, acceptance):
         user = self.manager
-        # Getting current site
-        mail_subject = 'Congratulations ' + user.username + ' You Have Been Verified for iBlinkco'
 
-        # Creating message body and rendering from template
-        messageBody = 'You are now able to conduct social media management services for clients on iblinkco.com. Be sure to consistently check your email as we will let you know when you have been assigned to a job.'
+        if acceptance == True:
+            # Creating subject
+            mail_subject = 'Congratulations ' + user.username + \
+                ' You Have Been Verified for iBlinkco'
 
+            # Creating message body and rendering from template
+            messageBody = 'You are now able to conduct social media management services for clients on iblinkco.com. Be sure to consistently check your email as we will let you know when you have been assigned to a job.'
+        else:
+            # Creating subject
+            mail_subject = "We are sorry to inform you that you didn't pass the verification"
+            messageBody = "Sorry but you didn't pass iBlinkco's social media management evaluation. You would be allowed to take another in 1 month. If you have any further questions email us at iblinkcompany@gmail.com"
         # Getting email
         email = user.email
 
@@ -114,9 +100,9 @@ def manager_acceptance(sender, instance, **kwargs):
         if not obj.accepted == instance.accepted:
             if instance.accepted == True:
                 # Sending Email if user was accepted
-                ManagerEvaluation.managerAccepted(instance)
-        # Checking if user has been declined
+                ManagerEvaluation.managerAcceptanceEmail(instance, True)
+
         elif not obj.declined == instance.declined:
             if instance.declined == True:
-                # Sending Email if user was accepted
-                ManagerEvaluation.managerDeclined(instance)
+                # Sending Email if user was declined
+                ManagerEvaluation.managerAcceptanceEmail(instance, False)

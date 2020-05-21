@@ -74,6 +74,7 @@ def registerFunc(request):
             print(email)
             email.send()
             
+            print('Verification email sent')
             # Redirecting to login screen
             url = createUrl('login')
             return redirect(url)
@@ -162,6 +163,14 @@ def comfirmUser(request):
             # Saving value in db
             profile.save(update_fields=["is_manager", "is_client"])
             
+            # Checking if evaluation is already created if so deleting it
+            try:
+                evaluation = ManagerEvaluation.objects.get(manager=request.user)
+                evaluation.delete()
+            except ManagerEvaluation.DoesNotExist:
+                print('does not exists')
+            
+
             # Redirecting 
             return redirect('service-complete-profile-client')
         # If Manager
@@ -174,9 +183,7 @@ def comfirmUser(request):
             profile.save(update_fields=["is_manager", "is_client"]) 
             
             # Creating evaluation modal for managers
-            evaluation = ManagerEvaluation()
-            evaluation.manager = request.user
-            evaluation.save()
+            evaluation = ManagerEvaluation.objects.create(manager=request.user)
 
             # Redirecting 
             return redirect('service-complete-profile-manager')

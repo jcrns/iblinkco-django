@@ -12,6 +12,9 @@ from django.views.generic import DetailView, DeleteView
 # Importing lib to get specific objects
 from django.shortcuts import get_object_or_404
 
+# Importing db charfield to add fields to querysets
+from django.db.models import CharField, Value
+
 # Importing profile to access 
 from users.models import Profile
 
@@ -41,6 +44,9 @@ import stripe
 # Importing task
 from service.tasks import milestoneRatedEmail, jobPrepEndedEmail
 
+# Importing chats
+from chat.models import Message
+
 # Overview function
 @login_required(login_url="/?login=true")
 def dashboard(request):
@@ -53,8 +59,15 @@ def dashboard(request):
     if profile.is_client == True:
         if profile.business_type != 'none':
             update_profile_form = ProfileUpdateFormClient(instance=request.user.profile)
-            past_orders = JobPost.objects.filter(client=request.user.pk, job_complete=True).order_by('-date_requested')
-            currentJob = JobPost.objects.filter(client=request.user.pk, job_complete=False)
+            past_orders = JobPost.objects.filter(
+                client=request.user.pk, job_complete=True, cancelled=False).order_by('-date_requested')
+            currentJob = JobPost.objects.filter(client=request.user.pk, job_complete=False, cancelled=False)
+
+            # Counting unread messages
+            if currentJob:
+                unread_client = number_of_unread_messages(currentJob[0].client, currentJob[0].job_id)
+            else:
+                unread_client = 0
 
             # Checking if request used post method
             if request.method == 'POST':
@@ -68,7 +81,7 @@ def dashboard(request):
                     profile.user = request.user
                     profile.save()
                     return redirect('dashboard-home')
-            return render(request, 'dashboard/client.html', { 'profile': profile, 'current_job' : currentJob, 'past_orders' : past_orders, 'update_profile_form' : update_profile_form, "static_header" : True, "nav_black_link" : True } )
+            return render(request, 'dashboard/client.html', {'profile': profile, 'current_job': currentJob, 'past_orders': past_orders, 'update_profile_form': update_profile_form, "static_header": True, "nav_black_link": True, "unread_client": unread_client})
         else:
             return redirect('service-complete-profile-client')
     # If manager
@@ -84,9 +97,18 @@ def dashboard(request):
             
                 # Get jobs involved
                 update_profile_form = ProfileUpdateFormManager(instance=request.user.profile)
-                past_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=True).order_by('-date_requested')
-                current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False).order_by('-date_requested')
+                past_jobs = JobPost.objects.filter(
+                    manager=request.user.pk, job_complete=True, cancelled=False).order_by('-date_requested')
+                current_jobs = JobPost.objects.filter(manager=request.user.pk, job_complete=False, cancelled=False).order_by('-date_requested')
                 print('profile.stripe_user_id')
+                
+                # Adding number of unread messages to jobs
+                for job in current_jobs:
+                    # Getting number of unread messages
+                    unread_messages = number_of_unread_messages(job.manager, job.job_id)
+                    job.unread_messages = unread_messages
+                
+                # unread_manager = number_of_unread_messages(context['object'].manager, context['object'].job_id)
 
                 # Checking if request used post method
                 if request.method == 'POST':
@@ -143,6 +165,10 @@ class JobDetailView(DetailView):
                 return redirect('dashboard-job-detail-manager', pk=self.object.pk)
 
 
+        if self.object.cancelled == True:
+            print('job is cancelled')
+            return redirect('dashboard-home')
+
         # Checking if user is either manager or client
         if user == self.object.client or user == self.object.manager:
 
@@ -169,6 +195,12 @@ class JobDetailView(DetailView):
         length = context['object'].length
         instagram = context['object'].instagram
         facebook = context['object'].facebook
+
+
+        # Counting unread messages
+        if context['object']:
+            unread_manager = number_of_unread_messages(context['object'].manager, context['object'].job_id)
+            unread_client = number_of_unread_messages(context['object'].client, context['object'].job_id)
 
         # Calculating number of platforms
         platforms = 0
@@ -242,6 +274,10 @@ class JobDetailView(DetailView):
         # Adding additional context for styling
         context['static_header'] = True
         context['nav_black_link'] = True
+
+        # Adding unread messages
+        context['unread_manager'] = unread_manager
+        context['unread_client'] = unread_client
 
         # Adding edit profile form
         context['edit_job_form'] = JobPostFormUpdate(instance=context['object'])
@@ -357,6 +393,10 @@ class ConfirmJobDetailView(DetailView):
         self.object = self.get_object() 
         user = request.user
 
+        if self.object.length != 3:
+            print('yay')
+        else:
+            print('ooof')
         if self.object.paid_for == False:
             # Checking if user is either manager or client
             if user == self.object.client or user == self.object.manager:
@@ -405,8 +445,9 @@ def deleteJob(request, pk):
     # Checking if user is involved in job
     if user == job.client or user == job.manager:
         
-        # Deleting job
-        job.delete()
+        # Cancelling the job
+        job.cancelled = True
+        job.save()
         
         # Making client non busy
         client = Profile.objects.get(user=job.client)
@@ -442,8 +483,16 @@ def jobPrepEnded(request, pk):
     return redirect('dashboard-job-detail-manager', pk=pk)
 
 
-def test(request):
-    if request.POST:
-        arg = 'yessssss'
-        testFunc()
-    return render(request, 'dashboard/test.html')
+def number_of_unread_messages(user, job):
+    
+    # Getting unread messages by job
+    job_id = 'chat_' + job
+    message_number = Message.objects.filter(
+        job=job_id, recipient_viewed=False).exclude(author=user).count()
+    print('message_number')
+    print(message_number)
+
+    # If message number over certain amount we may send email
+
+    return message_number
+    

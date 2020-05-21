@@ -83,6 +83,19 @@
     .section-header {
         color: #424242;
     }
+    #new-message-count{
+        position: relative;
+        top: -15px;
+        left: -10px;
+        border-radius: 20px;
+        border: 4px solid red;
+        min-width: 20px;
+        width:100%;
+        height: 20px;
+        background-color: red;
+        font-size: 16px;
+        color: #fff;
+    }
 </style>
 <div class="client">
     <div class="container-fluid">
@@ -150,7 +163,10 @@
                                 <a href="{% url 'dashboard-confirm-job' job.id %}" id="view-order-button" class="btn btn-primary">View Order</a>
                             {% endif %}
                             {% else %}
-                            <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success">Details</a>
+                            <a href="{% url 'dashboard-job-detail-client' job.id %}" class="btn btn-success" id="details-btn"><span id="details-btn-text">Details</span></a>
+                            {% if unread_client > 0 %}
+                            <span id="new-message-count">{{ unread_client }}</span>
+                            {% endif %}
                             {% endif %}
                             {% endfor %}
                         </div>

@@ -383,21 +383,24 @@
             const msgHistoryDiv = document.getElementById('msg_history');
             msgHistoryDiv.innerHTML = '';
             for(i=0; i<data['messages'].length; i++){
-                createMessage(data['messages'][i]);
+                createMessage(data['messages'][i], data['command']);
                 console.log(JSON.stringify(data['messages'][i]))
             }
-            scrollDown();
+
+            // When multiple messages are being retrieved we run the read all func
+            readAll();
         } else if(data['command'] == 'new_message'){
-            createMessage(data['message']);
-            // Scrolling down
-            scrollDown();
+            createMessage(data['message'], data['command']);
         }
+        // Scrolling down
+        scrollDown();
     };
 
-    function createMessage(data){
+    function createMessage(data, command){
         const message = data['content'];
         const author = data['author'];
         const timestamp = data['timestamp'];
+        const msgId = data['message_id'];
 
         console.log("message: " + JSON.stringify(data))
         
@@ -501,8 +504,28 @@
                 recieveMsgImgP.appendChild(recieveMsgImg)
             }
 
+            // Call func to send the viewing of the message
+            if(command == 'new_message'){
+                chatViewed(msgId);
+            }
         }
     }
+
+    // Function saying that message was viewed
+    function chatViewed(msgId){
+        chatSocket.send(JSON.stringify({
+            'message_id' : msgId,
+            'command': 'chat_viewed',
+            'viewer': username,
+        }));
+    }
+    function readAll(){
+        chatSocket.send(JSON.stringify({
+            'command': 'read_all',
+            'viewer': username,
+        }));
+    }
+    
     function formatDate(date){
         const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date);
         const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(date);

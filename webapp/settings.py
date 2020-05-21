@@ -2,7 +2,7 @@ import dj_database_url
 import os
 import django_heroku
 # from celery import Celery
-# import psycopg2
+import redis
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -187,15 +187,18 @@ CACHES = {
     }
 }
 
+POOL = redis.ConnectionPool(host=os.environ.get('REDIS_URL'), port=6379, db=0)
+r = redis.StrictRedis(connection_pool=POOL)
+
 # Defining for production
 if os.getcwd() =='/app':
     DEBUG=False
 
 
 # Stripe
-STRIPE_PUBLISHABLE_KEY = 'pk_test_S49pZhR9n8Qm0MM34RGzsMyG'
-STRIPE_SECRET_KEY = 'sk_test_8dRE7QLn40wUt6wZtr8upMA4'
-STRIPE_CONNECT_CLIENT_ID = 'ca_HBCiaAX9Br1gw4YiOtDI0McQffyqVTxz'
+STRIPE_PUBLISHABLE_KEY = os.environ.get('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = os.environ.get('STRIPE_SECRET_KEY')
+STRIPE_CONNECT_CLIENT_ID = os.environ.get('STRIPE_CONNECT_CLIENT_ID')
 
 # AWS E3
 AWS_ACCESS_KEY_ID = "AKIA3YGF6HNLB6JBJQHU"

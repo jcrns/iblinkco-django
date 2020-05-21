@@ -1,15 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
 from service.models import JobPost
-from django.db import connections
-    
+from webapp.utils import random_string_generator
+from django.db.models.signals import pre_save
+
 class Message(models.Model):
     # job = models.ForeignKey(JobPost, on_delete=models.CASCADE )
     job = models.CharField(max_length=120, default='none')
+    message_id = models.CharField(max_length=120, blank=True)
     author = models.ForeignKey(
         User, related_name='author_messages', on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    recipient_viewed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.author.username
@@ -21,5 +25,8 @@ class Message(models.Model):
         last_ten = reversed(last_ten)
         return last_ten
 
-    connections.close_all()
+def pre_save_create_message_id(sender, instance, *args, **kwargs):
+    if not instance.message_id:
+        instance.message_id = random_string_generator(size=10)
 
+pre_save.connect(pre_save_create_message_id, sender=Message)

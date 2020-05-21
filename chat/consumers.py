@@ -9,6 +9,9 @@ class ChatConsumer(WebsocketConsumer):
 
     def fetch_messages(self, data):
         messages = Message.last_10_messages(self.room_group_name)
+
+        print('dfdf')
+
         content = {
             'command': 'messages',
             'messages': self.messages_to_json(messages)
@@ -52,10 +55,35 @@ class ChatConsumer(WebsocketConsumer):
         print('sdsds')
         return self.send_chat_message(content)
 
+    # Action when new chat is viewed
+    def chat_viewed(self, data):
+        print('\nchat\n\n\n\n\n\n\n')
+        # Getting msg from db and setting recipient viewed to true
+        message = Message.objects.get(message_id=data['message_id'])
+        message.recipient_viewed = True
+        message.save()
+        
+        print("data")
+        print(data)
+        return data
+
+    def read_all(self, data):
+        username = data['viewer']
+        print('\n\n\n\nsdsdsd')
+
+        user = User.objects.get(username=username)
+        # Changing messages that haven't been viewed to viewed  
+        print(Message.objects.filter(job=self.room_group_name, recipient_viewed=False))
+        past_messages = Message.objects.filter(job=self.room_group_name, recipient_viewed=False).exclude(author=user).update(recipient_viewed=True)
+
+        return data
+
     # Creating statement for channel
     commands = {
         'fetch_messages': fetch_messages,
         'new_message': new_message,
+        'chat_viewed': chat_viewed,
+        'read_all': read_all
     }
 
     def connect(self):

@@ -27,6 +27,9 @@ from billing.models import BillingProfile
 # Importing stripe
 import stripe
 
+# Importing os
+import os
+
 # Importing celery task
 from service.tasks import manager_assignment, check_milestone_client_email, milestone_send_emails
 from datetime import timedelta, datetime
@@ -35,7 +38,7 @@ from datetime import timedelta, datetime
 from django.contrib.sites.shortcuts import get_current_site
 
 # Importing stripe key for checkout
-stripe.api_key = "sk_test_8dRE7QLn40wUt6wZtr8upMA4"
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 
 # View for django post job select
@@ -61,7 +64,16 @@ def postJobSelect(request):
 def postJob(request):
     if request.method == 'POST':
         form = JobPostForm(request.POST)
+
+        # Checking if user can post
+        if request.user.profile.can_post == False:
+            messages.warning(request, f"You don't have access to post any jobs")
+            return redirect('dashboard-home')
+        
+        # Setting user profile
         profile = request.user.profile
+
+        # Checking if form is valid
         if form.is_valid():
             print(form)
             # Getting posted fields
@@ -370,26 +382,158 @@ def charge(request, job_id):
         print('how\n\n\n\n\n\n\n')
 
         # Scheduling emails
-        milestone_send_emails.apply_async((job.id, 1, True), countdown=100)
-        milestone_send_emails.apply_async((job.id, 1, False), countdown=200)
         milestone_send_emails.apply_async(
-            (job.id, 2, True), countdown=300)
+            (job.id, 1, True), eta=datetime.now() + milestoneOneWarningDate)
         milestone_send_emails.apply_async(
-            (job.id, 2, False), countdown=400)
-        milestone_send_emails.apply_async((job.id, 3, True), countdown=500)
-        milestone_send_emails.apply_async((job.id, 3, False), countdown=600)
+            (job.id, 1, False), eta=datetime.now() + milestoneOneDueDate)
+        milestone_send_emails.apply_async(
+            (job.id, 2, True), eta=datetime.now() + milestoneTwoWarningDate)
+        milestone_send_emails.apply_async(
+            (job.id, 2, False), eta=datetime.now() + milestoneTwoDueDate)
+        milestone_send_emails.apply_async(
+            (job.id, 3, True), eta=datetime.now() + milestoneThreeWarningDate)
+        milestone_send_emails.apply_async(
+            (job.id, 3, False), eta=datetime.now() + milestoneThreeDueDate)
 
         # Checking if job length is large enough for 4 milestones
+        print("job.length")
+        print(job.length)
         if job.length != 3:
-            milestone_send_emails.apply_async((job.id, 4, True), eta=datetime.utcnow() + milestoneFourWarningDate)
+            milestone_send_emails.apply_async((job.id, 4, True), eta=datetime.now() + milestoneFourWarningDate)
             milestone_send_emails.apply_async(
-                (job.id, 4, False), eta=datetime.utcnow() + milestoneFourDueDate)
+                (job.id, 4, False), eta=datetime.now() + milestoneFourDueDate)
+        else:
+            print('short job')
 
 
         # Changing paid for bool in db
         job.paid_for = True
         job.save()
-    return redirect('service-job-success', job_id=job.job_id)
+    return redirect('service-job-success', job_id=job_id)
+
+# Testing if the transaction works
+def testTransaction(request, job_id):
+    print('test transaction')
+    if request.method == "POST":
+        # Trying to get a job
+        try:
+            job = JobPost.objects.get(job_id=job_id)
+        except Exception as e:
+            print(e)
+            messages.warning(request, f"Job was not found")
+            return redirect('dashboard-home')
+
+
+        # Redirecting if job is none
+        if not job:
+            messages.warning(request, f"Job does not exits")
+            return redirect('dashboard-home')
+
+        if request.user.profile.is_client == False:
+            messages.warning(request, f"You are not a client")
+            return redirect('dashboard-home')
+        
+        # Creating milestone emails timing variables
+        if job.length == 14:
+
+            # Defining day after amount for milestone emails
+            milestoneOneWarningDate = timedelta(days=2)
+            milestoneOneDueDate = timedelta(days=3)
+
+            milestoneTwoWarningDate = timedelta(days=6)
+            milestoneTwoDueDate = timedelta(days=7)
+
+            milestoneThreeWarningDate = timedelta(days=9)
+            milestoneThreeDueDate = timedelta(days=10)
+
+            milestoneFourWarningDate = timedelta(days=9)
+            milestoneFourDueDate = timedelta(days=14)
+        elif job.length == 10:
+
+            # Defining day after amount for milestone emails
+            milestoneOneWarningDate = timedelta(days=1)
+            milestoneOneDueDate = timedelta(days=2)
+
+            milestoneTwoWarningDate = timedelta(days=3)
+            milestoneTwoDueDate = timedelta(days=4)
+
+            milestoneThreeWarningDate = timedelta(days=6)
+            milestoneThreeDueDate = timedelta(days=7)
+
+            milestoneFourWarningDate = timedelta(days=6)
+            milestoneFourDueDate = timedelta(days=10)
+        elif job.length == 7:
+
+            # Defining day after amount for milestone emails
+            milestoneOneWarningDate = timedelta(days=1)
+            milestoneOneDueDate = timedelta(days=2)
+
+            milestoneTwoWarningDate = timedelta(days=2)
+            milestoneTwoDueDate = timedelta(days=3)
+
+            milestoneThreeWarningDate = timedelta(days=4)
+            milestoneThreeDueDate = timedelta(days=5)
+
+            milestoneFourWarningDate = timedelta(days=6)
+            milestoneFourDueDate = timedelta(days=7)
+
+        elif job.length == 5:
+
+            # Defining day after amount for milestone emails
+            milestoneOneWarningDate = timedelta(days=1)
+            milestoneOneDueDate = timedelta(days=2)
+
+            milestoneTwoWarningDate = timedelta(days=2)
+            milestoneTwoDueDate = timedelta(days=3)
+
+            milestoneThreeWarningDate = timedelta(days=3)
+            milestoneThreeDueDate = timedelta(days=4)
+
+            milestoneFourWarningDate = timedelta(days=4)
+            milestoneFourDueDate = timedelta(days=5)
+
+        elif job.length == 3:
+            # Defining day after amount for milestone emails
+            milestoneOneWarningDate = timedelta(days=1)
+            milestoneOneDueDate = timedelta(days=2)
+
+            milestoneTwoWarningDate = timedelta(days=2)
+            milestoneTwoDueDate = timedelta(days=3)
+
+            milestoneThreeWarningDate = timedelta(days=3)
+            milestoneThreeDueDate = timedelta(days=4)
+
+        print('how\n\n\n\n\n\n\n')
+
+        # Scheduling emails
+        milestone_send_emails.apply_async(
+            (job.id, 1, True), eta=datetime.now() + milestoneOneWarningDate)
+        milestone_send_emails.apply_async(
+            (job.id, 1, False), eta=datetime.now() + milestoneOneDueDate)
+        milestone_send_emails.apply_async(
+            (job.id, 2, True), eta=datetime.now() + milestoneTwoWarningDate)
+        milestone_send_emails.apply_async(
+            (job.id, 2, False), eta=datetime.now() + milestoneTwoDueDate)
+        milestone_send_emails.apply_async(
+            (job.id, 3, True), eta=datetime.now() + milestoneThreeWarningDate)
+        milestone_send_emails.apply_async(
+            (job.id, 3, False), eta=datetime.now() + milestoneThreeDueDate)
+
+        # Checking if job length is large enough for 4 milestones
+        print("job.length")
+        print(job.length)
+        if job.length != 3:
+            milestone_send_emails.apply_async(
+                (job.id, 4, True), eta=datetime.now() + milestoneFourWarningDate)
+            milestone_send_emails.apply_async(
+                (job.id, 4, False), eta=datetime.now() + milestoneFourDueDate)
+        else:
+            print('short job')
+
+        # Changing paid for bool in db
+        job.paid_for = True
+        job.save()
+        return redirect('service-job-success', job_id=job_id)
 
 # Success view after job is paid for
 def jobPaymentSuccess(request, job_id):
@@ -425,12 +569,12 @@ def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement
     if engagement == True:
         engagement = 2
     else:
-        engagement = 2
+        engagement = 0
 
     if post_for_you == True:
         post_for_you = 5
     else:
-        post_for_you = 5
+        post_for_you = 0
 
     # Adjusting prices
     platforms= float(platforms) * 0.375
@@ -447,13 +591,13 @@ def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement
     # Adding other services from managers to total
     totalValue = totalValue + engagement
     totalValue = totalValue + post_for_you
-    
+
     # Defining the payment of managers
     manager_payment = totalValue
 
     # Getting iBlinkco deduction by taking a percent from data
     iblinkcoValue = (totalValue * 0.1 ) + 2
-    print(round(iblinkcoValue, 2))
+    print("iblinkco: ", round(iblinkcoValue, 2))
 
     # Adding iBlinkco deduction to total
     totalValue = totalValue + iblinkcoValue

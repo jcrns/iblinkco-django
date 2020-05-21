@@ -194,7 +194,7 @@ def stripeAuthorizeView(request):
         'scope': 'read_write',
         'client_id': settings.STRIPE_CONNECT_CLIENT_ID,
         # 'redirect_uri': f'http://localhost:8000/users/oauth/callback'
-        'redirect_uri': f'https://iblinkco-django.herokuapp.com/users/oauth/callback'
+        'redirect_uri': f'https://django-connect.herokuapp.com/users/oauth/callback'
     }
 
     # Creating final
@@ -252,7 +252,7 @@ def emailJobOffer(user, job, current_site):
     beginning = 'Hello, ' + str(user.username) + ', You have a job opportunity with ' + str(job.client) +', '
 
     # Creating middle
-    middle = '\nJob Details: \nServices:'
+    middle = '\nJob Details: \n\nServices:'
     
     create_caption = ''
     look_for_content = ''
@@ -266,9 +266,9 @@ def emailJobOffer(user, job, current_site):
     if job.engagement == True:
         engagement = '\nCasual engagement needed'
 
-    length = '\nJob Length: ' + str(job.length) + ' days'
+    length = '\n\nJob Length: ' + str(job.length) + ' days'
 
-    platforms = '\nPlatforms:'
+    platforms = '\n\nPlatforms:'
     instagram = ''
     facebook = ''
 
@@ -278,18 +278,27 @@ def emailJobOffer(user, job, current_site):
     if job.facebook == True:
         facebook = '\nFacebook'
     
-    middle = middle + create_caption + look_for_content + engagement + length + platforms + instagram + facebook
+    job_description = "\n\nDescription:"
+    description = "\n" + str(job.service_description)
 
-    accept = '\nAccept Job:' + '\n' 
-    acceptLink = 'http:' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=True'
+    middle = middle + create_caption + look_for_content + engagement + \
+        length + platforms + instagram + facebook + job_description + description
 
-    decline = '\nDecline Job:' + '\n'
-    declineLink = 'http:' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=False'
+    accept = '\n\nAccept Job: \n' 
+    print("reverse('users-job-offer', args=(uid, token))")
+    print(reverse('users-job-offer', args=(uid, token)))
+    acceptLink = 'https://www.' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=True\n\n'
 
+    decline = '\n\nDecline Job: \n'
+    declineLink = 'https://www.' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=False\n\n'
+
+    # Creating ending
     ending = accept + acceptLink + decline + declineLink
 
+    # Creating message
     messageBody = beginning + middle + ending
 
+    print(messageBody)
     # Getting email
     email = user.email
     

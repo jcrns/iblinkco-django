@@ -55,7 +55,7 @@ class JobPost(models.Model):
     engagement = models.BooleanField(default=False)
     service_description = models.CharField(max_length=5000, default='none')
     manager_randomly_assigned = models.BooleanField(default=True)
-    manager_randomly_assigned = models.BooleanField(default=True)
+    cancelled = models.BooleanField(default=False)
 
     # Platforms
     instagram = models.BooleanField(default=False)
