@@ -129,6 +129,10 @@
                         <span class="card-title-bold">Manager Selection:</span> Random
                     </p>
 
+                    {% if order.paid_for == False %}
+                        <small>Job will start when client pays for job</small>
+                    {% endif %}
+
                     {% if not order.manager %}
                     <a href="#" id="browse-managers-btn" class="btn btn-outline-success" data-toggle="modal"
                         data-target="#browse-modal">Browse for Managers</a>

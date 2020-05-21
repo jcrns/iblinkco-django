@@ -15,7 +15,7 @@ class ManagerEvaluation(models.Model):
     
     # Checking if manager was accepted and creating prevalue to see if it is changed
     accepted = models.BooleanField(default=False)
-    __original_accepted = None
+    declined = models.BooleanField(default=False)
 
     # Checking if evaluation was completed
     evaluation_completed = models.BooleanField(default=False)
@@ -83,6 +83,24 @@ class ManagerEvaluation(models.Model):
         email.send()
         return email
 
+    def managerDeclined(self):
+        user = self.manager
+        # Getting current site
+        mail_subject = "We are sorry to inform you that you didn't pass the verification"
+
+        # Creating message body and rendering from template
+        messageBody = "Sorry but you didn't pass iBlinkco's social media management evaluation. You would be allowed to take another in 1 month. If you have any further questions email us at iblinkcompany@gmail.com"
+
+        # Getting email
+        email = user.email
+
+        print(email)
+
+        # Sending email
+        email = EmailMessage(mail_subject, messageBody, to=[f'{email}'])
+        email.send()
+        return email
+
 # Checking if acceptance has changed
 @receiver(pre_save, sender=ManagerEvaluation)
 def manager_acceptance(sender, instance, **kwargs):
@@ -92,8 +110,13 @@ def manager_acceptance(sender, instance, **kwargs):
         # Object is new, so field hasn't technically changed, but you may want to do something else here.
         pass
     else:
-        if not obj.accepted == instance.accepted:  # Field has changed
+        # Checking if user has been accepted
+        if not obj.accepted == instance.accepted:
             if instance.accepted == True:
                 # Sending Email if user was accepted
                 ManagerEvaluation.managerAccepted(instance)
-
+        # Checking if user has been declined
+        elif not obj.declined == instance.declined:
+            if instance.declined == True:
+                # Sending Email if user was accepted
+                ManagerEvaluation.managerDeclined(instance)

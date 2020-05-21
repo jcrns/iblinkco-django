@@ -113,8 +113,7 @@ def activate(request, uidb64, token):
         messages.warning(request, f'Activation link is invalid!')
 
     # Redirecting to login screen
-    url = createUrl('login')
-    return redirect(url)
+    return redirect('homepage-overview')
 
 # Login function
 def loginFunc(request):

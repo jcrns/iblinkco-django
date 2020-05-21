@@ -19,7 +19,9 @@ img {
     border: 1px solid #c4c4c4;
     background-color: #fff;
     clear: both;
-    height: 550px;
+    min-height: 100px;
+    max-height: 400px;
+    /* height: 50%; */
     overflow-y: auto;
 }
 .timestamp {
@@ -130,7 +132,7 @@ img {
 }
 
 .received_withd_msg p {
-    background: #ebebeb none repeat scroll 0 0;
+    background: #ebebeb;
     border-radius: 3px;
     color: #646464;
     font-size: 14px;
