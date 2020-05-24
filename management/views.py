@@ -289,6 +289,9 @@ def emailJobOffer(user, job, current_site):
     middle = middle + create_caption + look_for_content + engagement + \
         length + platforms + instagram + facebook + job_description + description
 
+    client = Profile.objects.get(user=job.client)
+    clientDetails = f"\n\nClient Details:\n Client Name: {client.first_name} {client.last_name} \n Client Language: {client.language} \n Business Name: {client.business_name} \n Business Type: {client.business_type} \n Business Description: {client.description}"
+
     accept = '\n\nAccept Job: \n' 
     print("reverse('users-job-offer', args=(uid, token))")
     print(reverse('users-job-offer', args=(uid, token)))
@@ -296,9 +299,9 @@ def emailJobOffer(user, job, current_site):
 
     decline = '\n\nDecline Job: \n'
     declineLink = 'https://www.' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=False\n\n'
-
+    
     # Creating ending
-    ending = accept + acceptLink + decline + declineLink
+    ending = clientDetails + accept + acceptLink + decline + declineLink
 
     # Creating message
     messageBody = beginning + middle + ending
