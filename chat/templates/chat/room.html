@@ -37,6 +37,7 @@
                 </div>
             </div>
         </div>
+        <ul id="test-show"></ul>
     </div>
 </div>
 <script>
@@ -409,6 +410,12 @@
         
         // Check if message is img
         console.log("\n\n\n\n\nmessage" + message)
+
+        // test test
+        list = document.getElementById("test-show")
+        testListItem = document.createElement('li')
+        testListItem.innerHTML = message
+        list.appendChild(testListItem)
 
         // Checking if user is sending message
         if (author == username) {
