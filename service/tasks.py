@@ -122,8 +122,8 @@ def manager_follow_up_email(user):
     try:
         date_joined = user.date_joined
         print(date_joined)
-    except expression as identifier:
-        print(identifier)
+    except Exception as e:
+        print(e)
         return None
 
 # Creating main milestone email task

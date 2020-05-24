@@ -24,6 +24,9 @@ from .models import ManagerEvaluation
 # Importing evaluation forms
 from .forms import *
 
+# Importing management task
+from .tasks import manager_job_preperation_email
+
 # Importing login required func
 from django.contrib.auth.decorators import login_required
 
@@ -36,6 +39,8 @@ from django.contrib.auth.models import User
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from webapp.tokens import token_generation
+
+from datetime import timedelta, datetime
 
 # Homepage function
 @login_required(login_url="/?login=true")
@@ -340,7 +345,9 @@ def managerOfferConfirm(request, uidb64, token):
                 # Changing variable in db
                 job.manager = user
                 job.save()
-                messages.success(request, f'You are now assigned to work a job with {job.client}. We will notfiy when to start the job')
+                manager_job_preperation_email.apply_async(
+                    (job.id), eta=datetime.now() + timedelta(days=2))
+                messages.success(request, f'You are now assigned to work a job with {job.client}. We will notify when to start the job')
             
             # Redirecting if manager already assigned
             else:
