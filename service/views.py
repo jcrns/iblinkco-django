@@ -547,6 +547,18 @@ def jobPaymentSuccess(request, job_id):
 
     return render(request, 'service/job_success.html', {"static_header": True, "nav_black_link": True})
 
+# Success view after job is paid for
+def jobRenewal(request, job_id):
+
+    job = JobPost.objects.get(job_id=job_id)
+
+    # Sending the email for job renewal to manager
+
+    # Creating a message to flash
+    messages.success(request, f'A Renewal request has been sent to the manager')
+
+    return redirect('dashboard-job-detail-client', pk=job.pk)
+
 # Price calculation func
 def calculatePrice(post_per_day, length, instagramBool, facebookBool, engagement, post_for_you, caption, search_for_content):
     platforms = 0

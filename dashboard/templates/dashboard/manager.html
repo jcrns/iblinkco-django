@@ -91,6 +91,10 @@
         border:solid rgba(0, 0, 0, .125) 1px;
         padding: 10px;
     }
+    .job-opportunity-div {
+        border:solid rgba(255,165,0) 1px;
+        padding: 10px;
+    }
     #new-message-count{
         position: relative;
         top: -15px;
@@ -103,6 +107,9 @@
         background-color: red;
         font-size: 16px;
         color: #fff;
+    }
+    #job-opportunity-details span {
+        padding-right: 20px;
     }
 </style>
 <div class="client">
@@ -123,6 +130,45 @@
                             Current Jobs
                         </h5>
                         <div class="current-job h-100 justify-content-center align-items-center">
+                            {% if not job_opportunities and not current_jobs %}
+                            <div class="d-flex h-50 text-center">
+                                <h3 class="text-secondary d-flex align-items-center justify-content-center mx-auto" id="no-job-text">No jobs
+                                    assigned
+                                </h3>
+                            </div>
+                            {% endif %}
+                            {% if job_opportunities %}
+                            {% for job in job_opportunities %}
+                                <div class="job-opportunity-div">
+                                <h6 class="h6">New Job Opportunity with {{ job.client }}</h6>
+                            
+                                <p class="h5">
+                                    {% if job.captions == True %}
+                                    Create Captions
+                                    {% endif %}
+                                    {% if job.captions == True and job.search_for_content == True %}
+                                    and
+                                    {% endif %}
+                                    {% if job.search_for_content == True %}
+                                    Look for content
+                                    {% endif %}
+                                </p>
+                                <p class="h5">For
+                                    {% if job.facebook == True %}
+                                    {{ job.facebook_username }} (Facebook)
+                                    {% endif %}
+                                    {% if job.facebook == True and job.instagram == True %}
+                                    and
+                                    {% endif %}
+                                    {% if job.instagram == True %}
+                                    {{ job.instagram_username }} (Instagram)
+                                    {% endif %}
+                                </p>
+                                <p id="job-opportunity-details"><span>Language: {{ job.client.profile.language }}</span><span>Length: {{ job.length }}</span><span>Number of Post: {{ job.number_of_post }}</span></p>
+                                <a href="{% url 'management-job-offer-page' job.job_id %}" class="btn btn-primary" id="details-btn">Accept</a>
+                                </div>
+                            {% endfor %}
+                            {% endif %}
                             {% if current_jobs %}
 
                             {% for job in current_jobs %}
@@ -157,12 +203,6 @@
                             {% endif %}
                             </div>
                             {% endfor %}
-                            {% else %}
-                            <div class="d-flex h-50 text-center">
-                                <h3 class="text-secondary d-flex align-items-center justify-content-center mx-auto" id="no-job-text">No jobs
-                                    assigned
-                                </h3>
-                            </div>
                             {% endif %}
                             <div id="stripe-div">
                             {% if not user.profile.stripe_user_id %}

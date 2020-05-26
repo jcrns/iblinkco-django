@@ -290,15 +290,17 @@ def emailJobOffer(user, job, current_site):
         length + platforms + instagram + facebook + job_description + description
 
     client = Profile.objects.get(user=job.client)
-    clientDetails = f"\n\nClient Details:\n Client Name: {client.first_name} {client.last_name} \n Client Language: {client.language} \n Business Name: {client.business_name} \n Business Type: {client.business_type} \n Business Description: {client.description}"
+    clientDetails = f"\n\nClient Details:\n Name: {client.first_name} {client.last_name} \n Language: {client.language} \n Business Name: {client.business_name} \n Business Type: {client.business_type} \n Business Description: {client.description}"
 
     accept = '\n\nAccept Job: \n' 
-    print("reverse('users-job-offer', args=(uid, token))")
-    print(reverse('users-job-offer', args=(uid, token)))
-    acceptLink = 'https://www.' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=True\n\n'
+    print("reverse('management-job-offer', args=(uid, token))")
+    print(reverse('management-job-offer', args=(uid, token)))
+    acceptLink = 'https://www.' + current_site + reverse('management-job-offer', args=(uid, token)) + '?accepted=True\n\n'
 
     decline = '\n\nDecline Job: \n'
-    declineLink = 'https://www.' + current_site + reverse('users-job-offer', args=(uid, token)) + '?accepted=False\n\n'
+    declineLink = 'https://www.' + current_site + \
+        reverse('management-job-offer', args=(uid, token)) + \
+        '?accepted=False\n\n'
     
     # Creating ending
     ending = clientDetails + accept + acceptLink + decline + declineLink
@@ -317,9 +319,23 @@ def emailJobOffer(user, job, current_site):
     email.send()
     return email
 
-# Manager job offer
+# Manager job offer confirm through email
 @login_required(login_url="/?login=true")
-def managerOfferConfirm(request, uidb64, token):
+def managerOfferConfirmPage(request, job_id):
+    job = JobPost.objects.get(job_id=job_id)
+    assignment = managerOfferConfirm(job_id, request.user)
+    if assignment == 'success':
+        messages.success(request, f'You are now assigned to work a job with {job.client}. We will notify when to start the job')
+        manager_job_preperation_email.apply_async(
+            (job.id), eta=datetime.now() + timedelta(days=2))
+    elif assignment == 'failed':
+        messages.warning(request, f'Manager already assigned')
+    return redirect('dashboard-home')
+
+
+# Manager job offer confirm through email
+@login_required(login_url="/?login=true")
+def managerOfferConfirmEmail(request, uidb64, token):
     
     # Getting accepted arg
     accepted = request.GET.get('accepted')
@@ -329,9 +345,7 @@ def managerOfferConfirm(request, uidb64, token):
     try:
         # Decoding encoded user id
         uid = force_text(urlsafe_base64_decode(uidb64))
-
-        # Getting user
-        job = JobPost.objects.get(pk=uid)
+        job = JobPost.objects.get(job_id=job_id)
     except:
         job = None
     
@@ -340,30 +354,35 @@ def managerOfferConfirm(request, uidb64, token):
 
         # If job is accepted changing bool in db
         if accepted == 'True':
-            print('sdsdsd')
-
-            # Checking if manager assigned already
-            if not job.manager:
-
-                # Changing variable in db
-                job.manager = user
-                job.save()
+            assignment = managerOfferConfirm(uid, request.user)
+            if assignment == 'success':
+                messages.success(request, f'You are now assigned to work a job with {job.client}. We will notify when to start the job')
                 manager_job_preperation_email.apply_async(
                     (job.id), eta=datetime.now() + timedelta(days=2))
-                messages.success(request, f'You are now assigned to work a job with {job.client}. We will notify when to start the job')
-            
-            # Redirecting if manager already assigned
-            else:
+            elif assignment == 'failed':
                 messages.warning(request, f'Manager already assigned')
+
     else:
         messages.warning(request, f'Activation link is invalid!')
     return redirect('dashboard-home')
 
-# Func for when manager cancels job
-@login_required(login_url="/?login=true")
-def managerCancels(request):
-    if request.POST:
-        print('requests')
-        # Reassigning manager to the job
+# Manager offer confirm
 
-        # Lower rating of manager
+
+def managerOfferConfirm(job_id, user):
+    print('sdsdsd')
+
+
+    job = JobPost.objects.get(job_id=job_id)
+    # Checking if manager assigned already
+    if not job.manager:
+
+        # Changing variable in db
+        job.manager = user
+        job.save()
+        print(job.id)
+        return 'success'
+
+    # Redirecting if manager already assigned
+    else:
+        return 'failed'

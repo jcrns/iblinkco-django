@@ -24,7 +24,6 @@ def manager_job_preperation_email(pk):
 
         # Checking if job is none else returning
         if not job_obj:
-            revoke('management.tasks.milestone_send_emails')
             return None
 
         # Checking if job prep has started
@@ -35,6 +34,7 @@ def manager_job_preperation_email(pk):
 
         manager_name = str(job_obj.manager)
         client_name = str(job_obj.client)
+        client_email = job_obj.client.email
         body = f"Hello {manager_name}, the preperation period for your job with {client_name} has ended. Go to the job details."
         # Client email
         email = EmailMessage(
@@ -46,7 +46,6 @@ def manager_job_preperation_email(pk):
 
     except Exception as e:
         print(e)
-        revoke('management.tasks.milestone_send_emails')
         return None
 
 # Manager follow up email

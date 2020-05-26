@@ -108,7 +108,13 @@ def dashboard(request):
                     unread_messages = number_of_unread_messages(job.manager, job.job_id)
                     job.unread_messages = unread_messages
                 
-                # unread_manager = number_of_unread_messages(context['object'].manager, context['object'].job_id)
+                # Getting job opportunities by getting jobs without managers and that have been sent to user
+                userJobQuery = ',' + str(request.user.username)
+                print(userJobQuery)
+                job_opportunities = JobPost.objects.filter(
+                    manager=None, job_offers__icontains=userJobQuery)
+                print("job_opportunities")
+                print(job_opportunities)
 
                 # Checking if request used post method
                 if request.method == 'POST':
@@ -128,7 +134,7 @@ def dashboard(request):
                 return redirect('management-evaluation')
         else:
             return redirect('service-complete-profile-manager')
-        return render(request, 'dashboard/manager.html', { 'profile': profile, 'current_jobs' : current_jobs, 'past_jobs' : past_jobs, 'update_profile_form' : update_profile_form, "static_header" : True, "nav_black_link" : True })
+        return render(request, 'dashboard/manager.html', { 'profile': profile, 'job_opportunities':job_opportunities, 'current_jobs' : current_jobs, 'past_jobs' : past_jobs, 'update_profile_form' : update_profile_form, "static_header" : True, "nav_black_link" : True })
 
 # Adding form to view
 def jobDetail(request):
