@@ -322,12 +322,9 @@ def emailJobOffer(user, job, current_site):
 # Manager job offer confirm through email
 @login_required(login_url="/?login=true")
 def managerOfferConfirmPage(request, job_id):
-    job = JobPost.objects.get(job_id=job_id)
     assignment = managerOfferConfirm(job_id, request.user)
     if assignment == 'success':
         messages.success(request, f'You are now assigned to work a job with {job.client}. We will notify when to start the job')
-        manager_job_preperation_email.apply_async(
-            (job.id), eta=datetime.now() + timedelta(days=2))
     elif assignment == 'failed':
         messages.warning(request, f'Manager already assigned')
     return redirect('dashboard-home')
@@ -345,7 +342,6 @@ def managerOfferConfirmEmail(request, uidb64, token):
     try:
         # Decoding encoded user id
         uid = force_text(urlsafe_base64_decode(uidb64))
-        job = JobPost.objects.get(job_id=job_id)
     except:
         job = None
     
@@ -357,8 +353,6 @@ def managerOfferConfirmEmail(request, uidb64, token):
             assignment = managerOfferConfirm(uid, request.user)
             if assignment == 'success':
                 messages.success(request, f'You are now assigned to work a job with {job.client}. We will notify when to start the job')
-                manager_job_preperation_email.apply_async(
-                    (job.id), eta=datetime.now() + timedelta(days=2))
             elif assignment == 'failed':
                 messages.warning(request, f'Manager already assigned')
 
@@ -381,6 +375,9 @@ def managerOfferConfirm(job_id, user):
         job.manager = user
         job.save()
         print(job.id)
+
+        manager_job_preperation_email.apply_async(
+            (job.id,), eta=datetime.now() + timedelta(days=2))
         return 'success'
 
     # Redirecting if manager already assigned
