@@ -144,8 +144,9 @@ def milestone_send_emails(pk, milestoneState, warning):
         return None
     print('milestones')
 
-    # Sending email to client
-    check_milestone_client_email(job_obj, milestoneState)
+    if warning == False:
+        # Sending email to client
+        check_milestone_client_email(job_obj, milestoneState)
 
     # Sending email to manager  
     milestone_manger_email(job_obj, milestoneState, warning)
