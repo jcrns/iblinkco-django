@@ -323,6 +323,7 @@ def emailJobOffer(user, job, current_site):
 @login_required(login_url="/?login=true")
 def managerOfferConfirmPage(request, job_id):
     assignment = managerOfferConfirm(job_id, request.user)
+    job = JobPost.objects.get(job_id=job_id)
     if assignment == 'success':
         messages.success(request, f'You are now assigned to work a job with {job.client}. We will notify when to start the job')
     elif assignment == 'failed':
@@ -342,6 +343,7 @@ def managerOfferConfirmEmail(request, uidb64, token):
     try:
         # Decoding encoded user id
         uid = force_text(urlsafe_base64_decode(uidb64))
+        job = JobPost.objects.get(pk=uid)
     except:
         job = None
     
