@@ -130,6 +130,15 @@
         cursor: pointer;
         color: #000;
     }
+    #renew-manager-btn {
+        margin-top: 10px;
+        width: 100%;
+    }
+    #renewal-note {
+        position:absolute;
+        bottom:0;
+        left:0;
+    }
 </style>
 <div class="job">
     <div class="container-fluid">
@@ -234,12 +243,16 @@
                                 {% if unread_client > 0 %}
                                 <span id="new-message-count">{{ unread_client }}</span>
                                 {% endif %}
+                                {% else %}
+                                <a href="#" class="btn btn-sm btn-outline-success" id="renew-manager-btn">Renew Manager</a>
+                                <a href="#" class="btn btn-sm btn-outline-success" id="renew-manager-btn">Auto Renew Manager</a>
                                 {% endif %}
 
                             </div>
                             <div id="profile-description-div" class="col-8 text-right">
                                 <h5>{{ manager_profile.email }}</h5>
                                 <p>{{ manager_profile.description }}</p>
+                                <small class="text-left" id="renewal-note">Note: Renew or AutoRenew this job if you would like these same services again</small>
                             </div>
                         </div>
                         {% else %}
