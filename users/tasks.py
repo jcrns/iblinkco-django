@@ -14,8 +14,13 @@ from django.core.mail import EmailMessage
 # User email func one day after account creation
 @shared_task
 def userCreationOneDayCheckin(user_id):
-    user = User.objects.get(user_id)
-    profile = Profile.objects.get(user)
+
+    # Trying to get user and platform
+    try:
+        user = User.objects.get(user_id)
+        profile = Profile.objects.get(user)
+    except Exception as e:
+        return None
 
     # Checking if user is user has selected user type
     if profile.is_manager == False and profile.is_client == False:
