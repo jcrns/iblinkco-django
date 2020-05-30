@@ -5,7 +5,7 @@ from celery import shared_task
 
 # Importing profile and jobpost manager for management assignment
 from users.models import Profile
-from service.models import JobPost
+from .models import JobPost
 
 # Importing email
 from django.core.mail import EmailMessage
@@ -115,16 +115,6 @@ def manager_assignment():
 
     # Returning none
     return None
-
-# Manager follow up email
-@shared_task
-def manager_follow_up_email(user):
-    try:
-        date_joined = user.date_joined
-        print(date_joined)
-    except Exception as e:
-        print(e)
-        return None
 
 # Creating main milestone email task
 @shared_task
