@@ -44,6 +44,18 @@ class ManagerEvaluation(models.Model):
     def __str__(self):
         return f'{self.manager} Evaluation'
     
+    # Overriding the save func to change certain attr
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+
+        # Checking if job is accepted
+        if self.accepted == True:
+            # Checking if evaluation is completed else changing it to compelted
+            if self.evaluation_completed == False:
+                self.evaluation_completed = True
+        super(ManagerEvaluation, self).save(
+            force_insert, force_update, *args, **kwargs)
+
+
     # Email manager accepted
     def managerAcceptanceEmail(self, acceptance):
         user = self.manager
