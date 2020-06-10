@@ -116,16 +116,6 @@ def manager_assignment():
     # Returning none
     return None
 
-# Manager follow up email
-@shared_task
-def manager_follow_up_email(user):
-    try:
-        date_joined = user.date_joined
-        print(date_joined)
-    except expression as identifier:
-        print(identifier)
-        return None
-
 # Creating main milestone email task
 @shared_task
 def milestone_send_emails(pk, milestoneState, warning):

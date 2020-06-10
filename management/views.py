@@ -37,6 +37,9 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from webapp.tokens import token_generation
 
+# Importing tasks for managers
+from .tasks import manager_complete_evaluation_email
+
 # Homepage function
 @login_required(login_url="/?login=true")
 def evaluation(request):

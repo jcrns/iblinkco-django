@@ -21,6 +21,7 @@ import stripe
 # import django.contrib.postgres.fields import ArrayField
 
 from datetime import timedelta, datetime
+import pytz
 class JobPost(models.Model):
 
     # JOB ID
@@ -163,7 +164,8 @@ def manager_previously_existed_check(sender, instance, **kwargs):
             if not obj.manager == instance.manager:
                 
                 # Creating deadline for job
-                now = datetime.today()
+                now = datetime.now(pytz.utc)
+
                 print('current time', now)
 
                 # Getting absolute job length by adding regular job length and preparation time

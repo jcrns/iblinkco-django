@@ -20,7 +20,7 @@ from management.views import emailJobOffer
 
 # Manager follow up email
 @shared_task
-def manager_follow_up_email(user):
+def manager_complete_evaluation_email(user):
     try:
         date_joined = user.date_joined
         print(date_joined)
