@@ -39,8 +39,16 @@ from django.contrib.auth.models import User
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from webapp.tokens import token_generation
+
+<<<<<<< HEAD
+# Importing tasks for managers
+from .tasks import manager_complete_evaluation_email
+
+||||||| ede76c98
+=======
 from datetime import timedelta, datetime
 
+>>>>>>> ef5f23a662a556bbac8c71bdf56580f18da92f77
 # Homepage function
 @login_required(login_url="/?login=true")
 def evaluation(request):
