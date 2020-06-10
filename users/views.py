@@ -35,6 +35,12 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from webapp.tokens import token_generation
 
+# Importing local tasks
+from .tasks import userCreationOneDayCheckin
+
+# Importing the datetime
+from datetime import timedelta, datetime
+
 # Registering new user
 def registerFunc(request):
     if request.method == 'POST':
@@ -107,6 +113,10 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
+
+        # Scheduling oneday checkin email
+        userCreationOneDayCheckin.apply_async(
+            (uid,), eta=datetime.now() + timedelta(days=1))
 
         # return redirect('home')
         messages.success(request, f'Thank you for your email confirmation. Now you can login your account.')

@@ -173,8 +173,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379), "redis://h:p433bdebe493ed86f7b09195c7983f3743ad34351fc6a892be0ac374927395332@ec2-3-81-254-48.compute-1.amazonaws.com:8879"],
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379'), "redis://h:p433bdebe493ed86f7b09195c7983f3743ad34351fc6a892be0ac374927395332@ec2-3-81-254-48.compute-1.amazonaws.com:8879"],
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
         },
     },
 }
@@ -209,6 +208,6 @@ AWS_DEFAULT_ACL = None
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Celery 
-CELERY_BROKER_URL = 'redis://h:p433bdebe493ed86f7b09195c7983f3743ad34351fc6a892be0ac374927395332@ec2-3-81-254-48.compute-1.amazonaws.com:8879'
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'

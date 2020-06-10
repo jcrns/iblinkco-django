@@ -44,6 +44,18 @@ class ManagerEvaluation(models.Model):
     def __str__(self):
         return f'{self.manager} Evaluation'
     
+    # Overriding the save func to change certain attr
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+
+        # Checking if job is accepted
+        if self.accepted == True:
+            # Checking if evaluation is completed else changing it to compelted
+            if self.evaluation_completed == False:
+                self.evaluation_completed = True
+        super(ManagerEvaluation, self).save(
+            force_insert, force_update, *args, **kwargs)
+
+
     # Email manager accepted
     def managerAcceptanceEmail(self, acceptance):
         user = self.manager
@@ -69,6 +81,24 @@ class ManagerEvaluation(models.Model):
         email.send()
         return email
 
+    def managerDeclined(self):
+        user = self.manager
+        # Getting current site
+        mail_subject = "We are sorry to inform you that you didn't pass the verification"
+
+        # Creating message body and rendering from template
+        messageBody = "Sorry but you didn't pass iBlinkco's social media management evaluation. You would be allowed to take another in 1 month. If you have any further questions email us at iblinkcompany@gmail.com"
+
+        # Getting email
+        email = user.email
+
+        print(email)
+
+        # Sending email
+        email = EmailMessage(mail_subject, messageBody, to=[f'{email}'])
+        email.send()
+        return email
+
 # Checking if acceptance has changed
 @receiver(pre_save, sender=ManagerEvaluation)
 def manager_acceptance(sender, instance, **kwargs):
@@ -78,6 +108,7 @@ def manager_acceptance(sender, instance, **kwargs):
         # Object is new, so field hasn't technically changed, but you may want to do something else here.
         pass
     else:
+        # Checking if user has been accepted
         if not obj.accepted == instance.accepted:
             if instance.accepted == True:
                 # Sending Email if user was accepted

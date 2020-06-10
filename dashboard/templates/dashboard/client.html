@@ -215,6 +215,7 @@
                                         <th>Price</th>
                                         <th>Manager</th>
                                         <th>Length</th>
+                                        <th>Deadline</th>
                                         <th>More</th>
                                     </tr>
                                 </thead>
@@ -242,6 +243,7 @@
                                         <td>
                                             {{ order.length }} Days
                                         </td>
+                                        <td>{{ order.deadline|date:"M d, Y" }}</td>
                                         <td>
                                             <a href="{% url 'dashboard-job-detail-client' order.id %}"><img
                                                     src="{% static 'homepage/img/expand-icon.png' %}" alt=""></a>

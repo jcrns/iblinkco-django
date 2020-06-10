@@ -56,6 +56,7 @@ class JobPost(models.Model):
     engagement = models.BooleanField(default=False)
     service_description = models.CharField(max_length=5000, default='none')
     manager_randomly_assigned = models.BooleanField(default=True)
+    auto_renewal = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
 
     # Platforms
@@ -125,12 +126,15 @@ class JobPost(models.Model):
                 # Calculating payment in pennies
                 manager_payment = int(self.manager_payment*100)
                 print('asasas')
+
+                
                 # Paying managers with stripe
                 stripe.Transfer.create(
                     amount=manager_payment,
                     currency="usd",
                     destination=stripe_id,
                 )
+                
                 self.manager_paid = True
 
                 # Emailing client to rate job
@@ -197,6 +201,8 @@ def manager_previously_existed_check(sender, instance, **kwargs):
                 # Sending email to client
                 managerAssignedEmails(
                     manager, client, client_email, manager_email)
+
+                # Schedule job prep deadline email
 
 def pre_save_create_job_id(sender, instance, *args, **kwargs):
     if not instance.job_id:

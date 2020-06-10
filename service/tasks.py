@@ -5,7 +5,7 @@ from celery import shared_task
 
 # Importing profile and jobpost manager for management assignment
 from users.models import Profile
-from service.models import JobPost
+from .models import JobPost
 
 # Importing email
 from django.core.mail import EmailMessage
@@ -134,8 +134,9 @@ def milestone_send_emails(pk, milestoneState, warning):
         return None
     print('milestones')
 
-    # Sending email to client
-    check_milestone_client_email(job_obj, milestoneState)
+    if warning == False:
+        # Sending email to client
+        check_milestone_client_email(job_obj, milestoneState)
 
     # Sending email to manager  
     milestone_manger_email(job_obj, milestoneState, warning)

@@ -130,9 +130,28 @@
         cursor: pointer;
         color: #000;
     }
+    #renew-manager-btn {
+        margin-top: 10px;
+        width: 100%;
+    }
+    #renewal-note {
+        position:absolute;
+        bottom:0;
+        left:0;
+    }
+    .profile-detail-area {
+        height: 100%;
+    }
 </style>
 <div class="job">
     <div class="container-fluid">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
         <div class="row">
             <div class="col-md-6 d-flex align-items-stretch">
                 <div class="card job-card">
@@ -195,7 +214,7 @@
                                 data-target="#view-job-description-modal">View</span>
                         </p>
                         <p class="h5">
-                            Complete:
+                            Completed:
                             {% if order.job_complete == True %}
                             Yes
                             {% else %}
@@ -219,7 +238,7 @@
                     <div class="card-body">
                         {% if order.manager %}
                         <h4>Manager</h4>
-                        <div class="row">
+                        <div class="row profile-detail-area">
                             <div class="col-4 text-center">
                                 <img id="profile-pic" class="float-center" src="{{ manager_profile.image.url }}" alt="">
                                 <p class="font-weight-bold">
@@ -234,12 +253,15 @@
                                 {% if unread_client > 0 %}
                                 <span id="new-message-count">{{ unread_client }}</span>
                                 {% endif %}
+                                {% else %}
+                                <a href="{% url 'service-job-renewal-request' order.job_id %}" class="btn btn-sm btn-outline-primary" id="renew-manager-btn">Renew Manager</a>
                                 {% endif %}
 
                             </div>
                             <div id="profile-description-div" class="col-8 text-right">
                                 <h5>{{ manager_profile.email }}</h5>
                                 <p>{{ manager_profile.description }}</p>
+                                <small class="text-left" id="renewal-note">Note: Renew this job if you would like these same services again</small>
                             </div>
                         </div>
                         {% else %}
