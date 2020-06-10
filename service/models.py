@@ -152,7 +152,6 @@ class JobPost(models.Model):
 
 
 # Checking if acceptance has changed
-@receiver(pre_save, sender=JobPost)
 def manager_previously_existed_check(sender, instance, **kwargs):
     try:
         obj = sender.objects.get(pk=instance.pk)
@@ -208,6 +207,8 @@ def pre_save_create_job_id(sender, instance, *args, **kwargs):
     if not instance.job_id:
         instance.job_id = random_string_generator(size=16)
 
+
+pre_save.connect(manager_previously_existed_check, sender=JobPost)
 pre_save.connect(pre_save_create_job_id, sender=JobPost)
 
 
