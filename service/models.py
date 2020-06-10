@@ -21,7 +21,7 @@ import stripe
 # import django.contrib.postgres.fields import ArrayField
 
 from datetime import timedelta, datetime
-import pytz
+import pytz 
 class JobPost(models.Model):
 
     # JOB ID
