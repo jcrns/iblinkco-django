@@ -158,9 +158,10 @@ def manager_previously_existed_check(sender, instance, **kwargs):
         obj = sender.objects.get(pk=instance.pk)
     except sender.DoesNotExist:
         # Object is new, so field hasn't technically changed, but you may want to do something else here.
+        obj = None
         pass
     
-    if obj:
+    if obj not None:
         # Checking if manager used to be null
         if not obj.manager or not obj.manager == instance.manager:
                 
