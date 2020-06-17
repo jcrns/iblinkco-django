@@ -85,8 +85,22 @@ def registerFunc(request):
             url = createUrl('login')
             return redirect(url)
         else:
-            print(form.errors)
-            messages.warning(request, f'There was a problem creating your account')
+            print("form.errors")
+            print(form.errors.as_data())
+
+            # Creating a list to store formatted errors
+            errorList = []
+
+            # Looping through list of errors, formatting and appending them
+            for error in form.errors.as_data():
+                for singleError in form.errors[error].as_data():
+                    print(singleError)
+                    print("singleError")
+                    errorList.append((str(singleError)[2:])[:-2])
+
+            # Looping through errorList to return messages
+            for error in errorList:
+                messages.warning(request, error)
             
 
             # Redirecting to signup screen
