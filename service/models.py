@@ -163,7 +163,7 @@ def manager_previously_existed_check(sender, instance, **kwargs):
     
     if obj is not None:
         # Checking if manager used to be null
-        if not obj.manager or not obj.manager == instance.manager:
+        if not obj.manager == instance.manager:
                 
             # Creating deadline for job
             now = datetime.now(pytz.utc)

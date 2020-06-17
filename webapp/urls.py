@@ -32,7 +32,7 @@ urlpatterns = [
 ]
 
 # Running manager assignment func on app load
-manager_assignment()
+# manager_assignment()
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

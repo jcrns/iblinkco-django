@@ -40,6 +40,8 @@ def manager_assignment():
         print(job)
 
         client_name = job.client
+        print("client_name")
+        print(client_name)
         client = User.objects.get(username=client_name)
 
         # Getting capable managers with filter
