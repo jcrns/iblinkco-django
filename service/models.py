@@ -161,7 +161,7 @@ def manager_previously_existed_check(sender, instance, **kwargs):
         obj = None
         pass
     
-    if obj not None:
+    if obj is not None:
         # Checking if manager used to be null
         if not obj.manager or not obj.manager == instance.manager:
                 
