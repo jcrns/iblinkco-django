@@ -158,48 +158,48 @@ def manager_previously_existed_check(sender, instance, **kwargs):
         obj = sender.objects.get(pk=instance.pk)
     except sender.DoesNotExist:
         # Object is new, so field hasn't technically changed, but you may want to do something else here.
-        obj = None
         pass
-        
-    # Checking if manager used to be null
-    if not obj.manager or not obj.manager == instance.manager:
+    
+    if obj:
+        # Checking if manager used to be null
+        if not obj.manager or not obj.manager == instance.manager:
+                
+            # Creating deadline for job
+            now = datetime.now(pytz.utc)
+
+            print('current time', now)
+
+            # Getting absolute job length by adding regular job length and preparation time
+            realJobLength = instance.length + 2
+
+            # Adding the absolute job length to current time
+            deadline = now + timedelta(days=realJobLength)
+            print('new deadline', deadline)
+            instance.deadline = deadline
+
+            # Getting preparation time
+            now = now + timedelta(days=2)
+            instance.job_preparation_deadline = now
             
-        # Creating deadline for job
-        now = datetime.now(pytz.utc)
+            # Preparing for email by getting vars
+            client = instance.client
+            client = User.objects.get(username=client)
+            manager = instance.manager
+            manager = User.objects.get(username=manager)
 
-        print('current time', now)
+            # Defining emails vars
+            client_email = client.email
+            manager_email = manager.email
+            
+            # Getting users usernames
+            manager = instance.manager.username
+            client = instance.client.username
 
-        # Getting absolute job length by adding regular job length and preparation time
-        realJobLength = instance.length + 2
+            # Sending email to client
+            managerAssignedEmails(
+                manager, client, client_email, manager_email)
 
-        # Adding the absolute job length to current time
-        deadline = now + timedelta(days=realJobLength)
-        print('new deadline', deadline)
-        instance.deadline = deadline
-
-        # Getting preparation time
-        now = now + timedelta(days=2)
-        instance.job_preparation_deadline = now
-        
-        # Preparing for email by getting vars
-        client = instance.client
-        client = User.objects.get(username=client)
-        manager = instance.manager
-        manager = User.objects.get(username=manager)
-
-        # Defining emails vars
-        client_email = client.email
-        manager_email = manager.email
-        
-        # Getting users usernames
-        manager = instance.manager.username
-        client = instance.client.username
-
-        # Sending email to client
-        managerAssignedEmails(
-            manager, client, client_email, manager_email)
-
-        # Schedule job prep deadline email
+            # Schedule job prep deadline email
 
 def pre_save_create_job_id(sender, instance, *args, **kwargs):
     if not instance.job_id:
