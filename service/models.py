@@ -169,7 +169,9 @@ def manager_previously_existed_check(sender, instance, **kwargs):
             now = datetime.now(pytz.utc)
 
             print('current time', now)
-
+            print(obj.manager)
+            print(instance.manager)
+            print("instance.manager")
             # Getting absolute job length by adding regular job length and preparation time
             realJobLength = instance.length + 2
 
