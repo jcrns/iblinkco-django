@@ -386,7 +386,12 @@ class JobDetailView(DetailView):
 
 
             # Checking if milestone is done for the
-            if (int(milestone_number) == 3 and int(job.length) == 3) or (int(milestone_number) == 4 and job.length > 3):
+            if int(milestone_number) == 3 and int(job.length) == 3:
+                # Higher milestone couldn't be updated
+                job.job_completion = True
+                job.save()
+            
+            elif int(milestone_number) > 3 and int(job.length) > 3:
                 # Higher milestone couldn't be updated
                 job.job_completion = True
                 job.save()
