@@ -388,13 +388,13 @@ class JobDetailView(DetailView):
             # Checking if milestone is done for the
             if int(milestone_number) == 3 and int(job.length) == 3:
                 # Higher milestone couldn't be updated
-                job.job_completion = True
-                print(job.job_completion)
+                job.job_complete = True
+                print(job.job_complete)
                 job.save()
             
             elif int(milestone_number) > 3 and int(job.length) > 3:
                 # Higher milestone couldn't be updated
-                job.job_completion = True
+                job.job_complete = True
                 job.save()
             else:
                 # Trying to apply milestone
