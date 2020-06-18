@@ -278,7 +278,7 @@
                             <a href="{{ request.path }}?signup=true">Not a member yet? Sign Up</a>
                         </div>
                         <div class="col-md-6 text-center">
-                            <a href="#" class="text-right">Forgot Password</a>
+                            <a href="{{ request.path }}?forgot_password=true" class="text-right">Forgot Password</a>
                         </div>
                     </div>
                 </div>
@@ -295,6 +295,27 @@
                 <div class="modal-body" id="form-sign-up" style="overflow:scroll; height:400px;">
                     {% include "users/signup.html" %}
                     <a href="{{ request.path }}?login=true">Already a member? Login now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="forgot-password-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Forgot Password</h5>
+                </div>
+                <div class="modal-body">
+                    {% include "users/forgot_password.html" %}
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <a href="{{ request.path }}?login=true">Go back to login</a>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <a href="{{ request.path }}?signup=true" class="text-right">Go back to signup</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -340,6 +361,15 @@
         <script>
             $(window).on('load', function () {
                 $('#signup-modal').modal('show');
+            });
+        </script>
+        {% endif %}
+    {% endif %}
+    {% if request.GET.forgot_password == 'true' %}
+        {% if not user.is_authenticated  %}
+        <script>
+            $(window).on('load', function () {
+                $('#forgot-password-modal').modal('show');
             });
         </script>
         {% endif %}

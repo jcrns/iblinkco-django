@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 from django.http import HttpResponseRedirect
 
@@ -7,9 +7,6 @@ from django.contrib.auth import authenticate, login, logout
 
 # Importing Authentication Form
 from django.contrib.auth.forms import AuthenticationForm
-
-# Importing password reset
-from django.contrib.auth import views as auth_views
 
 # importing messages from django
 from django.contrib import messages
@@ -44,6 +41,10 @@ from .tasks import userCreationOneDayCheckin
 # Importing the datetime
 from datetime import timedelta, datetime
 
+from django.contrib.auth import views as auth_views
+
+# Importing lib to hash password
+from django.contrib.auth.hashers import make_password
 # Registering new user
 def registerFunc(request):
     if request.method == 'POST':
@@ -73,6 +74,7 @@ def registerFunc(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': token_generation.make_token(user),
             })
+
             # Creating thank you message
             messages.success(
                 request, f'Congratulations {username} you created an account for iBlinkco! Please confirm your email address to complete the registration')
@@ -84,6 +86,7 @@ def registerFunc(request):
             email.send()
             
             print('Verification email sent')
+
             # Redirecting to login screen
             url = createUrl('login')
             return redirect(url)
@@ -107,11 +110,12 @@ def registerFunc(request):
             
 
             # Redirecting to signup screen
-            url = createUrl('signup')
+            url = request.POST.get("current-path")
+            url = createUrl('login', url)
             return redirect(url)
 
     # Redirecting to signup screen
-    url = createUrl('signup')
+    url = createUrl('signup', 'homepage-home')
     return redirect(url)
 
 # Activate account function
@@ -158,7 +162,8 @@ def loginFunc(request):
         else:
             # Redirecting to signup screen
             messages.warning(request, f'There was a problem logging in your account')
-            url = createUrl('login')
+            url = request.POST.get("current-path")
+            url = createUrl('login', url)
             return redirect(url)
     else:
         form = AuthenticationForm()
@@ -169,6 +174,114 @@ def logoutFunc(request):
     # user = request.user
     logout(request)
     return redirect('dashboard-home')
+
+
+def forgotPassword(request):
+    if request.method == 'POST':
+        email = request.POST.get("username")
+        print("email\n\n\n\n\n\n\n\n\n")
+        print(email)
+        # Checking if account with email exist
+
+        try:
+            user = User.objects.get(email=email)
+
+            # Getting current site
+            current_site = get_current_site(request)
+            mail_subject = 'iBlinkco Forgot Password'
+
+            # Creating message body and rendering from template
+            messageBody = render_to_string('users/password_templates/password_reset_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': token_generation.make_token(user),
+            })
+
+            print('sdsds')
+            # Sending email
+            email = EmailMessage(mail_subject,
+                                 messageBody, to=[f'{email}'])
+            print(email)
+            email.send()
+            
+            messages.success(
+                request, f'Verification email sent')
+        except Exception as e:
+            print(e)
+            messages.warning(
+                request, f'Email is not connected to an account')
+
+    url = request.POST.get("current-path")
+    url = createUrl('forgot_password', url)
+    return redirect(url)
+
+# Reset pass access
+def forgotPasswordConfirm(request, uidb64, token):
+
+    # Checking if user is 
+    if request.method == 'POST':
+        
+        
+        # Getting posted fields
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm-password")
+        url = request.POST.get("current-path")
+
+        print(token)
+
+        # Validating password
+        if password != confirm_password:
+            print('qqssaaasdsds')
+            messages.warning(request, f"Passwords don't match")
+            return redirect('users-forgot-password-generator', uidb64=uidb64, token=token)
+        elif len(password) < 8:
+            print('sdsds')
+            messages.warning(request, f"Password is too short")
+            return redirect('users-forgot-password-generator', uidb64=uidb64, token=token)
+        else:
+            print('good')
+
+            # Trying to see if link is valid
+            try:
+                # Decoding encoded user id
+                uid = force_text(urlsafe_base64_decode(uidb64))
+                
+                print(uid)
+                
+                # Getting and changing password
+                user = User.objects.get(pk=uid)
+                password = make_password(password)
+                user.password = password
+                user.save()
+
+                messages.success(request, f"Password Reset!")
+
+                url = createUrl('login', 'dashboard-home')
+                return redirect(url)
+            except Exception as e:
+                print(e)
+    # Trying to see if link is valid
+    try:
+        print('lllsdsdsds')
+        # Decoding encoded user id
+        uid = force_text(urlsafe_base64_decode(uidb64))
+
+        # Getting user
+        user = User.objects.get(pk=uid)
+    except Exception as e:
+        print(e)
+        user = None
+    if user is not None and token_generation.check_token(user, token):
+
+        # return redirect('home')
+        messages.success(request, f'Thank you for your email confirmation. Now you can login your account.')
+    else:
+        messages.warning(request, f'Activation link is invalid!')
+        return redirect('homepage-home')
+
+    # Redirecting to login screen
+    return render(request, 'users/password_templates/password_reset_form.html', {"nav_black_link": True})
 
 # PROFILE FUNC
 
@@ -219,11 +332,13 @@ def comfirmUser(request):
         return redirect('homepage-home')
 
 # Function to create url with paramaters
-def createUrl(state):
-    base_url = reverse('homepage-home')
+def createUrl(state, url):
+    base_url = reverse(url)
     if state == 'login':
         query_string =  urlencode({'login': 'true'})
     elif state == 'signup':
         query_string =  urlencode({'signup': 'true'})
+    else:
+        query_string = urlencode({state: 'true'})
     url = '{}?{}'.format(base_url, query_string) 
     return url

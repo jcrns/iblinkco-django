@@ -379,17 +379,11 @@ class JobDetailView(DetailView):
             milestone.milestone_post_goal_completed = milestone_post_goal_completed
             milestone.active = False
             milestone.save()
-            
-            print("int(milestone_number)\n\n\n\n\n\n\n\n\n\n\ndfgrtgrtgsrdtgsrtbgert")
-            print(int(milestone_number))
-            print(int(job.length))
-
 
             # Checking if milestone is done for the
             if int(milestone_number) == 3 and int(job.length) == 3:
                 # Higher milestone couldn't be updated
                 job.job_complete = True
-                print(job.job_complete)
                 job.save()
             
             elif int(milestone_number) > 3 and int(job.length) > 3:

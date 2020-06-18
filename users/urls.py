@@ -12,14 +12,15 @@ urlpatterns = [
         views.activate, name='users-activate'),
     
     # Password reset and change
-    # path('password_reset', auth_views.Pa, name='password_reset'),
-    # path('password_reset/done/$', auth_views.password_reset_done,
-    #     name='password_reset_done'),
-    # path('reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-    #     auth_views.password_reset_confirm, name='password_reset_confirm'),
-    # path(r'^reset/done/$', auth_views.password_reset_complete,
-    #     name='password_reset_complete'),
+    path('password_reset/', views.forgotPassword,
+         name='users-forgot-password'),
+    path('password_reset/(P<uidb64>[0-9A-Za-z_\-]+)/(P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/',
+         views.forgotPasswordConfirm, name='users-forgot-password-generator'),
+    #      name='password_reset'),
 
-    # Profile functions
-    path('confirm_user', views.comfirmUser, name='users-confirm-user-type'),
+    # path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='users/password_templates/password_reset_complete.html'),
+    #      name='password_reset_complete'),
+    
+    # # Profile functions
+    # path('confirm_user', views.comfirmUser, name='users-confirm-user-type'),
 ]

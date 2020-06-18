@@ -20,6 +20,7 @@
     
     <!-- Imported form.py and is using add on Crispy forms to enhance look-->
     {{ form_register|crispy }}
+    <input type="hidden" name="current-path" id="current-path" value="{{ request.resolver_match.url_name }}">
     <input class="btn-success" type="submit" value="Next">
 </form>
 {% endblock %}
