@@ -380,19 +380,21 @@ class JobDetailView(DetailView):
             milestone.active = False
             milestone.save()
             
-            # Trying to apply milestone
-            try:
-                # Updating next milestone as active
-                milestone_number = int(milestone_number) + 1
-                milestone = Milestone.objects.get(job=job, milestone_number=milestone_number)
-                milestone.active = True
-                milestone.save()
-            except Exception as e:
-                print(e)
-
+            # Checking if milestone is done for the
+            if (int(milestone_number) == 3 and job.length == 3) and (int(milestone_number) == 4 and job.length > 3):
                 # Higher milestone couldn't be updated
                 job.job_completion = True
                 job.save()
+            else:
+                # Trying to apply milestone
+                try:
+                    # Updating next milestone as active
+                    milestone_number = int(milestone_number) + 1
+                    milestone = Milestone.objects.get(job=job, milestone_number=milestone_number)
+                    milestone.active = True
+                    milestone.save()
+                except Exception as e:
+                    print(e)
 
         return redirect('dashboard-job-detail-manager', pk=self.object.pk)
 
