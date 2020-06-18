@@ -380,11 +380,15 @@ class JobDetailView(DetailView):
             milestone.active = False
             milestone.save()
             
-            # Updating next milestone as active
-            milestone_number = int(milestone_number) + 1
-            milestone = Milestone.objects.get(job=job, milestone_number=milestone_number)
-            milestone.active = True
-            milestone.save()
+            # Trying to apply milestone
+            try:
+                # Updating next milestone as active
+                milestone_number = int(milestone_number) + 1
+                milestone = Milestone.objects.get(job=job, milestone_number=milestone_number)
+                milestone.active = True
+                milestone.save()
+            except Exception as e:
+                print(e)
 
         return redirect('dashboard-job-detail-manager', pk=self.object.pk)
 
