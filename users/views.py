@@ -8,6 +8,9 @@ from django.contrib.auth import authenticate, login, logout
 # Importing Authentication Form
 from django.contrib.auth.forms import AuthenticationForm
 
+# Importing password reset
+from django.contrib.auth import views as auth_views
+
 # importing messages from django
 from django.contrib import messages
 

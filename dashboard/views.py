@@ -379,7 +379,7 @@ class JobDetailView(DetailView):
             milestone.milestone_post_goal_completed = milestone_post_goal_completed
             milestone.active = False
             milestone.save()
-
+            
             # Updating next milestone as active
             milestone_number = int(milestone_number) + 1
             milestone = Milestone.objects.get(job=job, milestone_number=milestone_number)

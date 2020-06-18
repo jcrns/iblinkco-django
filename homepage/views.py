@@ -42,22 +42,34 @@ def overview(request):
     
 # Simple webpages
 def termsAndConditions(request):
-    return render(request, 'homepage/terms-and-conditions.html', {"nav_black_link" : True} )
+    form_register = UserRegisterForm()
+    form_login = AuthenticationForm()
+    return render(request, 'homepage/terms-and-conditions.html', {"nav_black_link": True, 'form_register': form_register, 'form_login': form_login})
 
 def privacyPolicy(request):
-    return render(request, 'homepage/privacy-policy.html', {"nav_black_link" : True} )
+    form_register = UserRegisterForm()
+    form_login = AuthenticationForm()
+    return render(request, 'homepage/privacy-policy.html', {"nav_black_link": True, 'form_register': form_register, 'form_login': form_login})
 
 def partnerships(request):
-    return render(request, 'homepage/partnerships.html', {"nav_black_link" : True} )
+    form_register = UserRegisterForm()
+    form_login = AuthenticationForm()
+    return render(request, 'homepage/partnerships.html', {"nav_black_link": True, 'form_register': form_register, 'form_login': form_login})
 
 def helpAndSupport(request):
-    return render(request, 'homepage/help-and-support.html', {"nav_black_link" : True} )
+    form_register = UserRegisterForm()
+    form_login = AuthenticationForm()
+    return render(request, 'homepage/help-and-support.html', {"nav_black_link": True, 'form_register': form_register, 'form_login': form_login})
 
 def refunds(request):
-    return render(request, 'homepage/refunds.html', {"nav_black_link": True})
+    form_register = UserRegisterForm()
+    form_login = AuthenticationForm()
+    return render(request, 'homepage/refunds.html', {"nav_black_link": True, 'form_register': form_register, 'form_login': form_login})
 
 def connectSocials(request):
-    return render(request, 'homepage/share-social-medias.html', {"nav_black_link": True})
+    form_register = UserRegisterForm()
+    form_login = AuthenticationForm()
+    return render(request, 'homepage/share-social-medias.html', {"nav_black_link": True, 'form_register': form_register, 'form_login': form_login})
 
 # Become manager page
 def becomeManager(request):
