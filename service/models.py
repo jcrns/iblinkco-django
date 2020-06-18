@@ -95,6 +95,7 @@ class JobPost(models.Model):
         # Checking if user job is complete
         print("self.job_complete")
         print(self)
+        print(self.job_complete)
         if self.job_complete == True:
 
             # Checking if active is True if so setting to False
