@@ -390,6 +390,10 @@ class JobDetailView(DetailView):
             except Exception as e:
                 print(e)
 
+                # Higher milestone couldn't be updated
+                job.job_completion = True
+                job.save()
+
         return redirect('dashboard-job-detail-manager', pk=self.object.pk)
 
 class ConfirmJobDetailView(DetailView):
