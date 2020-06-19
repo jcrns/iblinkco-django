@@ -25,7 +25,7 @@ class ChatConsumer(WebsocketConsumer):
             result.append(self.message_to_json(message))
         return result
 
-    # Creating json out of one message
+    # Creating json for one message
     def message_to_json(self, message):
         return {
             'author': message.author.username,
@@ -127,3 +127,7 @@ class ChatConsumer(WebsocketConsumer):
         message = event['message']
 
         self.send(text_data=json.dumps(message))
+
+    def send_file(self, event):
+        message = event['message']
+        print(message)
