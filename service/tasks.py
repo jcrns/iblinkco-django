@@ -5,7 +5,7 @@ from celery import shared_task
 
 # Importing profile and jobpost manager for management assignment
 from users.models import Profile
-from .models import JobPost
+from .models import JobPost, Milestone
 
 # Importing email
 from django.core.mail import EmailMessage
@@ -127,6 +127,13 @@ def milestone_send_emails(pk, milestoneState, warning):
 
         # Checking if job is none else returning
         if not job_obj:
+            revoke('service.tasks.milestone_send_emails')
+            return None
+        
+        # Checking if specific milestone is active
+        
+        current_milestone = Milestone.objects.filter(job=job_obj, milestone_number=milestoneState)
+        if bool(current_milestone.active) == False or current_milestone == 'False':
             revoke('service.tasks.milestone_send_emails')
             return None
 
