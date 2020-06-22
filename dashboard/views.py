@@ -490,6 +490,10 @@ def jobPrepEnded(request, pk):
     # Changing variable in db
     job.job_preparation_completed = True
     
+    # Changing job deadline
+    job.deadline = datetime.now() + timedelta(days=int(job.length))
+
+    # Saving job
     job.save()
 
     # Getting vars
