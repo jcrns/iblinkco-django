@@ -130,11 +130,11 @@ class JobPost(models.Model):
 
                 
                 # Paying managers with stripe
-                stripe.Transfer.create(
-                    amount=manager_payment,
-                    currency="usd",
-                    destination=stripe_id,
-                )
+                # stripe.Transfer.create(
+                #     amount=manager_payment,
+                #     currency="usd",
+                #     destination=stripe_id,
+                # )
                 
                 self.manager_paid = True
 
@@ -242,7 +242,7 @@ def managerAssignedEmails(manager, client, client_email, manager_email):
 
 def rateJobEmail(manager, client, client_email):
 
-    subject = "Rate" + manager + "'s job now"
+    subject = "Rate " + manager + "'s job now"
     body = "Hello " + client + ", your job with " + manager + " is complete. Rate there job here and let us know how your experience with iBlinkco is going be emailing us at iblinkcompany@gmail.com "
 
     # Sending emails

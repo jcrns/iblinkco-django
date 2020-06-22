@@ -42,7 +42,8 @@ from django.http import HttpResponse
 import stripe
 
 # Importing task
-from service.tasks import milestoneRatedEmail, jobPrepEndedEmail
+from service.tasks import milestoneRatedEmail, jobPrepEndedEmail, milestone_send_emails
+from datetime import timedelta, datetime
 
 # Importing chats
 from chat.models import Message
@@ -502,6 +503,104 @@ def jobPrepEnded(request, pk):
     client = client.username
     
     jobPrepEndedEmail(manager, client, client_email)
+
+    # Creating milestone emails timing variables
+    if job.length == 14:
+
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=2)
+        milestoneOneDueDate = timedelta(days=3)
+
+        milestoneTwoWarningDate = timedelta(days=6)
+        milestoneTwoDueDate = timedelta(days=7)
+
+        milestoneThreeWarningDate = timedelta(days=9)
+        milestoneThreeDueDate = timedelta(days=10)
+
+        milestoneFourWarningDate = timedelta(days=9)
+        milestoneFourDueDate = timedelta(days=14)
+    elif job.length == 10:
+
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=1)
+        milestoneOneDueDate = timedelta(days=2)
+
+        milestoneTwoWarningDate = timedelta(days=3)
+        milestoneTwoDueDate = timedelta(days=4)
+
+        milestoneThreeWarningDate = timedelta(days=6)
+        milestoneThreeDueDate = timedelta(days=7)
+
+        milestoneFourWarningDate = timedelta(days=6)
+        milestoneFourDueDate = timedelta(days=10)
+    elif job.length == 7:
+
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=1)
+        milestoneOneDueDate = timedelta(days=2)
+
+        milestoneTwoWarningDate = timedelta(days=2)
+        milestoneTwoDueDate = timedelta(days=3)
+
+        milestoneThreeWarningDate = timedelta(days=4)
+        milestoneThreeDueDate = timedelta(days=5)
+
+        milestoneFourWarningDate = timedelta(days=6)
+        milestoneFourDueDate = timedelta(days=7)
+
+    elif job.length == 5:
+
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=1)
+        milestoneOneDueDate = timedelta(days=2)
+
+        milestoneTwoWarningDate = timedelta(days=2)
+        milestoneTwoDueDate = timedelta(days=3)
+
+        milestoneThreeWarningDate = timedelta(days=3)
+        milestoneThreeDueDate = timedelta(days=4)
+
+        milestoneFourWarningDate = timedelta(days=4)
+        milestoneFourDueDate = timedelta(days=5)
+
+    elif job.length == 3:
+        # Defining day after amount for milestone emails
+        milestoneOneWarningDate = timedelta(days=1)
+        milestoneOneDueDate = timedelta(days=2)
+
+        milestoneTwoWarningDate = timedelta(days=2)
+        milestoneTwoDueDate = timedelta(days=3)
+
+        milestoneThreeWarningDate = timedelta(days=3)
+        milestoneThreeDueDate = timedelta(days=4)
+
+    print('how\n\n\n\n\n\n\n')
+
+    # Scheduling emails
+    milestone_send_emails.apply_async(
+        (job.id, 1, True), eta=datetime.now() + milestoneOneWarningDate)
+    milestone_send_emails.apply_async(
+        (job.id, 1, False), eta=datetime.now() + milestoneOneDueDate)
+    milestone_send_emails.apply_async(
+        (job.id, 2, True), eta=datetime.now() + milestoneTwoWarningDate)
+    milestone_send_emails.apply_async(
+        (job.id, 2, False), eta=datetime.now() + milestoneTwoDueDate)
+    milestone_send_emails.apply_async(
+        (job.id, 3, True), eta=datetime.now() + milestoneThreeWarningDate)
+    milestone_send_emails.apply_async(
+        (job.id, 3, False), eta=datetime.now() + milestoneThreeDueDate)
+
+    # Checking if job length is large enough for 4 milestones
+    print("job.length")
+    print(job.length)
+    if job.length != 3:
+        milestone_send_emails.apply_async(
+            (job.id, 4, True), eta=datetime.now() + milestoneFourWarningDate)
+        milestone_send_emails.apply_async(
+            (job.id, 4, False), eta=datetime.now() + milestoneFourDueDate)
+    else:
+        print('short job')
+
     print('Works')
     return redirect('dashboard-job-detail-manager', pk=pk)
 

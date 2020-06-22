@@ -127,15 +127,22 @@ def milestone_send_emails(pk, milestoneState, warning):
 
         # Checking if job is none else returning
         if not job_obj:
+            print("rgewrtgertg")
             revoke('service.tasks.milestone_send_emails')
             return None
         
+        print("\n\n\n\nergwetrgewrtg")
+
         # Checking if specific milestone is active
-        
-        current_milestone = Milestone.objects.filter(job=job_obj, milestone_number=milestoneState)
-        if bool(current_milestone.active) == False or current_milestone == 'False':
-            revoke('service.tasks.milestone_send_emails')
-            return None
+        current_milestone = Milestone.objects.get(job=job_obj, milestone_number=milestoneState)
+        print("current_milestone")
+        print(current_milestone)
+        # print(bool(current_milestone.active))
+        # print(current_milestone)
+        # if bool(current_milestone.active) == False or current_milestone == 'False':
+        #     print('Testttstst')
+        #     revoke('service.tasks.milestone_send_emails')
+        #     return None
 
     except Exception as e:
         print(e)
@@ -200,6 +207,7 @@ def check_milestone_client_email(job_obj, milestone):
 
         return None
     except Exception as e:
+        print("eeeeeee")
         print(e)
         return None
 
