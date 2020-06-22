@@ -88,7 +88,8 @@ def registerFunc(request):
             print('Verification email sent')
 
             # Redirecting to login screen
-            url = createUrl('login')
+            url = request.POST.get("current-path")
+            url = createUrl('login', url)
             return redirect(url)
         else:
             print("form.errors")
