@@ -171,8 +171,7 @@
                                 {% endif %}
                                 {% if user.is_authenticated %}
                                 <li><a href="{% url 'users-logout' %}">Logout</a></li>
-                                <li><a id="username-link" href="{% url 'homepage-overview' %}" class="">Welcome,
-                                        {{ user.username }} </a></li>
+                                <li><a id="username-link" href="{% url 'homepage-overview' %}" class="">Go to Dashboard</a></li>
                                 {% else %}
                                 <li><a class="float-right" href="#" data-toggle="modal"
                                         data-target="#login-modal">Login</a></li>
