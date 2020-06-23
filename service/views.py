@@ -219,9 +219,14 @@ def completeProfileManager(request):
         print(dob)
 
         # Converting dob to datetime obj using current time
-        my_time = datetime.min.time()
-        dob = datetime.combine(dob, my_time)
-
+        try:  
+            my_time = datetime.min.time()
+            dob = datetime.combine(dob, my_time)
+        except Exception as e:
+            print(e)
+            messages.warning(request, f'Date of Birth is invalid')
+            return redirect('service-complete-profile-manager')
+            
         # Checking age with dob
         now = datetime.now()
         age = int((now - dob).days)

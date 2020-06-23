@@ -185,23 +185,27 @@ def manager_previously_existed_check(sender, instance, **kwargs):
             now = now + timedelta(days=2)
             instance.job_preparation_deadline = now
             
-            # Preparing for email by getting vars
-            client = instance.client
-            client = User.objects.get(username=client)
-            manager = instance.manager
-            manager = User.objects.get(username=manager)
+            # Trying to send email
+            try:
+                # Preparing for email by getting vars
+                client = instance.client
+                client = User.objects.get(username=client)
+                manager = instance.manager
+                manager = User.objects.get(username=manager)
 
-            # Defining emails vars
-            client_email = client.email
-            manager_email = manager.email
-            
-            # Getting users usernames
-            manager = instance.manager.username
-            client = instance.client.username
+                # Defining emails vars
+                client_email = client.email
+                manager_email = manager.email
+                
+                # Getting users usernames
+                manager = instance.manager.username
+                client = instance.client.username
 
-            # Sending email to client
-            managerAssignedEmails(
-                manager, client, client_email, manager_email)
+                # Sending email to client
+                managerAssignedEmails(
+                    manager, client, client_email, manager_email)
+            except Exception as e:
+                print(e)
 
             # Schedule job prep deadline email
 
