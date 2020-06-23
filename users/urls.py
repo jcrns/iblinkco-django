@@ -16,11 +16,7 @@ urlpatterns = [
          name='users-forgot-password'),
     path('password_reset/(P<uidb64>[0-9A-Za-z_\-]+)/(P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/',
          views.forgotPasswordConfirm, name='users-forgot-password-generator'),
-    #      name='password_reset'),
-
-    # path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='users/password_templates/password_reset_complete.html'),
-    #      name='password_reset_complete'),
-    
-    # # Profile functions
-    # path('confirm_user', views.comfirmUser, name='users-confirm-user-type'),
+         
+    # Profile functions
+    path('confirm_user', views.comfirmUser, name='users-confirm-user-type'),
 ]
