@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from service.models import JobPost
 from webapp.utils import random_string_generator
 from django.db.models.signals import pre_save
+from .tasks import email_on_message
 
 class Message(models.Model):
     # job = models.ForeignKey(JobPost, on_delete=models.CASCADE )
@@ -18,7 +19,14 @@ class Message(models.Model):
     def __str__(self):
         return self.author.username
 
-    def last_10_messages(job_id):
+    # Overriding the save function to check if manager was assigned
+    def save(self, force_insert=False, force_update=False, *args, **kwargs):
+        print("saving message")
+        
+        email_on_message.delay(self.job, str(self.author), self.content)
+        super(Message, self).save(force_insert, force_update, *args, **kwargs)
+
+    def last_10_messages(job_id,):
 
         # last_ten = Message.objects.filter(job=job_id).order_by('-timestamp')[:20]
         last_ten = Message.objects.filter(job=job_id).order_by('-timestamp')
