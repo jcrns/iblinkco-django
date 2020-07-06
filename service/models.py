@@ -130,11 +130,11 @@ class JobPost(models.Model):
 
                 
                 # Paying managers with stripe
-                # stripe.Transfer.create(
-                #     amount=manager_payment,
-                #     currency="usd",
-                #     destination=stripe_id,
-                # )
+                stripe.Transfer.create(
+                    amount=manager_payment,
+                    currency="usd",
+                    destination=stripe_id,
+                )
                 
                 self.manager_paid = True
 
