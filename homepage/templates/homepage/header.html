@@ -171,8 +171,7 @@
                                 {% endif %}
                                 {% if user.is_authenticated %}
                                 <li><a href="{% url 'users-logout' %}">Logout</a></li>
-                                <li><a id="username-link" href="{% url 'homepage-overview' %}" class="">Welcome,
-                                        {{ user.username }} </a></li>
+                                <li><a id="username-link" href="{% url 'homepage-overview' %}" class="">Go to Dashboard</a></li>
                                 {% else %}
                                 <li><a class="float-right" href="#" data-toggle="modal"
                                         data-target="#login-modal">Login</a></li>
@@ -225,7 +224,7 @@
                                 <ul class="footer-menu">
                                     <li><a href="#">Blog</a></li>
                                     <li><a href="#">FAQs</a></li>
-                                    <li><a href="#">Invite a Friend</a></li>
+                                    <li><a href="#">Manager Guide</a></li>
                                     <li><a href="#">Become a Manager</a></li>
                                 </ul>
                             </div>
@@ -273,8 +272,14 @@
                 </div>
                 <div class="modal-body">
                     {% include "users/login.html" %}
-                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal"
-                        data-target="#signup-modal">Not a member yet? Sign Up</a>
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <a href="{{ request.path }}?signup=true">Not a member yet? Sign Up</a>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <a href="{{ request.path }}?forgot_password=true" class="text-right">Forgot Password</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -288,8 +293,28 @@
                 </div>
                 <div class="modal-body" id="form-sign-up" style="overflow:scroll; height:400px;">
                     {% include "users/signup.html" %}
-                    <a href="#" data-dismiss="modal" aria-label="Close" data-toggle="modal"
-                        data-target="#login-modal">Already a member? Login now</a>
+                    <a href="{{ request.path }}?login=true">Already a member? Login now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="forgot-password-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Forgot Password</h5>
+                </div>
+                <div class="modal-body">
+                    {% include "users/forgot_password.html" %}
+                    <div class="row text-center">
+                        <div class="col-md-6">
+                            <a href="{{ request.path }}?login=true">Go back to login</a>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <a href="{{ request.path }}?signup=true" class="text-right">Go back to signup</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -320,6 +345,34 @@
     <script src="{% static 'homepage/temp-static/assets/js/header.js' %}"></script>
     {% endif %}
     <script src="{% static 'homepage/temp-static/assets/js/app.js' %}"></script>
+    
+    {% if request.GET.login == 'true' %}
+        {% if not user.is_authenticated  %}
+        <script>
+            $(window).on('load', function () {
+                $('#login-modal').modal('show');
+            });
+        </script>
+        {% endif %}
+    {% endif %}
+    {% if request.GET.signup == 'true' %}
+        {% if not user.is_authenticated  %}
+        <script>
+            $(window).on('load', function () {
+                $('#signup-modal').modal('show');
+            });
+        </script>
+        {% endif %}
+    {% endif %}
+    {% if request.GET.forgot_password == 'true' %}
+        {% if not user.is_authenticated  %}
+        <script>
+            $(window).on('load', function () {
+                $('#forgot-password-modal').modal('show');
+            });
+        </script>
+        {% endif %}
+    {% endif %}
 </body>
 
 </html>

@@ -36,6 +36,7 @@ def room(request, room_name):
         involvedUser = Profile.objects.get(user=involvedUserName)
     print(involvedUser.image.url)
     return render(request, 'chat/room.html', {
+        'job_id' : job.job_id,
         'image_url': involvedUser.image.url,
         'room_name': mark_safe(json.dumps(room_name)),
         'username': mark_safe(json.dumps(request.user.username)),

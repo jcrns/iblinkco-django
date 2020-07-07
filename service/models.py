@@ -21,6 +21,7 @@ import stripe
 # import django.contrib.postgres.fields import ArrayField
 
 from datetime import timedelta, datetime
+import pytz 
 class JobPost(models.Model):
 
     # JOB ID
@@ -94,11 +95,12 @@ class JobPost(models.Model):
         # Checking if user job is complete
         print("self.job_complete")
         print(self)
+        print(self.job_complete)
         if self.job_complete == True:
 
             # Checking if active is True if so setting to False
-            if self.active == True:
-                self.active = False
+            if self.active == False:
+                self.active = True
 
             print("self.manager_paid")
 
@@ -151,37 +153,40 @@ class JobPost(models.Model):
 
 
 # Checking if acceptance has changed
-@receiver(pre_save, sender=JobPost)
 def manager_previously_existed_check(sender, instance, **kwargs):
+    print('sfsdsdsdsdsds')
     try:
         obj = sender.objects.get(pk=instance.pk)
     except sender.DoesNotExist:
         # Object is new, so field hasn't technically changed, but you may want to do something else here.
+        obj = None
         pass
-    else:
-        
+    
+    if obj is not None:
         # Checking if manager used to be null
-        if not obj.manager:
-
-            # Checking if job manager changed from null
-            if not obj.manager == instance.manager:
+        if not obj.manager == instance.manager:
                 
-                # Creating deadline for job
-                now = datetime.today()
-                print('current time', now)
+            # Creating deadline for job
+            now = datetime.now(pytz.utc)
 
-                # Getting absolute job length by adding regular job length and preparation time
-                realJobLength = instance.length + 2
+            print('current time', now)
+            print(obj.manager)
+            print(instance.manager)
+            print("instance.manager")
+            # Getting absolute job length by adding regular job length and preparation time
+            realJobLength = instance.length + 2
 
-                # Adding the absolute job length to current time
-                deadline = now + timedelta(days=realJobLength)
-                print('new deadline', deadline)
-                instance.deadline = deadline
+            # Adding the absolute job length to current time
+            deadline = now + timedelta(days=realJobLength)
+            print('new deadline', deadline)
+            instance.deadline = deadline
 
-                # Getting preparation time
-                now = now + timedelta(days=2)
-                instance.job_preparation_deadline = now
-                
+            # Getting preparation time
+            now = now + timedelta(days=2)
+            instance.job_preparation_deadline = now
+            
+            # Trying to send email
+            try:
                 # Preparing for email by getting vars
                 client = instance.client
                 client = User.objects.get(username=client)
@@ -199,13 +204,17 @@ def manager_previously_existed_check(sender, instance, **kwargs):
                 # Sending email to client
                 managerAssignedEmails(
                     manager, client, client_email, manager_email)
+            except Exception as e:
+                print(e)
 
-                # Schedule job prep deadline email
+            # Schedule job prep deadline email
 
 def pre_save_create_job_id(sender, instance, *args, **kwargs):
     if not instance.job_id:
         instance.job_id = random_string_generator(size=16)
 
+
+pre_save.connect(manager_previously_existed_check, sender=JobPost)
 pre_save.connect(pre_save_create_job_id, sender=JobPost)
 
 
@@ -237,7 +246,7 @@ def managerAssignedEmails(manager, client, client_email, manager_email):
 
 def rateJobEmail(manager, client, client_email):
 
-    subject = "Rate" + manager + "'s job now"
+    subject = "Rate " + manager + "'s job now"
     body = "Hello " + client + ", your job with " + manager + " is complete. Rate there job here and let us know how your experience with iBlinkco is going be emailing us at iblinkcompany@gmail.com "
 
     # Sending emails

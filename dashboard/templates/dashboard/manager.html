@@ -140,7 +140,7 @@
                             {% if job_opportunities %}
                             {% for job in job_opportunities %}
                                 <div class="job-opportunity-div">
-                                <h6 class="h6">New Job Opportunity with {{ job.client }}</h6>
+                                <h6 class="h6">New Job Opportunity with {{ job.client }} <span>(${{ job.manager_payment }})</span></h6>
                             
                                 <p class="h5">
                                     {% if job.captions == True %}
@@ -173,7 +173,7 @@
 
                             {% for job in current_jobs %}
                             <div class="current-jobs-div">
-                            <h6 class="h6">{{ job.client }}</h6>
+                            <h6 class="h6">{{ job.client }} <span>(${{ job.manager_payment }})</span></h6>
                             
                             <p class="h5">
                                 {% if job.captions == True %}

@@ -297,7 +297,8 @@
                                                 <p>{{ order.client }} gave you a {{ milestone.milestone_rating }} star on during this milestone</p>
                                             {% endif %}
                                             {% else %}
-                                            <span class="update-link" data-toggle="modal" data-target="#milestone-{{milestone.milestone_number}}-update">Update</span>
+                                            <p class="update-link" data-toggle="modal" data-target="#milestone-{{milestone.milestone_number}}-update">Update</p>
+                                            Update on {{ milestone.deadline|date:"M d, Y" }}
                                             {% endif %}
                                         </div>
                                     {% endfor %}

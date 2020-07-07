@@ -39,7 +39,6 @@ from django.contrib.auth.models import User
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from webapp.tokens import token_generation
-
 from datetime import timedelta, datetime
 
 # Homepage function

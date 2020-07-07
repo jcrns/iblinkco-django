@@ -23,6 +23,12 @@
 <div class="chat">
     <div class="container">
         <h3 class=" text-center" id="message-name" data-image="{{ involvedUser.image.url }}">Message {{ involvedUserName }}</h3>
+        {% if user.profile.is_client == True %}
+            <p class="text-center">For steps to share your social media accounts with your manager. <a href="{% url 'homepage-connect-socials' %}">Click Here</a></p>
+        {% else %}
+            <p class="text-center">For steps to receiving access to your clients social media. <a
+                    href="{% url 'homepage-connect-socials' %}">Click Here</a></p>
+        {% endif %}
         <div class="messaging">
             <div class="inbox_msg">
                 <div class="mesgs h-100">
@@ -32,6 +38,15 @@
             <div class="type_msg">
                 <div class="input_msg_write">
                     <input id="chat-message-input" type="text" class="write_msg" placeholder="Type a message">
+                    <!-- <a href="#"><img src="{% static 'homepage/img/file-upload.png' %}" class="file-upload"></a> -->
+
+                    <div class="image-upload">
+                        <label for="file-input">
+                            <img src="{% static 'homepage/img/file-upload.png' %}" class="file-upload">
+                        </label>
+                        <input id="file-input" type="file" />
+                    </div>
+
                     <button id="chat-message-submit" class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
                             aria-hidden="true"></i></button>
                 </div>
@@ -366,6 +381,29 @@
     console.log(window.location)
     console.log(chatSocket)
 
+    // Image upload
+    $(document).ready(function () {
+        $("input[type=file]").click(function () {
+            $(this).val("");
+        });
+
+        $("input[type=file]").change(function () {
+            // alert($(this).val());
+            let photo = document.getElementById("file-input").files[0];
+            // alert(photo);
+            // let formData = new FormData();
+            // formData.append("photo", photo);
+            // alert(formData)
+            
+            chatSocket.send(JSON.stringify({
+                'command': 'new_file',
+                'message': photo,
+                'from': username,
+            }));
+
+        });
+    });
+
     // Defining method on open
     chatSocket.onopen = function(e) {
         fetchMessages();
@@ -392,11 +430,19 @@
             readAll();
         } else if(data['command'] == 'new_message'){
             createMessage(data['message'], data['command']);
+        } else if(data['command'] == 'new_file'){
+            uploadFile(data['message'], data['command'])
         }
         // Scrolling down
         scrollDown();
     };
 
+    // Function to show image
+    function uploadFile(data, command){
+        
+    }
+
+    // Function to show text message
     function createMessage(data, command){
         const message = data['content'];
         const author = data['author'];
@@ -522,6 +568,7 @@
             'viewer': username,
         }));
     }
+
     function readAll(){
         chatSocket.send(JSON.stringify({
             'command': 'read_all',

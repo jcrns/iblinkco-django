@@ -22,8 +22,8 @@
     </div>
     {% if request.GET.next %}
     <input type="hidden" name="next" value="{{ request.GET.next }}">
-
     {% endif %}
+    <input type="hidden" name="current-path" id="current-path" value="{{ request.resolver_match.url_name }}">
     <input class="btn-success" type="submit" value="Next">
 </form>
 {% endblock %}

@@ -5,7 +5,7 @@ from celery import shared_task
 
 # Importing profile and jobpost manager for management assignment
 from users.models import Profile
-from .models import JobPost
+from .models import JobPost, Milestone
 
 # Importing email
 from django.core.mail import EmailMessage
@@ -40,6 +40,8 @@ def manager_assignment():
         print(job)
 
         client_name = job.client
+        print("client_name")
+        print(client_name)
         client = User.objects.get(username=client_name)
 
         # Getting capable managers with filter
@@ -125,8 +127,22 @@ def milestone_send_emails(pk, milestoneState, warning):
 
         # Checking if job is none else returning
         if not job_obj:
+            print("rgewrtgertg")
             revoke('service.tasks.milestone_send_emails')
             return None
+        
+        print("\n\n\n\nergwetrgewrtg")
+
+        # Checking if specific milestone is active
+        current_milestone = Milestone.objects.get(job=job_obj, milestone_number=milestoneState)
+        print("current_milestone")
+        print(current_milestone)
+        # print(bool(current_milestone.active))
+        # print(current_milestone)
+        # if bool(current_milestone.active) == False or current_milestone == 'False':
+        #     print('Testttstst')
+        #     revoke('service.tasks.milestone_send_emails')
+        #     return None
 
     except Exception as e:
         print(e)
@@ -191,6 +207,7 @@ def check_milestone_client_email(job_obj, milestone):
 
         return None
     except Exception as e:
+        print("eeeeeee")
         print(e)
         return None
 

@@ -1,3 +1,7 @@
+.image-upload>input {
+    display: none;
+}
+
 .container {
     max-width: 1170px;
     margin: auto;
@@ -13,6 +17,13 @@ img {
     overflow: hidden;
     width: 40%;
     border-right: 1px solid #c4c4c4;
+}
+
+.file-upload {
+    position: absolute;
+    width: 50px;
+    top: 2px;
+    right: 40px;
 }
 
 .inbox_msg {
