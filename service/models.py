@@ -97,8 +97,8 @@ class JobPost(models.Model):
         if self.job_complete == True:
 
             # Checking if active is True if so setting to False
-            if self.active == False:
-                self.active = True
+            if self.active == True:
+                self.active = False
 
             print("self.manager_paid")
 

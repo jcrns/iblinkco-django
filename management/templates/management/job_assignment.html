@@ -23,8 +23,8 @@ Facebook
 {% endif %}
 
 Accept Job:
-http://{{ domain }}{% url 'users-job-offer' uidb64=uid token=token %}?accepted=True
+http://{{ domain }}{% url 'management-job-offer' uidb64=uid token=token %}?accepted=True
 
 Decline Job:
-http://{{ domain }}{% url 'users-job-offer' uidb64=uid token=token %}?accepted=False
+http://{{ domain }}{% url 'management-job-offer' uidb64=uid token=token %}?accepted=False
 {% endautoescape %}

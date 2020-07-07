@@ -453,6 +453,7 @@ def deleteJob(request, pk):
         
         # Cancelling the job
         job.cancelled = True
+        job.active = False
         job.save()
         
         # Making client non busy

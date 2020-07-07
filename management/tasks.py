@@ -51,14 +51,3 @@ def manager_job_preperation_email(pk):
     except Exception as e:
         print(e)
         return None
-
-# Manager follow up email
-@shared_task
-def manager_follow_up_email(user):
-    try:
-        date_joined = user.date_joined
-        print(date_joined)
-        return None
-    except expression as identifier:
-        print(identifier)
-        return None
