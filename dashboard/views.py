@@ -365,7 +365,12 @@ class JobDetailView(DetailView):
             # Getting milestone vars
             milestone_number = request.POST['milestone-number']
             milestone_statement = request.POST['milestone_statement']
-            milestone_post_goal_completed = request.POST['milestone_post_goal_completed']
+            try:
+
+                milestone_post_goal_completed = request.POST['milestone_post_goal_completed']
+            except Exception as e:
+                print(e)
+                milestone_post_goal_completed = False
             
             # Changing checkbox var
             if milestone_post_goal_completed == 'on':
