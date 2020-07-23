@@ -357,4 +357,24 @@ def jobPrepEndedEmail(manager, client, client_email):
     email.send()
 
 
+@shared_task
+def jobCancelledEmail(manager, client, client_email, manager_email):
+
+    subject = f'Your cancelled your job with {manager}'
+    body = f'Hello {client},\nYour job with {manager} has been cancelled. If you have any questions or concerns please respond to this email.'
+    
+    # Sending email to client
+    email = EmailMessage(subject, body, to=[f'{client_email}'])
+    print(email)
+    email.send()
+
+    subject = f'Your client {client} cancelled the job'
+    body = f'Hello {manager},\nYour job with {client} has been cancelled. If you have any questions or concerns please respond to this email.'
+
+    # Sending email to manager
+    email = EmailMessage(subject, body, to=[f'{manager_email}'])
+    print(email)
+    email.send()
+
+
 # manager_assignment()

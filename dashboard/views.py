@@ -42,7 +42,7 @@ from django.http import HttpResponse
 import stripe
 
 # Importing task
-from service.tasks import milestoneRatedEmail, jobPrepEndedEmail, milestone_send_emails
+from service.tasks import milestoneRatedEmail, jobPrepEndedEmail, milestone_send_emails, jobCancelledEmail
 from datetime import timedelta, datetime
 
 # Importing chats
@@ -473,6 +473,21 @@ def deleteJob(request, pk):
     # Checking if user is involved in job
     if user == job.client or user == job.manager:
         
+        # Sending cancelled email
+        
+        # Getting vars
+        manager = job.manager
+        manager = User.objects.get(username=manager)
+        manager_email = manager.email
+        manager = manager.username
+
+        client = job.client
+        client = User.objects.get(username=client)
+        client_email = client.email
+        client = client.username
+        
+        jobCancelledEmail(manager, client, client_email, manager_email)
+
         # Cancelling the job
         job.cancelled = True
         job.active = False
@@ -482,6 +497,7 @@ def deleteJob(request, pk):
         client = Profile.objects.get(user=job.client)
         client.busy = False
         client.save()
+
     return redirect('dashboard-home')
 
 # Func to change job prep bool

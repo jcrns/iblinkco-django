@@ -5,7 +5,7 @@ from .models import JobPost, Milestone ,MilestoneFiles
 class JobPostAdmin(admin.ModelAdmin):
     list_display = ('client', 'manager', 'active', 'date_requested', 'price_paid',
                     'paid_for',)
-    ordering = ['-active', '-paid_for', '-date_requested', '-price_paid']
+    ordering = ['-active',  '-date_requested', '-paid_for', '-price_paid']
 
     def get_queryset(self, request):
         qs = super(JobPostAdmin, self).get_queryset(request)
