@@ -18,7 +18,7 @@ class Profile(models.Model):
     busy = models.BooleanField(default=False)
 
     # Bool for if user is currently in a job
-    can_post = models.BooleanField(default=False)
+    can_post = models.BooleanField(default=True)
 
 
     # type of profile

@@ -92,7 +92,11 @@ def dashboard(request):
 
             # Getting evaluation
             evaluation = ManagerEvaluation.objects.get(manager=request.user)
+            
+            print("evaluation.accepted")
+            print(evaluation.accepted)
 
+            
             # Checking if evaluation is completed
             if evaluation.accepted == True:
             

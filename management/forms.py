@@ -1,5 +1,6 @@
 from django import forms
-from .models import ManagerEvaluation
+from .models import ManagerEvaluation, ManagerPreference
+from service.choices import *
 
 # Creating form for evaluation
 class EvaluationOneForm(forms.ModelForm):
@@ -53,3 +54,36 @@ class EvaluationThreeForm(forms.ModelForm):
     class Meta:
         model = ManagerEvaluation
         fields = [ "answer_three_caption", "answer_three_img" ]
+
+
+# Milestone Update
+class ManagerPreferenceForm(forms.ModelForm):
+    
+    length = forms.ChoiceField(label='Job Duration', choices=lengthChoices, widget=forms.Select(
+        attrs={'class': 'form-control'}))
+
+    post_per_day = forms.ChoiceField(
+        label='Post Per Day', choices=postPerDayChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    businessTypeChoices = (('Services', 'Services'), ('Retail', 'Retail'), ('Art & Entertainment', 'Art & Entertainment'), ('Tech', 'Tech'), ('Events', 'Events'), ('Farming', 'Farming'), ('Health Care', 'Health Care'), ('Restaurants', 'Restaurants'), ('Other', 'Other'))
+
+    businessChoices = ['Services',
+                       'Retail',
+                       'Art & Entertainment',
+                       'Tech',
+                       'Events',
+                       'Farming',
+                       'Health Care',
+                       'Restaurants',
+                       'Other', 
+                       ]
+
+    business_list_order = forms.ChoiceField(
+        label='What is you', choices=businessTypeChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+    post_per_day = forms.ChoiceField(
+        label='Post Per Day', choices=postPerDayChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+        
+    class Meta:
+        model = ManagerPreference
+        fields = ["business_list_order", "length",
+                  "instagram", "facebook", "post_per_day"]

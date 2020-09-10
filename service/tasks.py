@@ -7,6 +7,9 @@ from celery import shared_task
 from users.models import Profile
 from .models import JobPost, Milestone
 
+# Importing manager preferences modal
+from management.models import ManagerPreference
+
 # Importing email
 from django.core.mail import EmailMessage
 
@@ -58,9 +61,87 @@ def manager_assignment():
 
             print('manager: ', managers)
 
-            # Looping through managers
+            # Creating manager dict with manager's profile obj and a compatability score
+            managerList = []
+            
+            # Looping through managers and calculating compatability score
             for manager in managers:
+                managerDict = {}
+                managerDict['profile'] = manager
+
+                # Calculating compatability score
+
+                # Getting managers preference
+                manager_preference = ManagerPreference.objects.get(
+                    manager=manager.user)
+
+                # Defining score variable
+                score = 3
+
+                finalListOrder = manager_preference.business_list_order
+                print(finalListOrder)
+
+                finalListOrder = finalListOrder.split(',')
+                first_list_option = finalListOrder[0]
                 
+                business = Profile.objects.get(user=job.client)
+
+                # Checking if manager completed preferences
+
+                if manager_preference.completed:
+
+                    # Checking if business type is managers preference
+                    if business.business_type == first_list_option:
+                        score += 1
+
+                    print("business.business_type")
+                    print(business.business_type)
+                    print(first_list_option)
+
+                    if int(manager_preference.length) == int(job.length):
+                        score += 1
+
+                    print("job.length")
+                    print(job.length)
+                    print(manager_preference.length)
+
+                    post_per_day = job.number_of_post/job.length
+
+                    if int(post_per_day) == int(manager_preference.post_per_day):
+                        score += 1
+
+                    print("post_per_day")
+                    print(post_per_day)
+                    print(manager_preference.post_per_day)
+
+
+                    if job.instagram == True and manager_preference.instagram == True:
+                        score += 1
+
+                    print("job.instagram")
+                    print(job.instagram)
+                    print(manager_preference.instagram)
+
+                    if job.facebook == True and manager_preference.facebook == True:
+                        score += 1
+                    
+                    print("job.facebook")
+                    print(job.facebook)
+                    print(manager_preference.facebook)
+
+
+                managerDict['score'] = score
+                print("score")
+                print(score)
+                managerList.append(managerDict)
+
+            managers_sorted = sorted(managerList, key=lambda k: k['score'], reverse=True)
+
+            print("managers_sorted")
+            print(managers_sorted)
+
+            # Looping through managers
+            for manager in managers_sorted:
 
                 # Checking if user already received an application
                 job_offers = current_job.job_offers
@@ -69,7 +150,7 @@ def manager_assignment():
                 job_offers_array = job_offers.split(',')
 
                  # Randomly selecting managers
-                manager_name = random.choice(managers)
+                manager_name = manager['profile']
 
                # Checking if user has stripe connected
                 if not manager_name.stripe_user_id:
@@ -84,8 +165,8 @@ def manager_assignment():
                 if str(manager_name) in job_offers_array:
                     print('sent already')
                     continue
-
-
+                
+            
 
                 # Getting manager user
                 manager = User.objects.get(username=manager_name)

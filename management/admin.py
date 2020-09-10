@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ManagerEvaluation
+from .models import ManagerEvaluation, ManagerPreference
 
 
 class ManagerEvaluationAdmin(admin.ModelAdmin):
@@ -13,3 +13,4 @@ class ManagerEvaluationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ManagerEvaluation, ManagerEvaluationAdmin)
+admin.site.register(ManagerPreference)

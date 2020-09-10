@@ -25,7 +25,7 @@ from .forms import UserRegisterForm, ProfileUpdateFormClient, ProfileUpdateFormM
 from .models import Profile
 
 # Importing Evaluation Modal
-from management.models import ManagerEvaluation
+from management.models import ManagerEvaluation, ManagerPreference
 
 # Importing needed libs for email verification
 from django.template.loader import render_to_string
@@ -297,6 +297,7 @@ def comfirmUser(request):
 
         # If Client
         if managerOrClient == 'True':
+
             # Changing value of manager type
             profile.is_manager = False
             profile.is_client = True
@@ -325,6 +326,10 @@ def comfirmUser(request):
             
             # Creating evaluation modal for managers
             evaluation = ManagerEvaluation.objects.create(manager=request.user)
+
+            # Creating manager preferences
+            manager_preferences = ManagerPreference.objects.create(
+                manager=request.user)
 
             # Redirecting 
             return redirect('service-complete-profile-manager')
