@@ -19,7 +19,7 @@ from users.models import Profile
 from service.models import JobPost
 
 # Importing evaluation modal 
-from .models import ManagerEvaluation, ManagerPreference
+from .models import ManagerEvaluation #, ManagerPreference
 
 # Importing evaluation forms
 from .forms import *
@@ -145,63 +145,63 @@ def evaluation(request):
             else:
                 print("dgnjwerkgijsrgsrtgurtg")
 
-                # Checking evaluation is completed
-                if evaluation.evaluation_completed == True:
+                # # Checking evaluation is completed
+                # if evaluation.evaluation_completed == True:
 
-                    # Checking if job preference is completed
-                    manager_preference = ManagerPreference.objects.get(manager=user)
-                    print("dgnjwerkgijsrgsrtgurtg")
-                    if manager_preference.completed == True:
-                        return render(request, 'management/evaluation_complete.html', { "static_header" : True, "nav_black_link" : True } )
-                    else:
-                        form = ManagerPreferenceForm()
-                        if request.method == 'POST':
-                            form = ManagerPreferenceForm(
-                                request.POST or None, request.FILES or None, instance=manager_preference)
+                #     # Checking if job preference is completed
+                #     manager_preference = ManagerPreference.objects.get(manager=user)
+                #     print("dgnjwerkgijsrgsrtgurtg")
+                #     if manager_preference.completed == True:
+                #         return render(request, 'management/evaluation_complete.html', { "static_header" : True, "nav_black_link" : True } )
+                #     else:
+                #         form = ManagerPreferenceForm()
+                #         if request.method == 'POST':
+                #             form = ManagerPreferenceForm(
+                #                 request.POST or None, request.FILES or None, instance=manager_preference)
 
-                            print("aaaa")
-                            finalListOrder = request.POST.get('final-list-order') 
-                            finalListOrder = finalListOrder.replace("&amp;", "&")
-                            length = request.POST.get('length')
-                            post_per_day = request.POST.get('post_per_day')
-                            print(finalListOrder)
-                            print(request.POST)
+                #             print("aaaa")
+                #             finalListOrder = request.POST.get('final-list-order') 
+                #             finalListOrder = finalListOrder.replace("&amp;", "&")
+                #             length = request.POST.get('length')
+                #             post_per_day = request.POST.get('post_per_day')
+                #             print(finalListOrder)
+                #             print(request.POST)
                             
-                            # Checking if prefered platform is posted
-                            numberOfPlatforms = 0
+                #             # Checking if prefered platform is posted
+                #             numberOfPlatforms = 0
 
-                            instagram = request.POST.get('instagram')
-                            facebook = request.POST.get('facebook')
+                #             instagram = request.POST.get('instagram')
+                #             facebook = request.POST.get('facebook')
 
-                            instagramBool = False
-                            facebookBool = False
+                #             instagramBool = False
+                #             facebookBool = False
                             
-                            if instagram:
-                                numberOfPlatforms += 1
-                                instagram = True
-                            if facebook:
-                                numberOfPlatforms += 1
-                                facebook = True
+                #             if instagram:
+                #                 numberOfPlatforms += 1
+                #                 instagram = True
+                #             if facebook:
+                #                 numberOfPlatforms += 1
+                #                 facebook = True
 
-                            if numberOfPlatforms == 0:
-                                messages.warning(
-                                    request, f'Please choose a platform that you prefer to work on before you continue')
-                                return redirect('management-evaluation')
+                #             if numberOfPlatforms == 0:
+                #                 messages.warning(
+                #                     request, f'Please choose a platform that you prefer to work on before you continue')
+                #                 return redirect('management-evaluation')
                                 
-                            # Creating obj in database
+                #             # Creating obj in database
 
-                            manager_preference.manager = user
-                            manager_preference.business_list_order = finalListOrder
-                            manager_preference.length = length
-                            manager_preference.post_per_day = post_per_day
-                            manager_preference.instagram = instagramBool
-                            manager_preference.facebook = facebookBool
+                #             manager_preference.manager = user
+                #             manager_preference.business_list_order = finalListOrder
+                #             manager_preference.length = length
+                #             manager_preference.post_per_day = post_per_day
+                #             manager_preference.instagram = instagramBool
+                #             manager_preference.facebook = facebookBool
 
 
-                            manager_preference.completed = True
-                            manager_preference.save()
-                            return redirect('management-evaluation')
-                        return render(request, 'management/job_preferences.html', {"static_header": True, "nav_black_link": True, "form" : form })
+                #             manager_preference.completed = True
+                #             manager_preference.save()
+                #             return redirect('management-evaluation')
+                #         return render(request, 'management/job_preferences.html', {"static_header": True, "nav_black_link": True, "form" : form })
 
                 # Getting language from profile
                 language = profile.language
