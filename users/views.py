@@ -25,7 +25,7 @@ from .forms import UserRegisterForm, ProfileUpdateFormClient, ProfileUpdateFormM
 from .models import Profile
 
 # Importing Evaluation Modal
-from management.models import ManagerEvaluation, ManagerPreference
+from management.models import ManagerEvaluation #, ManagerPreference
 
 # Importing needed libs for email verification
 from django.template.loader import render_to_string

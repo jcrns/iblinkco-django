@@ -8,7 +8,7 @@ from users.models import Profile
 from .models import JobPost, Milestone
 
 # Importing manager preferences modal
-from management.models import ManagerPreference
+# from management.models import ManagerPreference
 
 # Importing email
 from django.core.mail import EmailMessage
