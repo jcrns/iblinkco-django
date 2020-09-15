@@ -21,14 +21,14 @@ from service.tasks import manager_assignment, check_milestone_client_email, mile
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('homepage.urls')),
-    path('', include('management.urls')),
-    path('blog/', include('blog.urls')),
-    path('', include('users.urls')),
-    path('', include('dashboard.urls')),
-    path('', include('service.urls')),
-    path('', include('chat.urls')),
+    # path('admin/', admin.site.urls),
+    # path('', include('homepage.urls')),
+    # path('', include('management.urls')),
+    # path('blog/', include('blog.urls')),
+    # path('', include('users.urls')),
+    # path('', include('dashboard.urls')),
+    # path('', include('service.urls')),
+    # path('', include('chat.urls')),
 ]
 
 # Running manager assignment func on app load
