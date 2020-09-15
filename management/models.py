@@ -22,6 +22,11 @@ class ManagerPreference(models.Model):
     def __str__(self):
         return f'{self.manager} Preferences'
 
+class ManagerBiases(models.Model):
+    #     # Manager
+    manager = models.OneToOneField(User, on_delete=models.CASCADE)
+    business_list_order = models.CharField(max_length=500, default='none')
+
 class ManagerEvaluation(models.Model):
     # Manager
     manager = models.OneToOneField(User, on_delete=models.CASCADE)
