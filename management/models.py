@@ -28,7 +28,7 @@ class ManagerBiases(models.Model):
 
     # Preferences
     business_list_order = models.CharField(max_length=500, default='none')
-    length = models.IntegerField(default=0)
+    # length = models.IntegerField(default=0)
     post_per_day = models.IntegerField(default=0)
     instagram = models.BooleanField(default=False)
     facebook = models.BooleanField(default=False)
