@@ -7,7 +7,22 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 
-class ManagerPreference(models.Model):
+# class ManagerPreference(models.Model):
+#     # Manager
+#     manager = models.OneToOneField(User, on_delete=models.CASCADE)
+
+#     # Preferences
+#     business_list_order = models.CharField(max_length=500, default='none')
+#     length = models.IntegerField(default=0)
+#     post_per_day = models.IntegerField(default=0)
+#     instagram = models.BooleanField(default=False)
+#     facebook = models.BooleanField(default=False)
+#     completed = models.BooleanField(default=False)
+
+#     def __str__(self):
+#         return f'{self.manager} Preferences'
+
+class ManagerBiases(models.Model):
     # Manager
     manager = models.OneToOneField(User, on_delete=models.CASCADE)
 
@@ -21,11 +36,6 @@ class ManagerPreference(models.Model):
 
     def __str__(self):
         return f'{self.manager} Preferences'
-
-class ManagerBiases(models.Model):
-    #     # Manager
-    manager = models.OneToOneField(User, on_delete=models.CASCADE)
-    business_list_order = models.CharField(max_length=500, default='none')
 
 class ManagerEvaluation(models.Model):
     # Manager
