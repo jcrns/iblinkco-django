@@ -19,7 +19,7 @@ from users.models import Profile
 from service.models import JobPost
 
 # Importing evaluation modal 
-from .models import ManagerEvaluation, ManagerPreference
+from .models import ManagerEvaluation, ManagerBiases
 
 # Importing evaluation forms
 from .forms import *
