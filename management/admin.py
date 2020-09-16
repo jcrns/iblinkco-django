@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ManagerEvaluation, ManagerBiases, ManagerPreference
+from .models import ManagerEvaluation#, ManagerBiases, ManagerPreference
 
 
 class ManagerEvaluationAdmin(admin.ModelAdmin):
@@ -13,5 +13,5 @@ class ManagerEvaluationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ManagerEvaluation, ManagerEvaluationAdmin)
-admin.site.register(ManagerBiases)
-admin.site.register(ManagerPreference)
+# admin.site.register(ManagerBiases)
+# admin.site.register(ManagerPreference)
