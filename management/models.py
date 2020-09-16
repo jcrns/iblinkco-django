@@ -27,12 +27,12 @@ class ManagerBiases(models.Model):
     manager = models.OneToOneField(User, on_delete=models.CASCADE)
 
     # Preferences
-    business_list_order = models.CharField(max_length=500, default='none')
-    length = models.IntegerField(default=0)
-    post_per_day = models.IntegerField(default=0)
-    instagram = models.BooleanField(default=False)
-    facebook = models.BooleanField(default=False)
-    completed = models.BooleanField(default=False)
+    # business_list_order = models.CharField(max_length=500, default='none')
+    # length = models.IntegerField(default=0)
+    # post_per_day = models.IntegerField(default=0)
+    # instagram = models.BooleanField(default=False)
+    # facebook = models.BooleanField(default=False)
+    # completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.manager} Preferences'
