@@ -1,5 +1,5 @@
 from django import forms
-from .models import ManagerEvaluation#, ManagerBiases
+from .models import ManagerEvaluation, ManagerPreference
 from service.choices import *
 
 # Creating form for evaluation
@@ -57,33 +57,33 @@ class EvaluationThreeForm(forms.ModelForm):
 
 
 # Milestone Update
-# class ManagerBiasesForm(forms.ModelForm):
+class ManagerPreferenceForm(forms.ModelForm):
     
-#     length = forms.ChoiceField(label='Job Duration', choices=lengthChoices, widget=forms.Select(
-#         attrs={'class': 'form-control'}))
+    length = forms.ChoiceField(label='Job Duration', choices=lengthChoices, widget=forms.Select(
+        attrs={'class': 'form-control'}))
 
-#     post_per_day = forms.ChoiceField(
-#         label='Post Per Day', choices=postPerDayChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+    post_per_day = forms.ChoiceField(
+        label='Post Per Day', choices=postPerDayChoices, widget=forms.Select(attrs={'class': 'form-control'}))
 
-#     businessTypeChoices = (('Services', 'Services'), ('Retail', 'Retail'), ('Art & Entertainment', 'Art & Entertainment'), ('Tech', 'Tech'), ('Events', 'Events'), ('Farming', 'Farming'), ('Health Care', 'Health Care'), ('Restaurants', 'Restaurants'), ('Other', 'Other'))
+    businessTypeChoices = (('Services', 'Services'), ('Retail', 'Retail'), ('Art & Entertainment', 'Art & Entertainment'), ('Tech', 'Tech'), ('Events', 'Events'), ('Farming', 'Farming'), ('Health Care', 'Health Care'), ('Restaurants', 'Restaurants'), ('Other', 'Other'))
 
-#     businessChoices = ['Services',
-#                        'Retail',
-#                        'Art & Entertainment',
-#                        'Tech',
-#                        'Events',
-#                        'Farming',
-#                        'Health Care',
-#                        'Restaurants',
-#                        'Other', 
-#                        ]
+    businessChoices = ['Services',
+                       'Retail',
+                       'Art & Entertainment',
+                       'Tech',
+                       'Events',
+                       'Farming',
+                       'Health Care',
+                       'Restaurants',
+                       'Other', 
+                       ]
 
-#     business_list_order = forms.ChoiceField(
-#         label='What is you', choices=businessTypeChoices, widget=forms.Select(attrs={'class': 'form-control'}))
-#     post_per_day = forms.ChoiceField(
-#         label='Post Per Day', choices=postPerDayChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+    business_list_order = forms.ChoiceField(
+        label='What is you', choices=businessTypeChoices, widget=forms.Select(attrs={'class': 'form-control'}))
+    post_per_day = forms.ChoiceField(
+        label='Post Per Day', choices=postPerDayChoices, widget=forms.Select(attrs={'class': 'form-control'}))
         
-#     class Meta:
-#         model = ManagerBiases
-#         fields = ["business_list_order", "length",
-#                   "instagram", "facebook", "post_per_day"]
+    class Meta:
+        model = ManagerPreference
+        fields = ["business_list_order", "length",
+                  "instagram", "facebook", "post_per_day"]

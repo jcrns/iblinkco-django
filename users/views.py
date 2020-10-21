@@ -25,7 +25,7 @@ from .forms import UserRegisterForm, ProfileUpdateFormClient, ProfileUpdateFormM
 from .models import Profile
 
 # Importing Evaluation Modal
-from management.models import ManagerEvaluation #, ManagerPreference
+from management.models import ManagerEvaluation, ManagerPreference
 
 # Importing needed libs for email verification
 from django.template.loader import render_to_string
@@ -323,9 +323,15 @@ def comfirmUser(request):
             
             # Saving value in db
             profile.save(update_fields=["is_manager", "is_client"]) 
+
+            try:
+                evaluation = ManagerEvaluation.objects.get(manager=request.user)
+            except ManagerEvaluation.DoesNotExist:
+                evaluation = ManagerEvaluation.objects.create(manager=request.user)
+            
             
             # Creating evaluation modal for managers
-            evaluation = ManagerEvaluation.objects.create(manager=request.user)
+            evaluation = ManagerEvaluation.objects.get(manager=request.user)
 
             # Creating manager preferences
             manager_preferences = ManagerPreference.objects.create(
